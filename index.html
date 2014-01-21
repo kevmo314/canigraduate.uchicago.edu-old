@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html ng-app="app" lang="en">
+	<head>
+		<title>Can I Graduate? | UChicago</title><!-- No, you cannot -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"/>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
+		<script src="ui-bootstrap-tpls-0.10.0.min.js"></script>
+		<script src="angular-base64.min.js"></script>
+		<script src="classes.js"></script>
+		<script src="requirements.js"></script>
+		<script src="sequences.js"></script>
+		<script src="kevin-wangular.js"></script>
+		<style type="text/css">
+		.pointer {
+			cursor:pointer;
+		}
+		body {
+			background-color:#EAE9E1;
+		}
+		header {
+			background-color:#800000;
+			color:white;
+			padding-top:1em;
+			border-bottom:10px solid #971E21;
+		}
+		#content {
+			background-color:#F7F6EE;
+			border-left:1px solid #DEDED6;
+			border-right:1px solid #DEDED6;
+			padding-top:1em;
+			padding-bottom:1em;
+		}
+		footer {
+			background-color:#403F3F;
+			color:#999999;
+			padding-top:1em;
+			padding-bottom:2em;
+		}
+		.affix {
+			top:25px;
+		}
+		.sequence {
+			margin-right:5px;
+			margin-bottom:5px;
+		}
+		.list-group-item {
+			padding:5px 15px;
+		}
+		.list-group {
+			margin-bottom:0;
+		}
+		</style>
+	</head>
+	<body ng-controller="AirTrafficCtrl">
+		<header>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8">
+						<h1>Can I Graduate?</h1>
+					</div>
+					<div class="col-md-4 text-right">
+						<img src="https://classes.uchicago.edu/i/uc_wordmark_phoenix.png" alt="UChicago"/>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="container clearfix" id="content">
+			<div class="row"><div class="col-md-6"><div>
+			<h2>Your Courses</h2>
+			<table class="table table-striped" ng-show="userClasses.length > 0">
+				<tr>
+					<th class="text-right">ID</th>
+					<th>Title</th>
+				</tr>
+				<tr ng-repeat="class in userClasses | orderBy:'toString()'">
+					<td class="col-sm-3 text-right">
+						{{class.substring(class, class.indexOf(' :: '))}}
+					</td>
+					<td class="col-sm-9">
+					{{class.substring(class.indexOf(' :: ') + 4)}}
+					<i ng-click="userClasses.splice(userClasses.indexOf(class), 1)" class="pointer pull-right glyphicon glyphicon-remove"></i>
+					</td>
+				</tr>
+			</table>
+			<form role="form" class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-3 control-label" for="searchClasses">Add</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="searchClasses" placeholder="Math 162" ng-model="addClassValue" typeahead-wait-ms="500" typeahead-on-select="addClass($item)" typeahead="class for class in classes | filter:$viewValue | limitTo:20" typeahead-editable="false"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-9 col-sm-push-3 text-right">
+						<span ng-click="save()" class="pointer btn btn-success">Export</span>
+						<span ng-click="load()" class="pointer btn btn-default">Import</span>
+					</div>
+				</div>
+			</form>
+			</div>
+			<h2>Common Sequences</h2>
+			<div class="btn btn-primary pointer sequence" ng-repeat="(title, grouping) in sequences" ng-click="toggleSequence(grouping)" ng-class="{'active':hasSequence(grouping)}">{{title}}</div>
+			</div>
+			<div class="col-md-6">
+			<h2>Departments</h2>
+			<accordion>
+				<accordion-group ng-repeat="(key, val) in requirements">
+					<accordion-heading>
+					<div class="row pointer">
+						<div class="col-xs-9">{{key}}</div>
+						<div class="col-xs-3 text-right"><span class="label label-default" ng-hide="val.base == val.total">{{val.total - val.base}} classes</span><span class="label label-success" ng-show="val.base == val.total">Finished!</span></div>
+					</div>
+					</accordion-heading>
+					{{val.notes}}
+					<h3>Requirements <small ng-show="val.base == val.total" ng-click="isOpen=!isOpen" class="pointer">(click to toggle)</small></h3>
+					<ul class="list-group" collapse="!isOpen && (val.base == val.total)">
+						<li class="list-group-item" ng-repeat="child in val.classes" ng-include="'requirements.html'"></li>
+					</ul>
+				</accordion-group>
+			</accordion>
+			</div></div>
+		</div>
+		<script type="text/ng-template" id="requirements.html">
+			<span ng-if="!isLeaf(child)">
+			<strong ng-click="isOpen=!isOpen">
+				<span ng-show="!child.complete">
+					<span ng-show="child.require == child.classes.length">All</span>
+					<span ng-hide="child.require==child.classes.length">{{child.require}}</span>
+					of the following:</span>
+				<span ng-show="child.complete" class="pointer text-success">
+					<span ng-show="child-require==child.classes.length">All</span>
+					<span ng-hide="child-require==child.classes.length">{{child.require}}</span>
+					required class<span ng-show="child.require > 1">es</span> finished <span class="text-muted">(click to toggle)</span></span>
+			</strong>
+				<a class="pull-right pointer" ng-click="forceIgnore(child)" ng-show="!child.complete || child.force">
+					<i class="glyphicon glyphicon-volume-off" ng-show="!child.force" tooltip="Ignore"></i><i class="glyphicon glyphicon-volume-up" ng-show="child.force" tooltip="Unignore"></i>
+				</a>
+			<small class="text-muted">{{child.notes}}</small>
+			<ul class="list-group" collapse="!isOpen && (child.base == child.total)">
+				<li class="list-group-item" ng-repeat="child in child.classes track by $index" ng-include="'requirements.html'"></li>
+			</ul>
+			</span>
+			<span ng-if="isLeaf(child)" ng-class="{'text-danger':!child.complete, 'text-success':child.complete}">
+				<div class="clearfix">
+					<span ng-click="showDetails=!showDetails" ng-class="{'pointer':child.classes.length == 10}">
+						<i class="glyphicon glyphicon-ok" ng-show="child.complete"></i>
+						<i class="glyphicon glyphicon-book" ng-hide="child.complete"></i>
+						{{child.classes | fill}} {{getName(child.classes)}} <small class="text-muted" ng-if="child.complete && child.classes.length < 10">{{child.userClass}}</small>
+					</span>
+					<a class="pull-right pointer" ng-click="forceIgnore(child)" ng-show="!child.complete || child.force">
+						<i class="glyphicon glyphicon-volume-off" ng-show="!child.force" tooltip="Ignore"></i><i class="glyphicon glyphicon-volume-up" ng-show="child.force" tooltip="Unignore"></i>
+					</a>
+				</div>
+				<div class="text-info small" ng-if="showDetails && child.classes.length == 10" ng-init="getDescription(child)">
+					<span>{{child.description}}</span>
+					<span class="text-muted" ng-if="child.notes">Notes: {{child.notes}}</span>
+					<table ng-if="child.sections" class="table table-hover small">
+						<thead>
+							<tr>
+								<th>&sect;</th>
+								<th>Quarter</th>
+								<th>Instructor</th>
+								<th>Schedule</th>
+								<th>Enroll</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="section in child.sections">
+								<td>{{section.section}}</td>
+								<td>{{section.quarter}}</td>
+								<td>{{section.instructor}}</td>
+								<td>{{section.schedule}}</td>
+								<td>{{section.enrollment}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</span>
+		</script>
+		<script type="text/ng-template" id="save.html">
+			<div class="modal-header">Save a Class List</div>
+			<div class="modal-body">
+				<p>Save the following string and paste it into the load box to recover your class list later:</p>
+				<pre>{{saveString}}</pre>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" ng-click="$close()">Hokay!</button>
+			</div>
+		</script>
+		<script type="text/ng-template" id="load.html">
+			<div class="modal-header">Load a Class List</div>
+			<div class="modal-body">
+				<p>Enter the save string below:</p>
+				<input type="text" class="form-control" ng-model="data.str"/>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success" ng-click="load()">Import, please!</button>
+				<button class="btn btn-default" ng-click="$close()">nvm</button>
+			</div>
+		</script>
+		<footer>
+			<div class="container">
+				<div class="text-center text-muted">
+					<p>DISCLAIMER: This is intended to be a helpful tool, not a replacement for intelligence. Manually verify that you've completed your requirements every so often before you graduate.</p>
+					<p>Field of study missing? That's because I couldn't understand its catalog listing (read: I didn't feel like reading through it).</p>
+					<p>Found a mistake? Have a suggestion? Giving away free cows? <a href="mailto:kdwang@uchicago.edu">Let me know!</a></p>
+					<p>Written by <a href="http://kevmo314.com/">Kevin Wang</a>, donate: 15AeuxTuPQpntVvq4KVGqSxZM3ry39PV6Q</p>
+				</div>
+			</div>			
+		</footer>
+	</body>
+</html>

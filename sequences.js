@@ -1,0 +1,19 @@
+var sequenceGroups = {
+	'Calc 130\'s':['MATH 13100','MATH 13200','MATH 13300'],
+	'Calc 150\'s':['MATH 15100','MATH 15200','MATH 15300'],
+	'Calc 160\'s':['MATH 16100','MATH 16200','MATH 16300'],
+	'Analysis':['MATH 20300','MATH 20400','MATH 20500'],
+	'Honors Analysis':['MATH 20700','MATH 20800','MATH 20900'],
+	'Physics 130\'s':['PHYS 13100','PHYS 13200','PHYS 13300'],
+	'Physics 140\'s':['PHYS 14100','PHYS 14200','PHYS 14300'],
+	'Gen Chem':['CHEM 11100','CHEM 11200','CHEM 11300'],
+	'Honors Gen Chem':['CHEM 12100','CHEM 12200','CHEM 12300'],
+	'Orgo':['CHEM 22000','CHEM 22100','CHEM 22200'],
+	'Honors Orgo':['CHEM 23000','CHEM 23100','CHEM 23200'],
+	'Econ 200\'s':['ECON 20000','ECON 20100','ECON 20200','ECON 20300'],
+	'Algebra':['MATH 25400','MATH 25500','MATH 25600'],
+	'Honors Algebra':['MATH 25700','MATH 25800','MATH 25900'],
+	'Comp Sci 120\'s':['CMSC 12100','CMSC 12200', '12300'],
+	'Comp Sci 150\'s':['CMSC 15100','CMSC 15200'],
+	'Comp Sci 160\'s':['CMSC 16100','CMSC 16200']
+};
