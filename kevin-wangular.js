@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ui.bootstrap', 'base64']);
+var app = angular.module('app', ['ui.bootstrap', 'base64', 'once']);
 app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $modal) {
 	$scope.departments = {};
 	$scope.classes = classes.sort();

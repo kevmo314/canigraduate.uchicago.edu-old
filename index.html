@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"/>
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script>
 		<script src="ui-bootstrap-tpls-0.10.0.min.js"></script>
+		<script src="once.js"></script>
 		<script src="angular-base64.min.js"></script>
 		<script src="classes.js"></script>
 		<script src="requirements.js"></script>
@@ -99,7 +100,7 @@
 			</form>
 			</div>
 			<h2>Common Sequences</h2>
-			<div class="btn btn-primary pointer sequence" ng-repeat="(title, grouping) in sequences" ng-click="toggleSequence(grouping)" ng-class="{'active':hasSequence(grouping)}">{{title}}</div>
+			<div class="btn btn-primary pointer sequence" ng-repeat="(title, grouping) in sequences" ng-click="toggleSequence(grouping)" ng-class="{'active':hasSequence(grouping)}" once-text="title"></div>
 			</div>
 			<div class="col-md-6">
 			<h2>Departments</h2>
@@ -107,11 +108,11 @@
 				<accordion-group ng-repeat="(key, val) in requirements">
 					<accordion-heading>
 					<div class="row pointer">
-						<div class="col-xs-9">{{key}}</div>
+						<div class="col-xs-9" once-text="key"></div>
 						<div class="col-xs-3 text-right"><span class="label label-default" ng-hide="val.base == val.total">{{val.total - val.base}} classes</span><span class="label label-success" ng-show="val.base == val.total">Finished!</span></div>
 					</div>
 					</accordion-heading>
-					{{val.notes}}
+					<span once-text="val.notes"></span>
 					<h3>Requirements <small ng-show="val.base == val.total" ng-click="isOpen=!isOpen" class="pointer">(click to toggle)</small></h3>
 					<ul class="list-group" collapse="!isOpen && (val.base == val.total)">
 						<li class="list-group-item" ng-repeat="child in val.classes" ng-include="'requirements.html'"></li>
@@ -125,17 +126,17 @@
 			<strong ng-click="isOpen=!isOpen">
 				<span ng-show="!child.complete">
 					<span ng-show="child.require == child.classes.length">All</span>
-					<span ng-hide="child.require==child.classes.length">{{child.require}}</span>
+					<span ng-hide="child.require==child.classes.length" once-text="child.require"></span>
 					of the following:</span>
 				<span ng-show="child.complete" class="pointer text-success">
 					<span ng-show="child-require==child.classes.length">All</span>
-					<span ng-hide="child-require==child.classes.length">{{child.require}}</span>
+					<span ng-hide="child-require==child.classes.length" once-text="child.require"></span>
 					required class<span ng-show="child.require > 1">es</span> finished <span class="text-muted">(click to toggle)</span></span>
 			</strong>
 				<a class="pull-right pointer" ng-click="forceIgnore(child)" ng-show="!child.complete || child.force">
 					<i class="glyphicon glyphicon-volume-off" ng-show="!child.force" tooltip="Ignore"></i><i class="glyphicon glyphicon-volume-up" ng-show="child.force" tooltip="Unignore"></i>
 				</a>
-			<small class="text-muted">{{child.notes}}</small>
+			<small class="text-muted" once-text="child.notes"></small>
 			<ul class="list-group" collapse="!isOpen && (child.base == child.total)">
 				<li class="list-group-item" ng-repeat="child in child.classes track by $index" ng-include="'requirements.html'"></li>
 			</ul>
@@ -145,14 +146,16 @@
 					<span ng-click="showDetails=!showDetails" ng-class="{'pointer':child.classes.length == 10}">
 						<i class="glyphicon glyphicon-ok" ng-show="child.complete"></i>
 						<i class="glyphicon glyphicon-book" ng-hide="child.complete"></i>
-						{{child.classes | fill}} {{getName(child.classes)}} <small class="text-muted" ng-if="child.complete && child.classes.length < 10">{{child.userClass}}</small>
+						<span once-text="child.classes | fill"></span>
+						<span once-text="getName(child.classes)"></span>
+						<small class="text-muted" ng-if="child.complete && child.classes.length < 10" ng-bind="child.userClass"></small>
 					</span>
 					<a class="pull-right pointer" ng-click="forceIgnore(child)" ng-show="!child.complete || child.force">
 						<i class="glyphicon glyphicon-volume-off" ng-show="!child.force" tooltip="Ignore"></i><i class="glyphicon glyphicon-volume-up" ng-show="child.force" tooltip="Unignore"></i>
 					</a>
 				</div>
 				<div class="text-info small" ng-if="showDetails && child.classes.length == 10" ng-init="getDescription(child)">
-					<span>{{child.description}}</span>
+					<span ng-bind="child.description"></span>
 					<span class="text-muted" ng-if="child.notes">Notes: {{child.notes}}</span>
 					<table ng-if="child.sections" class="table table-hover small">
 						<thead>
@@ -166,11 +169,11 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="section in child.sections">
-								<td>{{section.section}}</td>
-								<td>{{section.quarter}}</td>
-								<td>{{section.instructor}}</td>
-								<td>{{section.schedule}}</td>
-								<td>{{section.enrollment}}</td>
+								<td once-text="section.section"></td>
+								<td once-text="section.quarter"></td>
+								<td once-text="section.instructor"></td>
+								<td once-text="section.schedule"></td>
+								<td once-text="section.enrollment"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -181,7 +184,7 @@
 			<div class="modal-header">Save a Class List</div>
 			<div class="modal-body">
 				<p>Save the following string and paste it into the load box to recover your class list later:</p>
-				<pre>{{saveString}}</pre>
+				<pre ng-bind="saveString"></pre>
 			</div>
 			<div class="modal-footer">
 				<button class="btn btn-primary" ng-click="$close()">Hokay!</button>
