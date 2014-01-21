@@ -50,14 +50,14 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 		if(name.length != 10) {
 			return "Elective";
 		}
-		var index = hasClass(name, $scope.classes);
+		var index = $scope.classes.prefixBinarySearch(name);
 		return (index == -1 ? "" : $scope.classes[index].substring($scope.classes[index].indexOf(' :: ') + 4));
 	};
 	$scope.isLeaf = function(e) {
 		return typeof e.classes == 'string';
 	};
 	$scope.hasClass = function(child) {
-		return hasClass(child, $scope.userClasses) != -1;
+		return $scope.userClasses.prefixBinarySearch(child) != -1;
 	};
 	$scope.load = function() {
 		$modal.open({
@@ -167,22 +167,13 @@ app.filter('fill', function() {
 		return input;
 	};
 });
-function hasClass(name, classes) {
-	return classes.prefixBinarySearch(name);
-/*	for(var i = 0; i < classes.length; i++) {
-		if(classes[i].indexOf(name) == 0) {
-			return i;
-		}
-	}
-	return -1;*/
-}
 // I tried doing this in angular and it didn't work well :(
 function evaluate(taken) {
 	var userClasses;
 	function evaluateChild(node) {
 		if(node.classes) {
 			if(typeof node.classes == 'string') {
-				var has = hasClass(node.classes, userClasses);
+				var has = userClasses.prefixBinarySearch(node.classes);
 				if(has != -1) {
 					node.userClass = userClasses.splice(has, 1)[0];
 				}
@@ -216,9 +207,9 @@ function evaluate(taken) {
 	}
 	for(var major in requirements) {
 		userClasses = angular.copy(taken);
-		var complete = true;
 		requirements[major].total = 0;
 		requirements[major].base = 0;
+		var complete = true;
 		for(var i = 0; i < requirements[major].classes.length; i++) {
 			var result = evaluateChild(requirements[major].classes[i]);
 			complete = complete && (result[0] == result[1]);
