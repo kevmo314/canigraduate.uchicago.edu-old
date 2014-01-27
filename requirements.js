@@ -411,6 +411,17 @@ var requirements = {
 			'PBPL 26200','PBPL 26300','PBPL 29800'
 		]
 	},
+	'Sociology':{
+		classes:[
+			'SOCI 20002',
+			'SOCI 20005',
+			{require:1, classes:['SOCI 20001', 'SOCI 20111', 'SOCI 20140']},
+			'SOCI 20004',
+			'SOCI ','SOCI ','SOCI ','SOCI ',
+			{require:3, classes:['SOCI ','SOCI ','SOCI '],notes:'Three approved courses in sociology or related fields (one may be a reading and research course)'},
+			'SOCI 29998'
+		]
+	},
 	'Statistics BA':{
 		classes:[
 			angular.copy(SEQUENCES.MATH3Q130),
