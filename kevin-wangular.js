@@ -87,7 +87,7 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 				$modalScope.message = "";
 				$modalScope.load = function() {
 					if($modalScope.data.cnet != null) {
-						$modalScope.message = "Querying... (this may take a while)";
+						$modalScope.message = "Querying... (may take a while, usually ~15s)";
 						$http.post('/superimport.php', $modalScope.data).success(function(response) {
 							var group = response.split('|');
 							if(group.length == 1 && group[0] == '') {
