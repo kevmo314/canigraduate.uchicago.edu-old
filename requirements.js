@@ -180,21 +180,21 @@ var requirements = {
 		],
 		notes:'This major has the most ridiculous dependency structure...'
 	},
-	'Computer Science BA':{
+	'Computer Science':{
 		classes:[
 			{require:1, classes:[
 				angular.copy(SEQUENCES.PHYS2Q120),
 				angular.copy(SEQUENCES.CHEM2Q100)
 			]},
-			'MATH 13100', 'MATH 13200',
+			angular.copy(SEQUENCES.MATH2Q130),
 			angular.copy(SEQUENCES.CMSC2Q150),
-			'CMSC 15300', 'CMSC 15400',
+			'CMSC 15400',
 			{require:2, classes:[
 				'CMSC 22100','CMSC 22200','CMSC 22610','CMSC 23000','CMSC 23300',
 				'CMSC 23400','CMSC 23500','CMSC 23700','CMSC 23710']},
 			'CMSC 27100','CMSC 27200',
 			{require:1, classes:['CMSC 28000','CMSC 28100']},
-			{require:3, classes:['CMSC 2','CMSC 2','CMSC 2']}
+			{require:4, classes:['CMSC 2','CMSC 2','CMSC 2', 'CMSC 2']}
 		],
 		notes:'Also requires two courses from an approved sequence. The BS requires three more courses in an approved program in a related field.'
 	},

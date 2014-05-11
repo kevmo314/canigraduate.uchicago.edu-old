@@ -173,8 +173,7 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 					['C', data[4]],
 					['C-', data[3]],
 					['D+', data[2]],
-					['D', data[1]],
-					['D-', data[0]]
+					['D', data[1]]
 				]), {title:'Grade Distribution'});
 				
 			} else {

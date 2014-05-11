@@ -86,12 +86,11 @@ for($i = 0; $i < count($matches2[1]); $i++) {
 		array_push($out, $matches2[1][$i]);
 		continue;
 	}
-        if(!($grade[0] == 'A' || $grade[0] == 'B' || $grade[0] == 'C' || $grade[0] == 'D')) {
-   		continue;
-	}
 	if(checkSignature($idmatch[1], $signature)) {
-		array_push($new_vertices, $signature);
-		storeGrade($signature, $grade);
+        	if($grade[0] == 'A' || $grade[0] == 'B' || $grade[0] == 'C' || $grade[0] == 'D' || $grade[0] == 'P') {
+			array_push($new_vertices, $signature);
+			storeGrade($signature, $grade);
+		}
 	}
 	array_push($out, $matches2[1][$i]);
 }
