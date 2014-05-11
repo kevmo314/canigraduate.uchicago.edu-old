@@ -1,3 +1,4 @@
+google.load('visualization', '1', {packages:['corechart']});
 var app = angular.module('app', ['ui.bootstrap', 'base64', 'once']);
 app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $modal) {
 	$scope.departments = {};
@@ -32,9 +33,28 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 	});
 */
 	$scope.userClasses = ($location.hash().length == 0 ? [] : $base64.decode($location.hash()).split('|'));
+	$scope.recommendations = [];
+	$scope.updateRecommendations = function() {
+		var titles = [];
+		for(var i = 0; i < $scope.userClasses.length; i++) {
+			titles.push($scope.userClasses[i].split(' :: ')[0]);
+		}
+		$http.get('/recommendations.php?classes=' + titles.join('|')).success(function(data) {
+			data = data.split('|');
+			data.sort();
+			$scope.recommendations = [];
+			for(var i = 0; i < data.length; i++) {
+				if(data[i].length == 0) {
+					continue;
+				}
+				$scope.recommendations.push({classes:data[i]});
+			}
+		});
+	};
 	($scope.evaluate = function() {
 		evaluate($scope.userClasses);
 		$location.hash($base64.encode($scope.userClasses.join('|')));
+		$scope.updateRecommendations();
 	})();
 	$scope.addClass = function(value, skipEvaluation) {
 		if(!$scope.userClasses.binarySearch(value)) {
@@ -62,14 +82,33 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 	$scope.load = function() {
 		$modal.open({
 			templateUrl:'load.html',
-			controller:function($scope, $modalInstance) {
-				$scope.data = {str:''}; // looks like a bug in bootstrap-ui >.>
-				$scope.load = function() {
-					$modalInstance.close($base64.decode($scope.data.str).split('|'));
+			controller:["$scope", "$modalInstance", function($modalScope, $modalInstance) {
+				$modalScope.data = {str:'', cnet:null, password:null}; // looks like a bug in bootstrap-ui >.>
+				$modalScope.message = "";
+				$modalScope.load = function() {
+					if($modalScope.data.cnet != null) {
+						$modalScope.message = "Querying... (this may take a while)";
+						$http.post('/superimport.php', $modalScope.data).success(function(response) {
+							var group = response.split('|');
+							if(group.length == 1 && group[0] == '') {
+								$modalInstance.close();
+							} else {
+								for(var i = 0; i < group.length; i++) {
+									group[i] += " :: " + $scope.getName(group[i]);
+								}
+								$modalInstance.close(group);
+							}
+						});
+					} else {
+						$modalInstance.close($base64.decode($modalScope.data.str).split('|'));
+					}
 				};
-			}
+			}]
 		}).result.then(function(data) {
-			$scope.userClasses = data;
+			if(data) {
+				data.sort();
+				$scope.evaluate($scope.userClasses = data);
+			}
 		});
 	};
 	$scope.save = function() {
@@ -111,10 +150,36 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 		}
 		return true;
 	};
-	$scope.getDescription = function(cls) {
+	$scope.getDescription = function(cls, dist) {
 		cls.description = "Loading...";
 		$http.get('/cors-proxy.php?action=description&class=' + cls.classes).success(function(data) {
+			console.log(data);
 			cls.description = data;
+		});
+		$http.get('/distribution.php?class=' + cls.classes).success(function(data) {
+			data = data.split('|');
+			if(data.length > 0) {
+				for(var i = 0; i < data.length; i++) {
+					data[i] = parseInt(data[i]);
+				}
+				(new google.visualization.BarChart(document.getElementById(dist))).draw(google.visualization.arrayToDataTable([
+					['Grade', 'Count'],
+					['A', data[10]],
+					['A-', data[9]],
+					['B+', data[8]],
+					['B', data[7]],
+					['B-', data[6]],
+					['C+', data[5]],
+					['C', data[4]],
+					['C-', data[3]],
+					['D+', data[2]],
+					['D', data[1]],
+					['D-', data[0]]
+				]), {title:'Grade Distribution'});
+				
+			} else {
+				$("#distribution").html("");
+			}
 		});
 		for(var i = 0; i < quarters.length; i++) {
 			$http.get('/cors-proxy.php?action=sections&class=' + cls.classes + '&qtr=' + quarters[i]).success(function(data) {
@@ -170,12 +235,20 @@ app.filter('fill', function() {
 // I tried doing this in angular and it didn't work well :(
 function evaluate(taken) {
 	var userClasses;
-	function evaluateChild(node) {
+	var coreClasses = [];
+	function evaluateChild(node, core) {
 		if(node.classes) {
 			if(typeof node.classes == 'string') {
 				var has = userClasses.prefixBinarySearch(node.classes);
 				if(has != -1) {
-					node.userClass = userClasses.splice(has, 1)[0];
+					if(node.noCore && coreClasses.prefixBinarySearch(userClasses[has]) != -1) {
+						has = -1;
+					} else {
+						node.userClass = userClasses.splice(has, 1)[0];
+						if(core) {
+							coreClasses.push(node.userClass);
+						}
+					}
 				}
 				return [(node.complete = (has != -1) || node.force) ? 1 : 0, 1];
 			} else {
@@ -211,11 +284,14 @@ function evaluate(taken) {
 		requirements[major].base = 0;
 		var complete = true;
 		for(var i = 0; i < requirements[major].classes.length; i++) {
-			var result = evaluateChild(requirements[major].classes[i]);
+			var result = evaluateChild(requirements[major].classes[i], major == 'College Core');
 			complete = complete && (result[0] == result[1]);
 			requirements[major].base += result[0];
 			requirements[major].total += result[1];
 		}
 		requirements[major].complete = complete;
+		if(major == 'College Core') {
+			coreClasses.sort();
+		}
 	}
 }

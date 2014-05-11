@@ -59,6 +59,24 @@ var GROUPS = {
 	}
 };
 var requirements = {
+	'College Core':{
+		classes:[
+			// Humanities requirement
+			{require:2, classes:[
+				'HUMA 1','HUMA 1','HUMA 1'
+			]},
+			// Social Sciences requirement
+			{require:3, classes:['SOSC 1','SOSC 1','SOSC 1']},
+			// Physical Sciences requirement
+			{require:1, classes:[
+				angular.copy(SEQUENCES.CHEM2Q100),
+				angular.copy(SEQUENCES.PHYS2Q120),
+				{require:2, classes:['PHSC 1','PHSC 1']}
+			]},
+			
+		],
+		notes:'Section currently incomplete.'
+	},
 	'Anthropology':{
 		classes:[
 			{require:3, classes:['ANTH 211', 'ANTH 212', 'ANTH 213', 'ANTH 214', 'ANTH 216']},

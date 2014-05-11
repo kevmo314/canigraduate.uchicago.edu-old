@@ -15,5 +15,17 @@ var sequenceGroups = {
 	'Honors Algebra':['MATH 25700','MATH 25800','MATH 25900'],
 	'Comp Sci 120\'s':['CMSC 12100','CMSC 12200', '12300'],
 	'Comp Sci 150\'s':['CMSC 15100','CMSC 15200'],
-	'Comp Sci 160\'s':['CMSC 16100','CMSC 16200']
+	'Comp Sci 160\'s':['CMSC 16100','CMSC 16200'],
+	'Readings in World Lit':['HUMA 11000','HUMA 11100','HUMA 11200'],
+	'Phil Per':['HUMA 11500','HUMA 11600','HUMA 11700'],
+	'Greek Thought and Lit':['HUMA 12000','HUMA 12100','HUMA 12200'],
+	'HBC':['HUMA 12300','HUMA 12400','HUMA 12500'],
+	'Intro to Hum':['HUMA 13500','HUMA 13600','HUMA 13700'],
+	'Media Aesthetics':['HUMA 16000','HUMA 16100','HUMA 16200'],
+	'Language and the Human':['HUMA 17000','HUMA 17100','HUMA 17200'],
+	'Power':['SOSC 11100','SOSC 11200','SOSC 11300'],
+	'Self':['SOSC 12100','SOSC 12200','SOSC 12300'],
+	'Social Science Inquiry':['SOSC 13100','SOSC 13200','SOSC 13300'],
+	'Mind':['SOSC 14100','SOSC 14200','SOSC 14300'],
+	'Classics':['SOSC 15100','SOSC 15200','SOSC 15300']
 };

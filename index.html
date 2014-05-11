@@ -11,6 +11,7 @@
 		<script src="classes.js"></script>
 		<script src="requirements.js"></script>
 		<script src="sequences.js"></script>
+		<script src="//google.com/jsapi"></script>
 		<script src="kevin-wangular.js"></script>
 		<style type="text/css">
 		.pointer {
@@ -53,7 +54,7 @@
 		}
 		</style>
 	</head>
-	<body ng-controller="AirTrafficCtrl">
+	<body>
 		<header>
 			<div class="container">
 				<div class="row">
@@ -66,9 +67,12 @@
 				</div>
 			</div>
 		</header>
-		<div class="container clearfix" id="content">
+		<div class="container clearfix" id="content" ng-controller="AirTrafficCtrl">
 			<div class="row"><div class="col-md-6"><div>
 			<h2>Your Courses</h2>
+			<div class="alert alert-info" ng-if="!userClasses.length">
+				You don't have any classes added. Add them one at a time below or push the import button to import them.
+			</div>
 			<table class="table table-striped" ng-show="userClasses.length > 0">
 				<tr>
 					<th class="text-right">ID</th>
@@ -80,7 +84,7 @@
 					</td>
 					<td class="col-sm-9">
 					{{class.substring(class.indexOf(' :: ') + 4)}}
-					<i ng-click="userClasses.splice(userClasses.indexOf(class), 1)" class="pointer pull-right glyphicon glyphicon-remove"></i>
+					<i ng-click="userClasses.splice(userClasses.indexOf(class), 1);evaluate()" class="pointer pull-right glyphicon glyphicon-remove"></i>
 					</td>
 				</tr>
 			</table>
@@ -101,22 +105,59 @@
 			</div>
 			<h2>Common Sequences</h2>
 			<div class="btn btn-primary pointer sequence" ng-repeat="(title, grouping) in sequences" ng-click="toggleSequence(grouping)" ng-class="{'active':hasSequence(grouping)}" once-text="title"></div>
+			<h2>Recommended Courses</h2>
+			<div class="alert alert-info" ng-if="!recommendations.length">There's not enough information to recommend classes for you. You should add more classes above.</div>
+			<accordion>
+				<accordion-group ng-repeat="recommend in recommendations" is-open="isOpen">
+					<accordion-heading>
+						<i class="glyphicon glyphicon-book" ng-hide="child.complete"></i>
+						<span once-text="recommend.classes | fill"></span>
+						<span once-text="getName(recommend.classes)"></span>
+					</accordion-heading>
+					<div class="text-info small" ng-init="getDescription(recommend, 'recommendation-distribution')" ng-if="isOpen">
+						<span ng-bind="recommend.description"></span>
+						<div id="recommendation-distribution"></div>
+						<table ng-if="recommend.sections" class="table table-hover small">
+							<thead>
+								<tr>
+									<th>&sect;</th>
+									<th>Quarter</th>
+									<th>Instructor</th>
+									<th>Schedule</th>
+									<th>Enroll</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="section in recommend.sections">
+									<td once-text="section.section"></td>
+									<td once-text="section.quarter"></td>
+									<td once-text="section.instructor"></td>
+									<td once-text="section.schedule"></td>
+									<td once-text="section.enrollment"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</accordion-group>
+			</accordion>
 			</div>
 			<div class="col-md-6">
 			<h2>Departments</h2>
 			<accordion>
-				<accordion-group ng-repeat="(key, val) in requirements">
+				<accordion-group ng-repeat="(key, val) in requirements" is-open="accordionOpen">
 					<accordion-heading>
 					<div class="row pointer">
 						<div class="col-xs-9" once-text="key"></div>
-						<div class="col-xs-3 text-right"><span class="label label-default" ng-hide="val.base == val.total">{{val.total - val.base}} classes</span><span class="label label-success" ng-show="val.base == val.total">Finished!</span></div>
+						<div class="col-xs-3 text-right"><span class="label label-default" ng-hide="val.base == val.total">{{val.total - val.base}} class<span ng-if="val.total - val.base != 1">es</span></span><span class="label label-success" ng-show="val.base == val.total">Finished!</span></div>
 					</div>
 					</accordion-heading>
-					<span once-text="val.notes"></span>
-					<h3>Requirements <small ng-show="val.base == val.total" ng-click="isOpen=!isOpen" class="pointer">(click to toggle)</small></h3>
-					<ul class="list-group" collapse="!isOpen && (val.base == val.total)">
-						<li class="list-group-item" ng-repeat="child in val.classes" ng-include="'requirements.html'"></li>
-					</ul>
+					<div ng-if="accordionOpen">
+						<span once-text="val.notes"></span>
+						<h3>Requirements <small ng-show="val.base == val.total" ng-click="isOpen=!isOpen" class="pointer">(click to toggle)</small></h3>
+						<ul class="list-group" collapse="!isOpen && (val.base == val.total)">
+							<li class="list-group-item" ng-repeat="child in val.classes" ng-include="'requirements.html'"></li>
+						</ul>
+					</div>
 				</accordion-group>
 			</accordion>
 			</div></div>
@@ -154,8 +195,9 @@
 						<i class="glyphicon glyphicon-volume-off" ng-show="!child.force" tooltip="Ignore"></i><i class="glyphicon glyphicon-volume-up" ng-show="child.force" tooltip="Unignore"></i>
 					</a>
 				</div>
-				<div class="text-info small" ng-if="showDetails && child.classes.length == 10" ng-init="getDescription(child)">
+				<div class="text-info small" ng-if="showDetails && child.classes.length == 10" ng-init="getDescription(child, 'distribution-' + child.classes.substring(5))">
 					<span ng-bind="child.description"></span>
+					<div id="distribution-{{child.classes.substring(5)}}"></div>
 					<span class="text-muted" ng-if="child.notes">Notes: {{child.notes}}</span>
 					<table ng-if="child.sections" class="table table-hover small">
 						<thead>
@@ -193,12 +235,40 @@
 		<script type="text/ng-template" id="load.html">
 			<div class="modal-header">Load a Class List</div>
 			<div class="modal-body">
-				<p>Enter the save string below:</p>
-				<input type="text" class="form-control" ng-model="data.str"/>
+				<form role="form" class="form-horizontal">
+					<p>Enter your export data to load from the export string.</p>
+					<div class="form-group">
+						<label for="save-string" class="col-md-2 control-label">Data</label>
+						<div class="col-md-10">
+							<input type="text" id="save-string" class="form-control" ng-model="data.str"/>
+						</div>
+					</div>
+					<hr/>
+					<h3 class="text-center">OR</h3>
+					<hr/>
+					<p>Enter your CNetID and password to load from my.uchicago.edu</p>
+					<div class="form-group">
+						<label for="cnet" class="col-md-2 control-label">CNetID</label>
+						<div class="col-md-10">
+							<input type="text" id="cnet" class="form-control" ng-model="data.cnet"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="password" class="col-md-2 control-label">Password</label>
+						<div class="col-md-10">
+							<input type="password" id="password" class="form-control" ng-model="data.password"/>
+						</div>
+					</div>
+					<div class="alert alert-danger"><strong>FULL DISCLOSURE:</strong> By entering your CNetID and password, you authorize this application to log in to my.uchicago.edu as you and access your class and grade information. This information will be used for grade distribution statistics and class recommendations, but personally identifiable information <strong>is not saved</strong>. If you don't want this app to masquerade as you, click the nvm button below. If you'd like to review this app's source code, you can do so at <a href="https://github.com/kevmo314/canigraduate.uchicago.edu" target="_blank">the GitHub repo</a>.</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-success" ng-click="load()">Import, please!</button>
-				<button class="btn btn-default" ng-click="$close()">nvm</button>
+				<div class="col-md-7">
+					<progressbar ng-if="message" class="progress-striped active" type="info" value="100">{{message}}</progressbar>
+				</div>
+				<div class="col-md-5">
+					<button class="btn btn-success" ng-click="load()">Import, please!</button>
+					<button class="btn btn-default" ng-click="$close()">nvm</button>
+				</div>
 			</div>
 		</script>
 		<footer>
