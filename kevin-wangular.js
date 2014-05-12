@@ -239,6 +239,10 @@ function evaluate(taken) {
 		if(node.classes) {
 			if(typeof node.classes == 'string') {
 				var has = userClasses.prefixBinarySearch(node.classes);
+				if(node.classes.length == 6 && /2$/.test(node.classes) && has == -1) {
+					// handle special case, 3xxxx classes replace 2xxxx classes
+					has = userClasses.prefixBinarySearch(node.classes.substring(0, 5) + '3');
+				}
 				if(has != -1) {
 					if(node.noCore && coreClasses.prefixBinarySearch(userClasses[has]) != -1) {
 						has = -1;

@@ -203,7 +203,12 @@ var requirements = {
 			// General Education
 			angular.copy(SEQUENCES.MATH3Q130),
 			// Major
-			{require:4, classes:['ECON 20000', 'ECON 20100', 'ECON 20200', 'ECON 20300']},
+			{require:4, classes:[
+				{require:1, classes:['ECON 20000', 'ECON 20010']},
+				{require:1, classes:['ECON 20100', 'ECON 20110']},
+				{require:1, classes:['ECON 20200', 'ECON 20210']},
+				{require:1, classes:['ECON 20300', 'ECON 20310']}
+			]},
 			{require:1, classes:['STAT 23400', 'STAT 24400']},
 			{require:1, classes:['ECON 20900', 'ECON 21000']},
 			{require:1, classes:[
