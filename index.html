@@ -68,43 +68,46 @@
 			</div>
 		</header>
 		<div class="container clearfix" id="content" ng-controller="AirTrafficCtrl">
-			<div class="row"><div class="col-md-6"><div>
-			<h2>Your Courses</h2>
-			<div class="alert alert-info" ng-if="!userClasses.length">
-				You don't have any classes added. Add them one at a time below or push the import button to import them.
-			</div>
-			<table class="table table-striped" ng-show="userClasses.length > 0">
-				<tr>
-					<th class="text-right">ID</th>
-					<th>Title</th>
-				</tr>
-				<tr ng-repeat="class in userClasses | orderBy:'toString()'">
-					<td class="col-sm-3 text-right">
-						{{class.substring(class, class.indexOf(' :: '))}}
-					</td>
-					<td class="col-sm-9">
-					{{class.substring(class.indexOf(' :: ') + 4)}}
-					<i ng-click="userClasses.splice(userClasses.indexOf(class), 1);evaluate()" class="pointer pull-right glyphicon glyphicon-remove"></i>
-					</td>
-				</tr>
-			</table>
-			<form role="form" class="form-horizontal">
-				<div class="form-group">
-					<label class="col-sm-3 control-label" for="searchClasses">Add</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" id="searchClasses" placeholder="Math 162" ng-model="addClassValue" typeahead-wait-ms="500" typeahead-on-select="addClass($item)" typeahead="class for class in classes | filter:$viewValue | limitTo:20" typeahead-editable="false"/>
+			<div class="row">
+				<div class="col-md-6"><div>
+				<div class="row">
+					<div class="col-md-6">
+						<h2>Your Courses</h2>
+					</div>
+					<div class="col-md-6 text-right">
+						<span ng-click="load()" class="pointer btn btn-success btn-lg">Import Classes</span>
+						<span ng-click="save()" class="pointer btn btn-default btn-lg">Export</span>
 					</div>
 				</div>
-				<div class="form-group">
-					<div class="col-sm-9 col-sm-push-3 text-right">
-						<span ng-click="save()" class="pointer btn btn-success">Export</span>
-						<span ng-click="load()" class="pointer btn btn-default">Import</span>
-					</div>
+				<div class="alert alert-info" ng-if="!userClasses.length">
+					You don't have any classes added. Add them one at a time below or push the import button.
 				</div>
-			</form>
-			</div>
+				<table class="table table-striped" ng-show="userClasses.length > 0">
+					<tr>
+						<th class="text-right">ID</th>
+						<th>Title</th>
+					</tr>
+					<tr ng-repeat="class in userClasses | orderBy:'toString()'">
+						<td class="col-sm-3 text-right">
+							{{class.substring(class, class.indexOf(' :: '))}}
+						</td>
+						<td class="col-sm-9">
+							{{class.substring(class.indexOf(' :: ') + 4)}}
+						<i ng-click="userClasses.splice(userClasses.indexOf(class), 1);evaluate()" class="pointer pull-right glyphicon glyphicon-remove"></i>
+						</td>
+					</tr>
+				</table>
+				<form role="form" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="searchClasses">Add</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="searchClasses" placeholder="Math 162" ng-model="addClassValue" typeahead-wait-ms="500" typeahead-on-select="addClass($item)" typeahead="class for class in classes | filter:$viewValue | limitTo:20" typeahead-editable="false"/>
+						</div>
+					</div>
+				</form>
+				</div>
 			<h2>Common Sequences</h2>
-			<div class="btn btn-primary pointer sequence" ng-repeat="(title, grouping) in sequences" ng-click="toggleSequence(grouping)" ng-class="{'active':hasSequence(grouping)}" once-text="title"></div>
+			<div class="btn btn-xs btn-primary pointer sequence" ng-repeat="(title, grouping) in sequences" ng-click="toggleSequence(grouping)" ng-class="{'active':hasSequence(grouping)}" once-text="title"></div>
 			<h2>Recommended Courses</h2>
 			<div class="alert alert-info" ng-if="!recommendations.length">There's not enough information to recommend classes for you. You should add more classes above.</div>
 			<accordion>
@@ -225,7 +228,7 @@
 			</span>
 		</script>
 		<script type="text/ng-template" id="save.html">
-			<div class="modal-header">Save a Class List</div>
+			<div class="modal-header"><h4>Save a Class List</h4></div>
 			<div class="modal-body">
 				<p>Save the following string and paste it into the load box to recover your class list later:</p>
 				<pre ng-bind="saveString"></pre>
@@ -235,7 +238,7 @@
 			</div>
 		</script>
 		<script type="text/ng-template" id="load.html">
-			<div class="modal-header">Load a Class List</div>
+			<div class="modal-header"><h4>Load a Class List</h4></div>
 			<div class="modal-body">
 				<form role="form" class="form-horizontal">
 					<p>Enter your export data to load from the export string.</p>
@@ -278,6 +281,7 @@
 				<div class="text-center text-muted">
 					<p>DISCLAIMER: This is intended to be a helpful tool, not a replacement for intelligence. Manually verify that you've completed your requirements every so often before you graduate.</p>
 					<p>Field of study missing? That's because I couldn't understand its catalog listing (read: I didn't feel like reading through it).</p>
+					<p>View the source code on GitHub and make a pull request to add it!</p>
 					<p>Found a mistake? Have a suggestion? Giving away free cows? <a href="mailto:kdwang@uchicago.edu">Let me know!</a></p>
 					<p>Written by <a href="http://kevmo314.com/">Kevin Wang</a>, <a href="https://github.com/kevmo314/canigraduate.uchicago.edu">GitHub</a>, donate: 15AeuxTuPQpntVvq4KVGqSxZM3ry39PV6Q</p>
 				</div>
