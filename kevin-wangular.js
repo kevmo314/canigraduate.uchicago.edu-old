@@ -153,12 +153,11 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 	$scope.getDescription = function(cls, dist) {
 		cls.description = "Loading...";
 		$http.get('/cors-proxy.php?action=description&class=' + cls.classes).success(function(data) {
-			console.log(data);
 			cls.description = data;
 		});
 		$http.get('/distribution.php?class=' + cls.classes).success(function(data) {
 			data = data.split('|');
-			if(data.length > 0) {
+			if(data && data.length > 1) {
 				for(var i = 0; i < data.length; i++) {
 					data[i] = parseInt(data[i]);
 				}
@@ -176,8 +175,6 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $base64, $mo
 					['D', data[1]]
 				]), {title:'Grade Distribution'});
 				
-			} else {
-				$("#distribution").html("");
 			}
 		});
 		for(var i = 0; i < quarters.length; i++) {
