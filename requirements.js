@@ -416,10 +416,8 @@ var requirements = {
 	
 	'Psychology':{
 		classes:[
-			{require:1, classes:[
-				{require:2, classes:['PSYC 20100','PSYC 20200']},
-				{require:2, classes:['STAT 22000','PSYC 20200']}
-			]},
+			{require:1, classes:['PSYC 20100','STAT 22000']},
+			'PSYC 20200',
 			{require:4, classes:['PSYC 20300','PSYC 20400','PSYC 20500','PSYC 20600','PSYC 20700']},
 			'PSYC ', 'PSYC ','PSYC ','PSYC ','PSYC ','PSYC '
 		],
