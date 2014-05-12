@@ -198,14 +198,6 @@ var requirements = {
 		],
 		notes:'Also requires two courses from an approved sequence. The BS requires three more courses in an approved program in a related field.'
 	},
-	'English and Creative Writing Minor':{
-		classes:[
-			{require:1, classes:['CRWR 2']},
-			{require:1, classes:['CRWR ']},
-			{require:4, classes:['ENGL ','ENGL ','ENGL ','ENGL ','CRWR ','CRWR ','CRWR ','CRWR ']},
-		],
-		notes:'Also requires a portfolio of student work.'
-	},
 	'Economics':{
 		classes:[
 			// General Education
@@ -227,11 +219,18 @@ var requirements = {
 			{require:4, classes:['ECON 2', 'ECON 2', 'ECON 2', 'ECON 2']}
 		]
 	},
+	'English and Creative Writing Minor':{
+		classes:[
+			{require:1, classes:['CRWR 2']},
+			{require:1, classes:['CRWR ']},
+			{require:4, classes:['ENGL ','ENGL ','ENGL ','ENGL ','CRWR ','CRWR ','CRWR ','CRWR ']},
+		],
+		notes:'Also requires a portfolio of student work.'
+	},
 	'English Language and Literature':{
 		classes:[
-			{require:1, classes:['ENGL 10400', 'ENGL 10600', 'ENGL 10600', 'ENGL 10706','ENGL 10800']},
-			{require:1, classes:['ENGL 10400', 'ENGL 10600', 'ENGL 10600', 'ENGL 10706','ENGL 10800']},
-			{require:11, classes:['ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','CRWR ','CRWR ','CRWR ','CRWR ','CRWR ','CRWR ','CRWR ']}
+			{require:1, classes:['ENGL 10400', 'ENGL 10600', 'ENGL 10706','ENGL 10800']},
+			{require:10, classes:['ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','ENGL ','CRWR ','CRWR ','CRWR ','CRWR ','CRWR ','CRWR ','CRWR ']}
 		],
 		notes:'Please also account for language and distribution requirements on the college catalog. Those are really annoying to suss out.'
 	},
