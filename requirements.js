@@ -376,8 +376,8 @@ var requirements = {
 			'PHIL 20100',
 			'PHIL ','PHIL ','PHIL ','PHIL ',
 			{require:1, classes:[
-				{require:2, notes:'One from field A and two from field B'},
-				{require:2, notes:'Two from field A and one from field B'}
+				{require:3, classes:['PHIL ','PHIL ', 'PHIL '], notes:'One from field A and two from field B'},
+				{require:3, classes:['PHIL ','PHIL ', 'PHIL '], notes:'Two from field A and one from field B'}
 			]}
 		]
 	},
