@@ -1,0 +1,44 @@
+<div class="modal-header">
+	<h4>Textbooks for {{data.quarter}} {{data.id}} &sect;{{data.section}} <small ng-bind="::name"></small></h4>
+</div>
+<div class="modal-body">
+	<alert type="info" ng-if="!textbooks">Loading...</alert>
+	<alert type="info" ng-if="textbooks && !textbooks.length">There are no textbooks registered for this course at the bookstore. Try again later, or contact your instructor directly.</alert>
+	<div ng-repeat="textbook in textbooks" class="media">
+		<div class="pull-left"><img class="media-object" ng-src="http://img2.imagesbn.com/p/{{textbook.isbn}}_s260x420.jpg" width="100"/></div>
+		<div class="media-body">
+			<h4><span ng-bind="::textbook.title"></span> <small ng-bind="::textbook.author"></small></h4>
+			<span class="text-muted"><span ng-if="::textbook.edition">Edition: <span ng-bind="::textbook.edition"></span> | </span>ISBN: <span ng-bind="::textbook.isbn"></span></span> <span ng-if="textbook.required" class="label label-danger">REQUIRED</span>
+			<table class="table table-condensed">
+				<thead>
+				<tr><th class="col-xs-6"></th><th class="col-xs-3 text-center">New</th><th class="col-xs-3 text-center">Used</th></tr>
+				</thead>
+				<tr ng-if="textbook.price.amazon">
+					<td class="text-right"><a ng-href="http://www.amazon.com/dp/{{toISBN10(textbook.isbn)}}?tag=kevmo314-20" target="_blank">Amazon.com</a></td>
+					<td ng-if="::textbook.price.amazon.new" class="text-center">
+						<a ng-href="http://camelcamelcamel.com//product/{{toISBN10(textbook.isbn)}}" tooltip="View historical pricing" ng-bind="::textbook.price.amazon.new" target="_blank"></a>
+					</td>
+					<td ng-if="::!textbook.price.amazon.new" class="text-center">N/A</td>
+					<td ng-if="::textbook.price.amazon.used" class="text-center">
+						<a ng-href="http://camelcamelcamel.com//product/{{toISBN10(textbook.isbn)}}" tooltip="View historical pricing" ng-bind="::textbook.price.amazon.used" target="_blank"></a>
+					</td>
+					<td ng-if="::!textbook.price.amazon.used" class="text-center">N/A</td>
+				</tr>
+				<tr ng-if="textbook.price.coop">
+					<td class="text-right"><a ng-href="http://www.semcoop.com/book/v/{{textbook.isbn}}" target="_blank">Seminary Co-op</a></td>
+					<td ng-bind="::textbook.price.coop.new || 'N/A'" class="text-center"></td>
+					<td ng-bind="::textbook.price.coop.used || 'N/A'" class="text-center"></td>
+				</tr>
+				<tr ng-if="textbook.price.bn">
+					<td class="text-right"><a ng-href="http:{{textbook.link}}" target="_blank">UChicago Bookstore Online</a></td>
+					<td ng-bind="::textbook.price.bn.new || 'N/A'" class="text-center"></td>
+					<td ng-bind="::textbook.price.bn.used || 'N/A'" class="text-center"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="text-center text-muted">Data from UChicago Bookstore and Seminary Co-op</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="$dismiss()" type="button">Okay, thanks!</button>
+</div>

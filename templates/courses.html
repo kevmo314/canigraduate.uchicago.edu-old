@@ -1,0 +1,44 @@
+<div id="tutorial-courses">
+<h2>Your Courses <small ng-if="user.classes.length">
+	<span ng-bind="user.classes.length - user.credits.length"></span><span class="text-info" ng-if="user.credits.length"> + <span ng-bind="user.credits.length" tooltip="Accreditations"></span></span>
+</small></h2>
+<alert type="info" ng-if="!user.classes.length">You don't have any classes added. Add them one at a time below or push the import button.</alert>
+<table class="table table-condensed table-striped" ng-show="user.classes.length > 0">
+	<thead><tr>
+		<th class="text-right">Class</th>
+		<th>Title</th>
+		<th class="text-right"><span tooltip="The number of majors this class contributes towards" tooltip-placement="left">#</span></th>
+	</tr></thead>
+	<tr ng-repeat="class in user.classes | orderBy:'toString()'" ng-mouseenter="showDelete=true" ng-mouseleave="showDelete=false" class="pointer" ng-class="{'info':user.isCredited(class)}">
+		<td class="col-sm-3 text-right">
+			<div class="row">
+				<div class="col-xs-3" ng-class="{'text-muted':!showDelete}">
+					<a ng-if="evaluations.data.binarySearch(class) >= 0" ng-click="evaluations.showDialog(class)"><i class="fa fa-pencil" tooltip="Be a class critic! Write a review!" tooltip-append-to-body="true" tooltip-placement="right"></i></a>
+				</div>
+				<div class="col-xs-9" ng-click="interface.findClass(class)"><span ng-bind="::class"></span></div>
+			</div>
+		</td>
+		<td class="col-sm-8" ng-click="interface.findClass(class)">
+			<span ng-bind="::getName(class)"></span>
+			<small class="text-muted" ng-if="isCrosslisted(class)" tooltip="Crosslistings" tooltip-placement="left"><br/><em ng-bind="getCrosslists(class).join(', ')"></em></small>
+		</td>
+		<td class="col-sm-1 text-right">
+			<span ng-if="!showDelete" class="text-muted" ng-bind="classWeights[class].length"></span>
+			<a ng-if="showDelete" ng-click="user.toggleCredited(class)"><i class="fa fa-university" tooltip="Toggle accreditation"></i></a>
+			<a ng-if="showDelete" ng-click="user.remove(class)"><i class="fa fa-times" tooltip="Remove"></i></a>
+		</td>
+	</tr>
+</table>
+</div>
+<form role="form" class="form-horizontal" id="tutorial-courses-add">
+	<div class="form-group">
+		<label class="col-sm-3 control-label" for="searchClasses">Add</label>
+		<div class="col-sm-9">
+			<input type="text" class="form-control" id="searchClasses" placeholder="Math 162" ng-model="addClassValue" typeahead-wait-ms="200" typeahead-on-select="user.add($item);addClassValue=''" typeahead="class as class+' :: '+getName(class) for class in searchClasses($viewValue, 20)" typeahead-editable="false"/>
+		</div>
+	</div>
+</form>
+<div id="tutorial-common-sequences">
+	<h2>Common Sequences</h2>
+	<div class="btn btn-xs btn-primary pointer sequence" ng-repeat="(title, sequence) in sequences" ng-click="sequence.toggle()" ng-class="{'active btn-success':sequence.isActive()}" ng-bind="::title"></div>
+</div>

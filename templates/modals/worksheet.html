@@ -1,0 +1,85 @@
+<div class="modal-header">
+	<h3>Degree Program Worksheet <small ng-bind="::data.heading"></small></h3>
+</div>
+<div class="modal-body">
+	<alert type="warning">This worksheet might not accurately represent the list of classes used towards your major. Manually verify that it makes sense with the college catalog listing before printing.</alert>
+	<div class="row">
+		<div class="col-sm-3">
+			<label>Social Sciences</label>
+			<dpw-field target="data.sosc[n]" search="search" ng-repeat="n in [0,1,2]"></dpw-field>
+		</div>
+		<div class="col-sm-3">
+			<label>Art/Music/Drama</label>
+			<dpw-field target="data.art[n]" search="search" ng-repeat="n in [0,1]"></dpw-field>
+		</div>
+		<div class="col-sm-3">
+			<label>Humanities</label>
+			<dpw-field target="data.hum[n]" search="search" ng-repeat="n in [0,1,2]"></dpw-field>
+		</div>
+		<div class="col-sm-3">
+			<label>Civilizations</label>
+			<dpw-field target="data.civ[n]" search="search" ng-repeat="n in [0,1,2]"></dpw-field>
+		</div>
+	</div>
+	<br/>
+	<div class="row">
+		<div class="col-sm-3">
+			<label>Mathematics</label>
+			<dpw-field target="data.math[n]" search="search" ng-repeat="n in [0,1]"></dpw-field>
+		</div>
+		<div class="col-sm-3">
+			<label>Physical Sci</label>
+			<dpw-field target="data.phys[n]" search="search" ng-repeat="n in [0,1,2]"></dpw-field>
+		</div>
+		<div class="col-sm-3">
+			<label>Biological Sci</label>
+			<dpw-field target="data.bio[n]" search="search" ng-repeat="n in [0,1,2]"></dpw-field>
+		</div>
+	</div>
+	<hr/>
+	<div class="row">
+		<div class="col-sm-12">
+			<label>Major [9-19 classes]</label>
+		</div>
+	</div>
+	<div class="clearfix">
+		<div class="pull-left" style="width:20%" ng-repeat="k in [0,1,2,3]">
+			<dpw-field target="data.major[4*k+n]" search="search" ng-repeat="n in [0,1,2,3]"></dpw-field>
+		</div>
+		<div class="pull-left" style="width:20%">
+			<dpw-field target="data.major[16+n]" search="search" ng-repeat="n in [0,1,2]"></dpw-field>
+		</div>
+	</div>
+	<br/>
+	<div class="row">
+		<div class="col-sm-12">
+			<label>Electives [8-18 classes]</label>
+		</div>
+	</div>
+	<div class="clearfix">
+		<div class="pull-left" style="width:20%" ng-repeat="k in [0,1,2,3]">
+			<dpw-field target="data.electives[4*k+n]" search="search" ng-repeat="n in [0,1,2,3]"></dpw-field>
+		</div>
+		<div class="pull-left" style="width:20%">
+			<dpw-field target="data.electives[16+n]" search="search" ng-repeat="n in [0,1]"></dpw-field>
+		</div>
+	</div>
+	<hr/>
+	<form class="form-horizontal">
+		<div class="form-group form-group-sm">
+			<div class="col-sm-2">
+				<label class="control-label">Language</label>
+			</div>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" ng-model="data.language" typeahead="language for language in languages | filter:$viewValue"/>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<form action="/degree.php" method="post" target="_blank">
+		<textarea json="data" name="data" class="hidden"></textarea>
+		<input type="submit" class="btn btn-success" ng-click="$close()" value="Generate!"/>
+		<a class="btn btn-default" ng-click="$dismiss()">Don't generate!</a>
+	</form>
+</div>

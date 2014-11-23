@@ -1,0 +1,5 @@
+canigraduate.db
+*.swp
+data/timeschedules/*.json
+data/timeschedules-compressed/*.json
+config.php

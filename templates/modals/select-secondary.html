@@ -1,0 +1,19 @@
+<div class="modal-header"><h4>Select an Activity for {{id}} <small ng-bind="::name"></small></h4></div>
+<table class="table">
+	<thead><tr><th>Type</th><th>Instructor</th><th>Location</th><th>Schedule</th><th>Size</th></tr></thead>
+	<tbody ng-repeat="(sid, secondary) in secondaries" ng-click="data.selected=sid">
+		<tr class="pointer"
+			  ng-repeat="activity in secondary"
+			  ng-class="{success:data.selected==sid}">
+			<td class="col-sm-2" ng-bind="::activity.type"></td>
+			<td class="col-sm-6" ng-bind="::activity.instructor"></td>
+			<td class="col-sm-2" location="activity.location"></td>
+			<td class="col-sm-1 text-center" schedule="activity.schedule"></td>
+			<td class="col-sm-1 text-center" enrollment="activity.enrollment" context="context"></td>
+		</tr>
+	</tbody>
+</table>
+<div class="modal-footer">
+	<input type="submit" value="I pick this one!" class="btn btn-success" ng-click="$close(data.selected)" ng-disabled="data.selected==null"/>
+	<button class="btn btn-default" ng-click="$dismiss()" type="button">nvm</button>
+</div>

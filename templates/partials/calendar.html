@@ -1,0 +1,26 @@
+<div style="height:15px;text-align:center;font-weight:bold;">
+	<div style="float:left;width:12.5%">&nbsp;</div>
+	<div style="float:left;width:12.5%">Sun</div>
+	<div style="float:left;width:12.5%">Mon</div>
+	<div style="float:left;width:12.5%">Tue</div>
+	<div style="float:left;width:12.5%">Wed</div>
+	<div style="float:left;width:12.5%">Thu</div>
+	<div style="float:left;width:12.5%">Fri</div>
+	<div style="float:left;width:12.5%">Sat</div>
+</div>
+<div style="position:relative">
+<svg height="500" width="98%" style="float:left">
+	<g transform="translate(0.5, 10)">
+		<text text-anchor="end" alignment-baseline="middle" x="12.5%" ng-attr-y="{{::label.y}}" ng-repeat="label in labels">{{::label.t}}&nbsp;</text>
+		<line x1="12.5%" ng-attr-y1="{{::label.y}}" x2="100%" ng-attr-y2="{{::label.y}}" stroke="#EEE" stroke-width="1" ng-repeat="label in labels"/>
+		<line x1="12.5%" ng-attr-y1="{{::label.y+15}}" x2="100%" ng-attr-y2="{{::label.y+15}}" stroke="#F7F7F7" stroke-width="1" ng-repeat="label in labels"/>
+	</g>
+</svg>
+	<div style="height:15px;width:10px"></div>
+	<div class="label label-warning" style="margin-left:98%;width:2%;height:135px;display:block" tooltip-placement="right" tooltip="Morning"></div>
+	<div class="label label-info" style="margin-left:98%;width:2%;height:90px;display:block" tooltip-placement="right" tooltip="Around noon"></div>
+	<div class="label label-primary" style="margin-left:98%;width:2%;height:45px;display:block" tooltip-placement="right" tooltip="Early afternoon"></div>
+	<div class="label label-danger" style="margin-left:98%;width:2%;height:45px;display:block" tooltip-placement="right" tooltip="Late afternoon"></div>
+	<div class="label label-default" style="margin-left:98%;width:2%;height:165px;display:block" tooltip-placement="right" tooltip="Evening"></div>
+	<div ng-transclude></div>
+</div>

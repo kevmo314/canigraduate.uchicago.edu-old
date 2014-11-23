@@ -1,0 +1,14 @@
+AddType application/json .json
+<IfModule mod_deflate.c>
+AddOutputFilterByType DEFLATE application/json
+</IfModule>
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^(.*) /index.php [NC,L]
+
+<IfModule mod_headers.c>
+	Header set X-Powered-By "Fishbein Technologies"
+</IfModule>

@@ -1,0 +1,96 @@
+<div id="tutorial-find-classes-filter">
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<i class="fa fa-filter"></i> Filters
+	</div>
+	<ul class="list-group">
+		<li class="list-group-item">
+			Hide sections that meet on
+			<div class="btn-group">
+				<toggle target="interface.find.filters.dow.M" color="danger">M</toggle>
+				<toggle target="interface.find.filters.dow.T" color="danger">T</toggle>
+				<toggle target="interface.find.filters.dow.W" color="danger">W</toggle>
+				<toggle target="interface.find.filters.dow.H" color="danger">Th</toggle>
+				<toggle target="interface.find.filters.dow.F" color="danger">F</toggle>
+				<toggle target="interface.find.filters.dow.S" color="danger">Sa</toggle>
+				<toggle target="interface.find.filters.dow.U" color="danger">Su</toggle>
+			</div>
+			<div class="btn-group" title="ARR is my favorite day of the week">
+				<toggle target="interface.find.filters.dow.ARR" color="danger">ARR</toggle>
+			</div>
+		</li>
+		<li class="list-group-item">
+			Only show departments:
+			<tags data-options="{addable:false}" data-src="d for d in departments" data-model="interface.find.filters.departments"></tags>
+		</li>
+		<li class="list-group-item">
+			Only show sections involving instructors:
+			<tags data-options="{addable:false}" data-src="i for i in timeschedules.instructors" data-model="interface.find.filters.instructors"></tags>
+		</li>
+		<li class="list-group-item">
+			Hide classes that
+			<toggle target="interface.find.filters.taken" color="success">I've taken</toggle>
+			<toggle target="interface.find.filters.tested" color="info">I've tested out of</toggle>
+			<toggle target="interface.find.filters.prereq" color="warning" disabled="true">I don't have prereqs for</toggle>
+			<toggle target="interface.find.filters.core" color="primary">are core reqs</toggle>
+		</li>
+		<li class="list-group-item">
+			Hide sections that 
+			<toggle target="interface.find.filters.conflict" color="danger" disabled="!(user.schedule.getRecords().length + user.registration.getRecords().length)">conflict with my schedule</toggle>
+			<toggle target="interface.find.filters.archive" color="danger">don't meet {{timeschedules.quarters.active}}</toggle>
+			<span tooltip="Haven't been offered within the last sixteen quarters">
+				<toggle target="interface.find.filters.dead" color="danger">are old</toggle>
+			</span>
+			<toggle target="interface.find.filters.full" color="danger">are full</toggle>
+		</li>
+	</ul>
+</div>
+<div class="row">
+	<div class="col-sm-9">
+		<input type="text" class="form-control" placeholder="Econ 198 -- accepts regex!" ng-model="interface.find.filters.search" ng-model-options="{debounce:50}"/>
+	</div>
+	<div class="col-sm-3">
+		<input type="number" class="form-control text-right" ng-model="interface.find.pageSize" ng-model-options="{debounce:250}" min="0" tooltip="Page size"/>
+	</div>
+</div>
+</div>
+<div ng-show="findRecords.length">
+	<table class="table table-condensed" id="find-results">
+		<thead>
+			<tr>
+				<th class="col-sm-3 text-right">Class</th>
+				<th class="col-sm-6">Title (<span ng-bind="findRecordsSize"></span> result<span ng-if="findRecordsSize!=1">s</span>, <span class="small text-muted" ng-bind="getExecutionTime() + 'ms'"></span>)</th>
+				<th class="col-sm-1 text-right"><span tooltip="The number of majors this class contributes towards" tooltip-placement="left">#</span></th>
+				<th class="col-sm-2 text-center"><span tooltip="Hover to view the last year it was offered in that quarter.">Quarter</span></th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="record in findRecords" ng-init="offerings=getOfferings(record)">
+			<tr ng-init="showDetails[record.classes]=(findRecordsSize==1 || showDetails[record.classes])"
+			    ng-click="toggleDetails(record.classes)"
+			    class="pointer">
+				<td class="text-right col-sm-3">
+					<span ng-bind="::record.classes" ng-class="{'text-muted':isArchived(record)}"></span>
+				</td>
+				<td class="col-sm-6">
+					<span ng-bind="::getName(record.classes)" ng-class="{'text-muted':isArchived(record)}"></span>
+					<em ng-if="::!getName(record.classes).length" class="text-muted" tooltip="No class title was found for this class yet. It may be a new class, cancelled, or worse, expelled.">Unknown</em>
+					<small class="text-muted" ng-if="isCrosslisted(record.classes) && !record.show" tooltip="Crosslistings" tooltip-placement="left"><br/><em ng-bind="getCrosslists(record.classes).join(', ')"></em></small>
+				</td>
+				<td class="col-sm-1 text-right">
+					<span class="text-muted" ng-bind="classWeights[record.classes].length"></span>
+				</td>
+				<td class="col-sm-2 text-right">
+					<span class="label label-default pointer" ng-class="{'label-warning':offerings['Autumn']}" tooltip="{{offerings['Autumn']}}" ng-click="interface.findQuarter('Autumn ' + offerings['Autumn'])">F</span><span class="label label-default pointer" ng-class="{'label-info':offerings['Winter']}" tooltip="{{offerings['Winter']}}" ng-click="interface.findQuarter('Winter ' + offerings['Winter'])">W</span><span class="label label-default pointer" ng-class="{'label-success':offerings['Spring']}" tooltip="{{offerings['Spring']}}" ng-click="interface.findQuarter('Spring ' + offerings['Spring'])">S</span><span class="label label-default pointer" ng-class="{'label-danger':offerings['Summer']}" tooltip="{{offerings['Summer']}}" ng-click="interface.findQuarter('Summer ' + offerings['Summer'])">S</span>
+				</td>
+			</tr>
+			<tr style="background-color:white;border-left:1px solid #ddd;border-right:1px solid #ddd;" ng-if="showDetails[record.classes]">
+				<td colspan="4" ng-include="'/templates/partials/class-info.html'" ng-init="child=record"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="text-center">
+		<pagination boundary-links="true" total-items="findRecordsSize" items-per-page="interface.find.pageSize" max-size="9" ng-model="interface.find.page" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+		<p class="text-center text-muted" ng-bind="timeschedules.status"></p>
+	</div>
+</div>
+<alert ng-if="!findRecords.length" type="warning">No results found :(</alert>

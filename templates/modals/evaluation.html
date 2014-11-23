@@ -1,0 +1,36 @@
+<form role="form">
+	<div class="modal-header"><h4>{{data.id}} Evaluation <small ng-bind="::classes[data.id].name"></small></h4></div>
+	<div class="modal-body">
+		<p>Would you like to give a class evaluation for <strong>{{data.id}}: {{classes[data.id].name}}</strong>? Your data will be used to help future students who use <strong>Can I Graduate?</strong> make informed decisions about what classes to take.</p>
+		<div class="form-group">
+			<label>How did you like this class?</label>
+			<div class="row">
+				<div class="col-xs-3">
+					<rating ng-model="data.rating" on-hover="hovering(value)"></rating>
+				</div>
+				<div class="col-xs-9 text-muted" ng-bind="hoveringText"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label>What classes, if any, would be good to have taken before this one?</label>
+			<div class="list-group pointer">
+				<a ng-repeat="class in data.prerequisites" class="list-group-item" ng-click="data.prerequisites.splice($index, 1)" tooltip="Click to remove">
+					<div class="row">
+						<div class="col-sm-3" ng-bind="::class"></div>
+						<div class="col-sm-9" ng-bind="::classes[class].name"></div>
+					</div>
+				</a>
+			</div>
+			<input type="text" typeahead="class as class+' :: '+classes[class].name for class in searchClasses($viewValue, 20)" typeahead-editable="false" typeahead-on-select="data.prerequisites.push($item);wai=''" placeholder="Stat 234" ng-model="wai" class="form-control"/>
+		</div>
+		<div class="form-group">
+			<label>Any advice for this class?</label>
+			<textarea class="form-control" placeholder="Avoid evaluating the instructor, rather evaluate the class as a whole. For example, 'It helps a lot to know programming before taking this class.'" ng-model="data.comment"></textarea>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<input type="submit" value="Happy to help!" class="btn btn-success" ng-click="$close(data)"/>
+		<button class="btn btn-default" ng-click="$dismiss()" type="button">Not right now</button>
+		<button class="btn btn-danger" ng-click="$close({action:'ignore',id:data.id})" type="button">Don't ask me again</button>
+	</div>
+</form>

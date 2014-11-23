@@ -1,0 +1,9 @@
+<div class="modal-header"><h4>New Negotiation Offer!</h4></div>
+<div class="modal-body">
+	<p>You've received a new negotiation offer from <strong ng-bind="offer.negotiation.cnetid"></strong>! They want to trade <strong ng-bind="offer.negotiation.id"></strong>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-success" ng-click="$close(true)">Accept</button>
+	<button class="btn btn-danger" ng-click="$close(false)">Reject</button>
+	<button class="btn btn-default" ng-click="$dismiss()">Ignore</button>
+</div>

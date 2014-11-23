@@ -1,0 +1,117 @@
+<div class="text-info small" ng-init="getDescription(child)" ng-controller="ClassInfoCtrl">
+	<gravitate><p ng-bind="::child.description"></p></gravitate>
+	<p ng-if="child.evaluations.prerequisites.length > 0">Suggested prerequisites: <span ng-repeat="prerequisite in child.evaluations.prerequisites"><a href="#" ng-click="interface.findClass(prerequisite)" tooltip="{{getName(prerequisite)}}" ng-bind="::prerequisite"></a></span></p>
+	<tabset>
+		<tab heading="Sections">
+			<table ng-if="child.sections" class="table table-hover small table-condensed" ng-init="child.displayLimit=child.displayLimit || getNextQuarter(child)">
+				<thead>
+					<tr>
+					<th class="col-sm-2">Section</th>
+					<th class="col-sm-1">Type</th>
+					<th class="col-sm-5">Instructor</th>
+					<th class="col-sm-2">Location</th>
+					<th class="col-sm-1">Schedule</th>
+					<th class="col-sm-1">Size</th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="section in child.sections | limitTo:child.displayLimit">
+					<tr ng-repeat="primary in section.primary" ng-class="{'success':section.quarter==timeschedules.quarters.active && isScheduled(section)}" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+						<td class="pointer" rowspan="{{section.primary.length}}" ng-if="$index==0" ng-click="section.showSecondary=!section.showSecondary"
+						    ng-init="getNotes(child, section)"
+						    tooltip-placement="right" tooltip-append-to-body="true">
+							<span ng-bind="::section.quarter"></span><br/>
+							&sect;<span ng-bind="::section.section"></span>
+						</td>
+						<td ng-bind="::primary.type"></td>
+						<td><a ng-href="//classes.uchicago.edu/searchEvaluations.php?EvalSearchType=option-instructor-search&InstructorLastName={{primary.instructor}}&advancedSearch=SEARCH" ng-bind="::primary.instructor" target="_blank"></a></td>
+						<td location="primary.location"></td>
+						<td schedule="primary.schedule"></td>
+						<td enrollment="primary.enrollment" context="section" ng-if="!hover"></td>
+						<td ng-if="hover">
+							<a ng-click="textbooks.open(section, true)"><i class="fa fa-book" tooltip="Find textbooks"></i></a>
+							<a ng-if="section.quarter==timeschedules.quarters.active && !isScheduled(section)" ng-click="user.schedule.add(section)"><i class="fa fa-plus" tooltip="Add to schedule"></i></a>
+							<a ng-click="watch(section)" ng-if="authentication.cnetid.length"><i class="fa fa-bell" tooltip="Watch this section for changes" tooltip-append-to-body="true"></i></a>
+							<a ng-if="section.quarter==timeschedules.quarters.available[0]" ng-href="//classes.uchicago.edu/loggedin/consentForm.php?CourseName={{::section.id}}&SectionName={{::section.section}}&ActivityName=&Units=100&EnrollmentStatus=" target="_blank"><i class="fa fa-exclamation-circle" tooltip="Consent form"></i></a>
+						</td>
+					</tr>
+					<tr ng-repeat="secondary in section.secondary_collapsed" ng-show="section.showSecondary" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+						<td ng-bind="::'Activity ' + secondary.id" class="text-right"></td>
+						<td ng-bind="::secondary.type"></td>
+						<td><a ng-href="//classes.uchicago.edu/searchEvaluations.php?EvalSearchType=option-instructor-search&InstructorLastName={{secondary.instructor}}&advancedSearch=SEARCH" ng-bind="::secondary.instructor"></a></td>
+						<td location="secondary.location"></td>
+						<td schedule="secondary.schedule"></td>
+						<td enrollment="secondary.enrollment" context="section" activity="secondary.id" ng-if="!hover"></td>
+						<td ng-if="hover">
+							<a ng-if="section.quarter==timeschedules.quarters.active && !isScheduled(section)" ng-click="user.schedule.add(section, secondary.id)"><i class="fa fa-plus"></i></a>
+							<a ng-click="watch(section, secondary.id)" ng-if="authentication.cnetid.length"><i class="fa fa-bell" tooltip="Watch this activity for changes" tooltip-placement="left"></i></a>
+							<a ng-if="section.quarter==timeschedules.quarters.available[0]" ng-href="//classes.uchicago.edu/loggedin/consentForm.php?CourseName={{::section.id}}&SectionName={{::section.section}}&ActivityName={{::secondary.id}}&Units=100&EnrollmentStatus=" target="_blank"><i class="fa fa-exclamation-circle" tooltip="Consent form"></i></a>
+						</td>
+					</tr>
+					<tr ng-if="::section.notes">
+						<td colspan="6"><gravitate ng-bind="::section.notes" class="text-muted"></gravitate></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="btn-group btn-block" ng-if="child.displayLimit < child.sections.length" dropdown>
+			<button type="button" class="btn col-xs-11 btn-default" ng-click="child.displayLimit=getNextQuarter(child)">Load <span compile="child.sections[child.displayLimit].quarter.slice(-4)"></span></button>
+			<button type="button" class="btn col-xs-1 btn-default dropdown-toggle"><span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><a ng-click="child.displayLimit=child.sections.length" tooltip="WARNING: May take a while to load" tooltip-append-to-body="true">Load All</a></li>
+			</ul>
+			</div>
+		</tab>
+		<tab heading="Evaluations" disabled="!(child.evaluations.comments.length + child.evaluations.official.length)">
+			<br/>
+			<blockquote ng-repeat="comment in child.evaluations.comments" class="small"><p ng-bind="::comment"></p></blockquote>
+			<table ng-if="child.evaluations.official.length" class="table table-hover table-condensed">
+				<thead>
+					<tr>
+						<th>Quarter</th>
+						<th>Section</th>
+						<th>Instructor</th>
+						<th></th>
+					</tr>
+				</thead><tbody>
+					<tr ng-repeat="evaluation in child.evaluations.official">
+						<td ng-bind="::evaluation.quarter"></td>
+						<td ng-bind="::evaluation.section"></td>
+						<td ng-bind="::evaluation.instructor"></td>
+						<td><a ng-href="//classes.uchicago.edu/loggedin/evaluation.php?id={{evaluation.id}}" target="_blank">View</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</tab>
+		<tab heading="Grades" disabled="!child.distribution.length">
+			<div class="row">
+				<div class="col-sm-6">
+					<h4>Ratings</h4>
+					<div style="height:16px" class="text-center">
+						<div style="width:20%;float:left" ng-repeat="n in [1,2,3,4,5]"><strong>{{n}} <i class="fa fa-star"></i></strong></div>
+					</div>
+					<div ng-repeat="rating in child.evaluations.ratings | orderBy:'gpa':true" ng-if="child.evaluations.ratings.length">
+						<div style="border-top:1px solid #DDD;width:20%;height:17px;float:left;" ng-repeat="n in [0,1,2,3,4]">
+							<div ng-style="::{'opacity':(rating.data[n] || 0) / child.evaluations.maxRating}" style="height:16px;text-align:center;font-size:8pt;background-color:steelblue;color:#EEE" tooltip="{{(rating.data[n] ? rating.data[n] + ' student' + (rating.data[n] == 1 ? '' : 's') + ' who received a ' + rating.gpa + ' rated this class ' + (n + 1) + '/5' : '')}}">{{rating.data[n] || ''}}</div>
+						</div>
+					</div>
+					<div class="text-center" style="margin-top:70px" ng-if="!child.evaluations.ratings.length">No data</div>
+				</div>
+				<div class="col-sm-6">
+					<h4>Grades</h4>
+					<div style="height:16px">
+						<strong tooltip="Data based on users who use this site.">Observed Frequency</strong>
+					</div>
+					<div ng-repeat="grade in child.distribution">
+						<div ng-style="{width:{{grade[1]}} + '%'}" ng-bind="::grade[0]"
+						     style="height:16px;background-color:steelblue;color:#EEE;font-size:8pt;margin:1px 0;text-align:right;padding-right:1px"></div>
+					</div>
+				</div>
+			</div>
+		</tab>
+		<tab heading="Meta">
+			<br/>
+			<p ng-if="classWeights[child.classes]">This class contributes towards major requirements for: <span ng-repeat="major in classWeights[child.classes]"><a href="#" ng-click="interface.findMajor(major)" ng-bind="::major"></a>{{$last ? '' : ', '}}</span></p>
+			<p ng-if="isCrosslisted(child.classes)">This class is crosslisted as: {{getCrosslists(child.classes).join(', ')}}</p>
+			<p>View this class on <a ng-href="//classes.uchicago.edu/courseDetail.php?courseName={{child.classes}}" target="_blank">classes.uchicago.edu</a>.</p>
+		</tab>
+	</tabset>
+</div>

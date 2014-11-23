@@ -1,0 +1,139 @@
+<div id="tutorial-scheduler">
+<div class="row">
+	<div class="col-sm-9">
+<h2 class="dropdown">Scheduled Classes <small>
+	<span class="pointer dropdown-toggle">{{timeschedules.quarters.active}} <span class="caret"></span></span>
+</small>
+	</div><div class="col-sm-3">
+<form ng-if="authentication.cnetid" method="POST" target="_blank" action="/data/export.php">
+	<input type="hidden" name="username" ng-value="authentication.cnetid"/>
+	<input type="hidden" name="password" ng-value="authentication.password"/>
+	<button style="margin-top:30px" class="btn btn-default btn-xs" tooltip="Only exports registered classes. May take a few seconds, UChicago's servers are slow. Sorry!"><i class="fa fa-calendar"></i> Export to iCalendar</button>
+</form>
+	</div>
+</div>
+<ul class="dropdown-menu dropdown-menu-right" role="menu">
+	<li ng-repeat="quarter in timeschedules.quarters.available | limitTo:16"><a ng-click="timeschedules.quarters.active=quarter" ng-bind="::quarter"></a></li>
+</ul>
+</h2>
+<alert type="warning" ng-if="user.schedule.getRecords().length">Classes that are not in green are scheduled, but not registered. Click <i class="fa fa-plus"></i> to submit the class to the registrar.</alert>
+<table class="table table-condensed" ng-if="user.registration.getRecords().length || user.schedule.getRecords().length">
+	<thead>
+		<th class="col-sm-3 text-right">Class</th>
+		<th class="col-sm-6">Title</th>
+		<th class="col-sm-3 text-right">Books</th>
+	</thead>
+	<tr class="success" ng-class="{'warning':record.hidden}" ng-repeat="record in user.registration.getRecords()" ng-style="{color:colors[$index]}" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+		<td class="pointer text-right" ng-click="interface.findClass(record.timeschedule.id)" ng-bind="::record.timeschedule.id"
+	      tooltip="{{(record.timeschedule.section ? 'Section: ' + record.timeschedule.section + ' ' : '') + (record.activity ? 'Activity: ' + record.activity : '')}}"
+			  tooltip-placement="right"
+		    tooltip-append-to-body="true">
+		</td>
+		<td class="pointer" ng-click="interface.findClass(record.timeschedule.id)"
+		    ng-bind="::getName(record.timeschedule.id)"></td>
+		<td class="text-right">
+			<div ng-hide="record.pending || !hover">
+				<a ng-click="textbooks.open(record.timeschedule, true)" ng-init="textbooks.get(record.timeschedule)"><i class="fa fa-book" tooltip="Find textbooks"></i></a>
+				<a ng-click="user.registration.drop(record).then(user.schedule.add)">
+					<i class="fa fa-minus" tooltip="Drop class"></i>
+				</a>
+				<a ng-click="user.registration.toggle(record)">
+					<i class="fa" ng-class="{'fa-eye':record.hidden, 'fa-eye-slash':!record.hidden}" tooltip="Toggle"></i>
+				</a>
+			</div>
+			<div ng-hide="record.pending || hover">
+				<span ng-bind="record.timeschedule.textbooks.length"></span>
+			</div>
+			<div ng-show="record.pending" class="text-muted">
+				Requesting...
+			</div>
+		</td>
+	</tr>
+	<tr ng-repeat="record in user.schedule.getRecords()" ng-style="{color:colors[$index+user.registration.getRecords().length]}">
+		<td ng-if="::record.timeschedule.index == -1">Manual Record</td>
+		<td class="pointer text-right" ng-click="interface.findClass(record.timeschedule.id)" ng-bind="::record.timeschedule.id"
+	      tooltip="{{(record.timeschedule.section ? 'Section: ' + record.timeschedule.section + ' ' : '') + (record.activity ? 'Activity: ' + record.activity : '')}}"
+			  tooltip-placement="right"
+		    tooltip-append-to-body="true">
+		</td>
+		<td class="pointer" ng-click="interface.findClass(record.timeschedule.id)"
+		    ng-bind="::getName(record.timeschedule.id)" ng-if="::record.timeschedule.index > -1"></td>
+		<td class="text-right">
+			<div ng-hide="record.pending">
+				<a ng-click="textbooks.open(record.timeschedule, true)" ng-init="textbooks.get(record.timeschedule)">
+					<span ng-bind="record.timeschedule.textbooks.length"></span>
+					<i class="fa fa-book" tooltip="Find textbooks"></i>
+				</a>
+				<a ng-click="user.registration.add(record).then(user.schedule.drop)" ng-if="user.registration">
+					<i class="fa fa-plus" tooltip="Register"></i>
+				</a>
+				<a ng-if="record.timeschedule.quarter==timeschedules.quarters.available[0]" ng-href="//classes.uchicago.edu/loggedin/consentForm.php?CourseName={{::record.timeschedule.id}}&SectionName={{::record.timeschedule.section}}&ActivityName={{::record.activity}}&Units=100&EnrollmentStatus=" target="_blank"><i class="fa fa-exclamation-circle" tooltip="Consent form"></i></a>
+				<a ng-click="user.schedule.drop(record)">
+					<i class="fa fa-minus" tooltip="Remove"></i>
+				</a>
+			</div>
+			<div ng-show="record.pending" class="text-muted">
+				Requesting...
+			</div>
+		</td>
+	</tr>
+</table>
+<calendar>
+	<event ng-repeat="record in user.registration.getRecords()" record="record" index="$index"></event>
+	<event ng-repeat="record in user.schedule.getRecords()" record="record" index="$index+user.registration.getRecords().length"></event>
+</calendar>
+</div>
+<div id="tutorial-scheduler-manual">
+<h3>Create Manual Record</h3>
+<form role="form" ng-controller="ManualRecordCtrl" class="form-horizontal">
+	<div class="form-group">
+		<label for="name" class="col-sm-2 control-label">Name</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" ng-model="data.id" placeholder="Lunch with Mugit"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="dow" class="col-sm-2 control-label">Days</label>
+		<div class="col-sm-10">
+			<p class="btn-group form-control-static">
+			<toggle target="dow.M" color="success">M</toggle>
+			<toggle target="dow.T" color="success">T</toggle>
+			<toggle target="dow.W" color="success">W</toggle>
+			<toggle target="dow.H" color="success">Th</toggle>
+			<toggle target="dow.F" color="success">F</toggle>
+			<toggle target="dow.S" color="success">Sa</toggle>
+			<toggle target="dow.U" color="success">Su</toggle>
+			</p>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-4 col-sm-offset-2">
+			<label for="from">From</label>
+			<timepicker ng-model="from"/>
+		</div>
+		<div class="col-sm-6">
+			<label for="to">To</label>
+			<timepicker ng-model="to"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-success" ng-click="createRecord()">Add me!</button>
+		</div>
+	</div>
+</form>
+</div>
+<h2>Recommended Courses</h2>
+<alert type="info" ng-if="!recommendations.length">Add courses or import your data.</alert>
+<accordion>
+	<accordion-group ng-repeat="recommend in recommendations" is-open="showDetails">
+		<accordion-heading>
+			<div class="pointer">
+				<i class="fa fa-book"></i>
+				<span ng-bind="::recommend.classes | fill"></span>
+				<span ng-bind="::getName(recommend.classes)"></span>
+			</div>
+		</accordion-heading>
+		<div ng-init="child=recommend" ng-include="'/templates/partials/class-info.html'" ng-if="showDetails"></div>
+	</accordion-group>
+</accordion>

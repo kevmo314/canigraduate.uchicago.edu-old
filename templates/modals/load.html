@@ -1,0 +1,48 @@
+<form role="form" class="form-horizontal" id="tutorial-modal">
+	<div class="modal-header"><h4>Import Your Data</h4></div>
+	<div class="modal-body">
+		<p>Enter an encryption key to load from:</p>
+		<div class="form-group">
+			<label for="save-string" class="col-md-2 control-label">Save Key</label>
+			<div class="col-md-10">
+				<input type="text" id="save-string" class="form-control" ng-model="data.str"/>
+			</div>
+		</div>
+		<hr/>
+		<h3 class="text-center">OR</h3>
+		<hr/>
+		<p>Enter your CNetID and password to load from <a href="http://my.uchicago.edu" target="_blank">my.uchicago.edu</a></p>
+		<alert type="danger" ng-if="error" ng-bind="error"></alert>
+		<div class="form-group" ng-class="{'has-error':error}">
+			<label for="cnet" class="col-md-2 control-label">CNetID</label>
+			<div class="col-md-10">
+				<input type="text" id="cnet" class="form-control" ng-model="data.cnet"/>
+			</div>
+		</div>
+		<div class="form-group" ng-class="{'has-error':error}">
+			<label for="password" class="col-md-2 control-label">Password</label>
+			<div class="col-md-10">
+				<input type="password" id="password" class="form-control" ng-model="data.password"/>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<div class="checkbox">
+					<label>
+					<input type="checkbox" ng-model="data.suppress_gpa"> Suppress Grades
+					</label>
+				</div>
+			</div>
+		</div>
+		<alert type="danger"><strong>FULL DISCLOSURE:</strong> By entering your CNetID and password, you authorize this application to log in to <a href="http://my.uchicago.edu" target="_blank">my.uchicago.edu</a> and <a href="http://classes.uchicago.edu" target="_blank">classes.uchicago.edu</a> as you and access class and grade information. This information will be used for grade distribution statistics, class recommendations, and improving <strong>Can I Graduate?</strong> data, but personally identifiable information <strong>is not saved</strong>. If you don't want this app to masquerade as you, click the nvm button below. If you'd like to review this app's source code, you can do so at <a href="https://github.com/kevmo314/canigraduate.uchicago.edu" target="_blank">the <i class="fa fa-github"></i> GitHub repo</a>.</alert>
+	</div>
+	<div class="modal-footer">
+		<div ng-if="message">
+			<div class="mugit-wrapper text-left"><div class="mugit"></div><p class="text-info">Mugit sez: {{message}}</p></div>
+		</div>
+		<div ng-if="!message">
+			<input type="submit" value="Import, please! :D" class="btn btn-success" ng-enter="load()" ng-click="load()"/>
+			<button class="btn btn-default" ng-click="$dismiss()" type="button">nvm</button>
+		</div>
+	</div>
+</form>

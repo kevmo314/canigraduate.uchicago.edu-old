@@ -1,0 +1,144 @@
+.pointer, a {
+	cursor:pointer;
+}
+.sequence {
+	margin-right:5px;
+	margin-bottom:5px;
+}
+body.has-footer {
+	background-color:#1E1E1E;
+}
+body, #content-body {
+	background-color:#FDFDF7;
+}
+header {
+	background-color:#A51C30;
+	color:white;
+	border-bottom:10px solid #8C8179;
+}
+.navbar {
+	margin-bottom:0;
+	border:none;
+}
+.navbar .navbar-brand {
+	padding:0;
+	font-size:32px;
+	line-height:50px;
+	margin-right:15px;
+}
+.navbar .navbar-nav a {
+	color:white;
+}
+.navbar .navbar-nav .dropdown-menu a {
+	color:#333;
+}
+.navbar .navbar-nav a:hover {
+	background-color:#8C8179;
+}
+.navbar .navbar-nav li.active {
+	background-color:#8C8179;
+}
+.navbar .icon-bar {
+	background-color:white;
+}
+#content {
+	background-color:white;
+	border-left:1px solid #DEDED6;
+	border-right:1px solid #DEDED6;
+	padding-top:1em;
+	padding-bottom:1em;
+}
+#find-results td {
+	border:none;
+}
+#find-results tbody:nth-child(even) {
+	background-color:#F9F9F9;
+}
+#find-results tbody {
+	border:0;
+	border-top:1px solid #ddd;
+}
+footer {
+	background-color:#1E1E1E;
+	color:#999999;
+	padding-top:1em;
+	padding-bottom:2em;
+}
+.affix {
+	top:25px;
+}
+.list-group-item {
+	padding:5px 15px;
+}
+.list-group {
+	margin-bottom:0;
+}
+[ng\:cloak], [ng-cloak], .ng-cloak {
+	display: none !important;
+}
+.mugit-wrapper {
+	position:relative;
+	height:34px;
+}
+.mugit-wrapper p {
+	margin-left:65px;
+}
+.mugit {
+	background:url('/mugit.png') no-repeat transparent;
+	height:61px;
+	width:45px;
+	position:absolute;
+	-webkit-animation:jump 1s infinite;
+	-moz-animation:jump 1s infinite;
+	animation:jump 1s infinite;
+}
+@-webkit-keyframes jump {
+	0% {
+		bottom:30px;
+		-webkit-animation-timing-function: ease-in;
+ 	}
+ 	50% {
+		bottom:-20px;
+		-webkit-animtion-timing-function: ease-in;
+ 	}
+ 	100% {
+		bottom:30px;
+		-webkit-animation-timing-function: ease-out;
+ 	}
+}
+@-moz-keyframes jump {
+	0% {
+		bottom:30px;
+		-moz-animation-timing-function: ease-in;
+	}
+	50% {
+		bottom:-20px;
+		-moz-animtion-timing-function: ease-in;
+	}
+	100% {
+		bottom:30px;
+		-moz-animation-timing-function: ease-out;
+	}
+}
+.tutorial-highlight {
+	position:absolute;
+	z-index:100;
+	opacity:0.5;
+	background-color:black;
+}
+.tutorial-text {
+	padding:1em;
+	background-color:black;
+	opacity:0.75;
+	position:fixed;
+	z-index:10000;
+	color:white;
+}
+.tutorial-close {
+	cursor:pointer;
+	position:fixed;
+	z-index:10000;
+	color:white;
+	right:35px;
+	top:25px;
+}

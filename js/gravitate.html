@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html ng-app="app">
+	<head>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.10/angular.min.js"></script>
+		<script src="angular-gravitate.js"></script>
+		<script>
+			angular.module('app', ['gravitate'])
+				.controller('GravitateController', ['$scope', '$interval', function($scope, $interval) {
+					$scope.style = {height:'50px'};
+					var t = 0;
+					$interval(function() {
+						t += 0.05;
+						$scope.style = {height:(Math.sin(t) * 25 + 50) + 'px'};
+					}, 10);
+				}]);
+		</script>
+	</head>
+	<body ng-controller="GravitateController">
+		<div style="margin:200px;height:10000px;">
+			<button ng-click="gravitator=!gravitator">Toggle Gravitator</button>
+			<gravitate ng-if="!gravitator">
+				<div style="border:1px solid black;width:50px;margin:20px;padding:20px;background-color:red" ng-style="style">
+					Gravitator
+				</div>
+			</gravitate>
+			<div ng-if="gravitator" style="border:1px solid black;width:50px;margin:20px;padding:20px;background-color:red" ng-style="style">
+				Gravitator
+			</div>
+			<button>Imagine this is a submit button!</button>
+		</div>
+</html>

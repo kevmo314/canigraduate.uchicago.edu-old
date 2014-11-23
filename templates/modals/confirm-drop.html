@@ -1,0 +1,8 @@
+<div class="modal-header"><h4>Drop {{id}}</h4></div>
+<div class="modal-body">
+	<p>Are you sure you wish to drop <strong><span ng-bind="::id"></span>: <span ng-bind="::getName(id)"></span></strong>?</p>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-success" ng-click="$close()">Yep, drop it!</button>
+	<button class="btn btn-default" ng-click="$dismiss()">No jk</button>
+</div>

@@ -1,0 +1,108 @@
+<div id="tutorial-watches">
+<div class="row">
+	<div class="col-sm-9">
+		<h2>Your Watches <small ng-if="watches.data.length">{{authentication.cnetid}}@uchicago.edu</small></h2>
+	</div>
+	<div class="col-sm-3">
+		<a style="margin-top:30px"class="pull-right btn btn-default btn-xs" ng-click="watches.remove()"><i class="fa fa-trash"></i> Remove all watches</a>
+	</div>
+</div>
+<p class="text-muted">Accuracy contingent on active users. For higher accuracy, ask IT Services for an API.</p>
+<alert type="info" ng-if="!watches.data.length">You don't have any watches. Import your data and click the <i class="fa fa-bell"></i> icon in the "Find Classes" panel to add one.</alert>
+<div ng-if="authentication.cnetid.length">
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-sm-3">Quarter</th>
+				<th class="col-sm-3">Class</th>
+				<th class="col-sm-2">Section</th>
+				<th class="col-sm-2">Activity</th>
+				<th class="col-sm-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="watch in watches.data" tooltip="{{watch.course ? getName(watch.course) : ''}}" tooltip-append-to-body="true" tooltip-placement="left" ng-click="interface.findClass(watch.course)" class="pointer"
+			    ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+				<td ng-bind="::(watch.quarter || '*')"></td>
+				<td ng-bind="::(watch.course || '*')"></td>
+				<td ng-bind="::(watch.section || '*')"></td>
+				<td ng-bind="::(watch.activity || '*')"></td>
+				<td class="text-right">
+					<span ng-if="removing" class="text-muted">Removing...</span>
+					<a ng-if="!removing && hover" ng-click="removing=true;watches.remove(watch)"><i class="fa fa-minus" tooltip="Remove"></i></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<button class="btn btn-default btn-block" ng-click="add()"><i class="fa fa-plus"></i> Add</button>
+</div>
+</div>
+<h2>Class Exchange</h2>
+<alert type="info">Yeah... this probably won't happen. UChicago's servers are far too slow.</alert>
+<!--
+<alert type="danger">Don't use this yet. If you do, it might mess up your schedule. I'm still working on it.</alert>
+<div ng-if="negotiationServer">
+	<alert type="warning">The exchanger comes with no warranty. It will blindly drop both classes, then blindly add both classes. If any request fails for some reason, you may end up dropping a class without getting anything back. It is recommended to the person via email before negotiating an offer.</alert>
+	<h3>Open Offers</h3>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Quarter</th>
+				<th>Class</th>
+				<th>Section</th>
+				<th>Activity</th>
+				<th>CNetID</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="offer in offers">
+			<tr>
+				<td ng-bind="::offer.quarter"></td>
+				<td ng-bind="::offer.id"></td>
+				<td ng-bind="::offer.section"></td>
+				<td ng-bind="::offer.activity"></td>
+				<td><a ng-href="mailto:{{::offer.cnetid}}@uchicago.edu" target="_blank" ng-bind="::offer.cnetid"></a></td>
+				<td>
+					<a ng-click="negotiate(offer)">Negotiate</a>
+					<a ng-if="offer.cnetid==authentication.cnetid" ng-click="cancel(offer)">Cancel</a>
+				</td>
+			</tr>
+			<tr ng-if="::offer.notes">
+				<td colspan="4" ng-bind="::offer.notes"></td>
+			</tr>
+		</tbody>
+	</table>
+	<h3>Open Negotiations</h3>
+	<h3>Create an Offer</h3>
+	<form class="form-horizontal" rel="form">
+		<div class="form-group">
+			<label for="cnetid" class="col-sm-2 control-label">CNetID</label>
+			<p class="col-sm-10 form-control-static" ng-bind="authentication.cnetid"></p>
+		</div>
+		<div class="form-group">
+			<label for="quarter" class="col-sm-2 control-label">Quarter</label>
+			<div class="col-sm-10">
+				<select class="form-control" ng-model="offer.quarter" ng-options="quarter for quarter in quarters"></select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="id" class="col-sm-2 control-label">Class</label>
+			<div class="col-sm-10">
+				<p class="form-control-static" ng-if="!availableCourses">Loading...</p>
+				<ul class="list-group pointer">
+					<li ng-repeat="course in availableCourses" class="list-group-item" ng-bind="::(course.id + ' :: ' + getName(course.id))"
+					    ng-class="{active:offer.id==course.id}" ng-click="offer.id=course.id"></li>
+				</ul>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="note" class="col-sm-2 control-label">Note</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="note" placeholder="I'm looking for a spot in COWS 68448"/>
+			</div>
+		</div>
+		<button type="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="!availableCourses || !offer.id" ng-click="submit()">Find me another class!</button>
+	</form>
+</div>
+<alert type="info" ng-if="!negotiationServer">It looks like the exchange server isn't running. Email kdwang@uchicago.edu please. :)</alert>
+-->

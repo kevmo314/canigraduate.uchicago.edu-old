@@ -1,0 +1,14 @@
+<div class="modal-header"><h4>Swap a Course</h4></div>
+<div class="modal-body">
+	<p>Select the course you want to swap with</p>
+	<div class="list-group">
+		<a ng-repeat="registration in data.registrations" ng-bind="registration"
+		   ng-click="data.selected[registration]=!data.selected[registration]"
+		   ng-class="{active:data.selected[registration]}"
+		   class="list-group-item"></a>
+	</div>
+</div>
+<div class="modal-footer">
+	<input type="submit" value="Swap!" class="btn btn-success" ng-click="$close(data.selected)"/>
+	<button class="btn btn-default" ng-click="$dismiss()" type="button">nvm</button>
+</div>

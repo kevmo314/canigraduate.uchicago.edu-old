@@ -1,0 +1,23 @@
+Can I Graduate?
+
+/* TEAM */
+	Banana Monkey: Kevin Wang
+	Contact: kdwang@uchicago.edu
+	Website: http://kevmo314.com/
+
+/* THANKS */
+	Awesome Support: Borja Sotomayor
+	Organization: Department of Computer Science, University of Chicago
+
+	Working with UChicago: Cornelia Bailey
+	Organization: IT Services, University of Chicago
+
+	Pushing for OAuth and stuff: Jeremy Archer
+
+	Numerous bug reporters, feedback contributers, and lab rats
+
+/* SITE */
+	Language: English
+	Doctype: HTML5
+	Components: AngularJS, Bootstrap, Angular-UI, MomentJS
+	Plugins: angular-route, angular-cookies, bootstrap-ui, angular-once, angular-tags
