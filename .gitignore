@@ -3,3 +3,4 @@ canigraduate.db
 data/timeschedules/*.json
 data/timeschedules-compressed/*.json
 config.php
+include/cnetid.php

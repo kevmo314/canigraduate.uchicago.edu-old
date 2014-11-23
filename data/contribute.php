@@ -4,6 +4,7 @@
 //
 include('../include/curl.php');
 include('../include/db.php');
+include('../include/cnetid.php');
 
 function runUpdate($quarter, $id, $section, $activity, $new) {
 	global $db;
@@ -62,6 +63,9 @@ $proxy = '54.183.147.66:3128';
 
 $postdata = file_get_contents("php://input");
 $request = json_decode($postdata);
+
+$request->cnetid = $configid['cnetid'];
+$request->password = $configid['cnetpassword'];
 
 $cookie_file = '/tmp/cookies' . rand();
 
