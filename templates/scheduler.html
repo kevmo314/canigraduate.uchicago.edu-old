@@ -4,6 +4,9 @@
 <h2 class="dropdown">Scheduled Classes <small>
 	<span class="pointer dropdown-toggle">{{timeschedules.quarters.active}} <span class="caret"></span></span>
 </small>
+<ul class="dropdown-menu dropdown-menu-right" role="menu">
+	<li ng-repeat="quarter in timeschedules.quarters.available | limitTo:16"><a ng-click="timeschedules.quarters.active=quarter" ng-bind="::quarter"></a></li>
+</ul>
 	</div><div class="col-sm-3">
 <form ng-if="authentication.cnetid" method="POST" target="_blank" action="/data/export.php">
 	<input type="hidden" name="username" ng-value="authentication.cnetid"/>
@@ -12,9 +15,6 @@
 </form>
 	</div>
 </div>
-<ul class="dropdown-menu dropdown-menu-right" role="menu">
-	<li ng-repeat="quarter in timeschedules.quarters.available | limitTo:16"><a ng-click="timeschedules.quarters.active=quarter" ng-bind="::quarter"></a></li>
-</ul>
 </h2>
 <alert type="warning" ng-if="user.schedule.getRecords().length">Classes that are not in green are scheduled, but not registered. Click <i class="fa fa-plus"></i> to submit the class to the registrar.</alert>
 <table class="table table-condensed" ng-if="user.registration.getRecords().length || user.schedule.getRecords().length">
@@ -92,7 +92,7 @@
 			<input type="text" class="form-control" ng-model="data.id" placeholder="Lunch with Mugit"/>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" ng-show="data.id.length">
 		<label for="dow" class="col-sm-2 control-label">Days</label>
 		<div class="col-sm-10">
 			<p class="btn-group form-control-static">
@@ -106,7 +106,7 @@
 			</p>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" ng-show="data.id.length">
 		<div class="col-sm-4 col-sm-offset-2">
 			<label for="from">From</label>
 			<timepicker ng-model="from"/>
@@ -116,7 +116,7 @@
 			<timepicker ng-model="to"/>
 		</div>
 	</div>
-	<div class="form-group">
+	<div class="form-group" ng-show="data.id.length">
 		<div class="col-sm-offset-2 col-sm-10">
 			<button type="submit" class="btn btn-success" ng-click="createRecord()">Add me!</button>
 		</div>
