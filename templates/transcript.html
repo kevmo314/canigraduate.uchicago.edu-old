@@ -22,7 +22,7 @@
 			<td class="col-xs-1" ng-hide="show"><strong ng-bind="::user.transcript.getCumulativeGPA(quarter).toFixed(2)"></strong></td>
 			<td colspan="4" ng-show="show"></td>
 		</tr>
-		<tr ng-repeat="record in user.transcript.getRecords(quarter, true)" ng-show="show" class="pointer" ng-click="interface.findClass(record.id)">
+		<tr ng-repeat="record in user.transcript.getRecords(quarter, true)" ng-show="show" class="pointer" ng-click="interface.findClass(record.id, quarter)">
 			<td ng-bind="::record.id"></td>
 			<td ng-bind="::getName(record.id)" colspan="4"></td>
 			<td ng-bind="::record.gpa"></td>

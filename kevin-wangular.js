@@ -261,7 +261,7 @@ app.controller('FindClassesCtrl', function($rootScope, $scope, $modal, WatchServ
 		WatchService.open({ // separate object in case the user modifies the data, it shouldn't modify ts
 			quarter:cls.quarter,
 			section:cls.section,
-			id:cls.id,
+			course:cls.id,
 			activity:index
 		});
 	};
@@ -327,9 +327,16 @@ app.service('InterfaceManagerService', function(DEFAULT_FILTERS, ClassService, T
 		page:1,
 		pageSize:20
 	};
-	self.findClass = function(cls) {
+	self.findClass = function(cls, forceQuarter) {
 		self.tabs[3] = true;
 		self.find.filters = angular.extend({}, DEFAULT_FILTERS, {search:cls});
+		if(forceQuarter) {
+			// forcing to an active quarter
+			if(forceQuarter !== true) {
+				TimeschedulesService.quarters.active = forceQuarter;
+			}
+			self.find.filters.archive = true;
+		}
 	};
 	self.findMajor = function(major) {
 		self.tabs[1] = true;
@@ -433,7 +440,7 @@ app.controller('ExchangeCtrl', function($q, $scope, $http, $modal, ClassService,
 		WatchService.open({ // separate object in case the user modifies the data, it shouldn't modify ts
 			quarter:TimeschedulesService.quarters.active,
 			section:'',
-			id:'',
+			course:'',
 			activity:''
 		});
 	};
@@ -488,7 +495,7 @@ app.controller('ExchangeCtrl', function($q, $scope, $http, $modal, ClassService,
 		});
 	};
 });
-app.controller('ClassInfoCtrl', function($scope, $http) {
+app.controller('ClassInfoCtrl', function($scope, $http, UserService, ClassService) {
 	$scope.getNextQuarter = function(cls) {
 		var limit = cls.displayLimit || 0;
 		if(cls.sections[limit]) {
@@ -1089,6 +1096,7 @@ app.service('RecommendationService', function($http, UserService) {
 	var self = this;
 	self.data = [];
 	self.update = function() {
+		/*
 		if(UserService.classes.length > 0) {
 			$http.get('/data/recommendations.php?classes=' + UserService.classes.join('|')).success(function(data) {
 				self.data.clear();
@@ -1099,6 +1107,7 @@ app.service('RecommendationService', function($http, UserService) {
 		} else {
 			self.data.clear();
 		}
+		*/
 	};
 });
 app.service('SequenceService', function($rootScope, $http, UserService, ClassService) {
@@ -1205,7 +1214,7 @@ app.service('WatchService', function($http, $modal, TimeschedulesService, ClassS
 				$scope.authentication = AUTHENTICATION;
 				$scope.data = data;
 				$scope.matches = function() {
-					return /[A-Z]{4} \d{5}/.test($scope.data.id);
+					return /[A-Z]{4} \d{5}/.test($scope.data.course);
 				};
 			}
 		}).result.then(self.add);
@@ -2040,7 +2049,7 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 		for(var id in secondaries) {
 			secondaries[id] = secondaries[id].map(toActivityObject);
 		}
-		return {
+		var obj = {
 			index:i,
 			id:timeschedules[i][1],
 			quarter:timeschedules[i][0],
@@ -2051,6 +2060,11 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 			// for ease of templating:
 			secondary_collapsed:timeschedules[i][4].map(toActivityObject)
 		};
+		obj.secondary_collapsed.sort(function(a, b) {
+			var idcmp = strcmp(a.id, b.id);
+			return (idcmp == 0 ? strcmp(a.type, b.type) : idcmp)
+		});
+		return obj;
 	};
 	self.quarters = {
 		active:'', available:[]
@@ -2116,6 +2130,68 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 			}
 		})(0);
 	});
+});
+app.directive('notes', function($rootScope, UserService, ClassService) {
+	var re = /(\w{4}(\s)?)?\d{3,5}/g;
+	return {
+		restrict:'A',
+		scope:{
+			notes:'=',
+			department:'='
+		},
+		template:'<span ng-repeat="cls in ::classes" tooltip="{{::cls.name}}" ng-class="cls.text" ng-style="cls.style" ng-click="open(cls)"><i class="fa" ng-class="::cls.icon" ng-if="::cls.icon"></i><span ng-if="::cls.icon"> </span><span ng-bind="::cls.id"></span></span>',
+		link:function(scope, element, attrs) {
+			scope.open = function(cls) {
+				if(cls.name) {
+					// make sure it's not just a text node
+					$rootScope.interface.findClass(cls.id);
+				}
+			};
+			scope.$watchGroup(['notes', 'department'], function() {
+				scope.classes = [];
+				var matches = [];
+				while(m = re.exec(scope.notes)) { matches.push(m) }
+				var transcript = UserService.transcript.getRecords(), activeDepartment = scope.department;
+				var left = 0;
+				for(var i = 0; i < matches.length; i++) {
+					var length = matches[i][0].length;
+					var id = matches[i][0].toUpperCase();
+					var containsDepartment = true;
+					if(id.match(/\w{4}\d{3,5}/)) {
+						id = id.substring(0, 4) + " " + id.substring(4);
+					} else if(id.match(/\d{3,5}/) && id.length <= 5) {
+						id = activeDepartment + " " + id;
+						containsDepartment = false;
+					}
+					for(var j = id.length; j < 10; j++) { id += "0" }
+					var name = (id in ClassService.data ? ClassService.data[id].name : undefined);
+					if(name) {
+						// push the text node
+						scope.classes.push({id:scope.notes.substring(left, matches[i].index)});
+						// then push the identification node
+						var record = transcript.filter(function(record) { return record.id == id }).pop();
+						if(record) {
+							if(record.quality) {
+								scope.classes.push({id:id, icon:'fa-check', name:name, text:['text-success', 'pointer'], style:{'white-space':'nowrap'}});
+							} else {
+								scope.classes.push({id:id, icon:'fa-minus', name:name, text:['text-warning', 'pointer'], style:{'white-space':'nowrap'}});
+							}
+						} else {
+							scope.classes.push({id:id, icon:'fa-times', name:name, text:['text-danger', 'pointer'], style:{'white-space':'nowrap'}});
+						}
+						if(containsDepartment) {
+							activeDepartment = id.substring(0, 4);
+						}
+					} else {
+						// just render it as a text node, we can't locate the record
+						scope.classes.push({id:scope.notes.substring(left, matches[i].index + length)});
+					}
+					left = matches[i].index + length;
+				}
+				scope.classes.push({id:scope.notes.substring(left, scope.notes.length)});
+			});
+		}
+	}
 });
 app.directive('toggle', function() {
 	return {
@@ -2271,7 +2347,7 @@ app.directive('gpaVisualization', function() {
 		scope:{
 			transcript:'='
 		},
-		template:'<svg height="270" width="100%"><svg width="100%" height="100%" ng-mousemove="setTooltip($event)" viewBox="0 0 4 54" preserveAspectRatio="none">'
+		template:'<svg height="270" width="100%" ng-mousemove="setTooltip($event)"><svg width="100%" height="100%" viewBox="0 0 4 54" preserveAspectRatio="none">'
 			+ '<rect x="0" y="0" ng-attr-width="{{leftWidth}}" height="54" fill="#5cb85c"/>'
 			+ '<rect ng-attr-x="{{leftWidth}}" y="0" ng-attr-width="{{rightWidth}}" height="54" fill="#d9534f"/>'
 			+ '<rect shape-rendering="crispEdges" ng-attr-x="{{block.x}}" ng-attr-y="{{block.y}}" width="0.04" height="1" ng-attr-fill="{{block.fill}}" ng-repeat="block in blocks"/>'
@@ -2281,8 +2357,8 @@ app.directive('gpaVisualization', function() {
 			+ '<line shape-rendering="crispEdges" vector-effect="non-scaling-stroke" ng-repeat="x in labels.x" ng-attr-x1="{{x}}" y1="52" ng-attr-x2="{{x}}" y2="54" stroke="black" stroke-width="1"/>'
 			+ '<line shape-rendering="crispEdges" vector-effect="non-scaling-stroke" ng-repeat="y in labels.y" x1="3.9" ng-attr-y1="{{y}}" x2="4.0" ng-attr-y2="{{y}}" stroke="black" stroke-width="1"/>'
 			+ '</svg>'
-			+ '<text vector-effect="non-scaling-stroke" ng-repeat="x in labels.x" ng-attr-x="{{(25 * x) + \'%\'}}" y="258" text-anchor="middle" ng-bind="x.toFixed(1)"></text>'
-			+ '<text vector-effect="non-scaling-stroke" ng-repeat="y in labels.y" x="97.5%" ng-attr-y="{{y * 5}}" text-anchor="end" alignment-baseline="central" ng-bind="y"></text>'
+			+ '<text vector-effect="non-scaling-stroke" ng-repeat="x in labels.x" ng-attr-x="{{(25 * x) + \'%\'}}" y="258" text-anchor="middle" ng-bind="x.toFixed(1)" style="pointer-events:none"></text>'
+			+ '<text vector-effect="non-scaling-stroke" ng-repeat="y in labels.y" x="97.5%" ng-attr-y="{{y * 5}}" text-anchor="end" alignment-baseline="central" ng-bind="y" style="pointer-events:none"></text>'
 			+ '</svg><div class="text-center" compile="tooltip"></div>',
 		link:function(scope, element, attrs) {
 			scope.blocks = [];

@@ -1,7 +1,7 @@
 <div id="tutorial-scheduler">
 <div class="row">
 	<div class="col-sm-9">
-<h2 class="dropdown">Scheduled Classes <small>
+<h2 class="dropdown">Scheduled Courses <small>
 	<span class="pointer dropdown-toggle">{{timeschedules.quarters.active}} <span class="caret"></span></span>
 </small>
 <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -16,7 +16,7 @@
 	</div>
 </div>
 </h2>
-<alert type="warning" ng-if="user.schedule.getRecords().length">Classes that are not in green are scheduled, but not registered. Click <i class="fa fa-plus"></i> to submit the class to the registrar.</alert>
+<alert type="warning" ng-if="user.schedule.getRecords().length">Courses that are not in green are scheduled, but not registered. Click <i class="fa fa-plus"></i> to submit the class to the registrar.</alert>
 <table class="table table-condensed" ng-if="user.registration.getRecords().length || user.schedule.getRecords().length">
 	<thead>
 		<th class="col-sm-3 text-right">Class</th>
@@ -24,12 +24,12 @@
 		<th class="col-sm-3 text-right">Books</th>
 	</thead>
 	<tr class="success" ng-class="{'warning':record.hidden}" ng-repeat="record in user.registration.getRecords()" ng-style="{color:colors[$index]}" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
-		<td class="pointer text-right" ng-click="interface.findClass(record.timeschedule.id)" ng-bind="::record.timeschedule.id"
+		<td class="pointer text-right" ng-click="interface.findClass(record.timeschedule.id, true)" ng-bind="::record.timeschedule.id"
 	      tooltip="{{(record.timeschedule.section ? 'Section: ' + record.timeschedule.section + ' ' : '') + (record.activity ? 'Activity: ' + record.activity : '')}}"
 			  tooltip-placement="right"
 		    tooltip-append-to-body="true">
 		</td>
-		<td class="pointer" ng-click="interface.findClass(record.timeschedule.id)"
+		<td class="pointer" ng-click="interface.findClass(record.timeschedule.id, true)"
 		    ng-bind="::getName(record.timeschedule.id)"></td>
 		<td class="text-right">
 			<div ng-hide="record.pending || !hover">
@@ -51,12 +51,12 @@
 	</tr>
 	<tr ng-repeat="record in user.schedule.getRecords()" ng-style="{color:colors[$index+user.registration.getRecords().length]}">
 		<td ng-if="::record.timeschedule.index == -1">Manual Record</td>
-		<td class="pointer text-right" ng-click="interface.findClass(record.timeschedule.id)" ng-bind="::record.timeschedule.id"
+		<td class="pointer text-right" ng-click="interface.findClass(record.timeschedule.id, true)" ng-bind="::record.timeschedule.id"
 	      tooltip="{{(record.timeschedule.section ? 'Section: ' + record.timeschedule.section + ' ' : '') + (record.activity ? 'Activity: ' + record.activity : '')}}"
 			  tooltip-placement="right"
 		    tooltip-append-to-body="true">
 		</td>
-		<td class="pointer" ng-click="interface.findClass(record.timeschedule.id)"
+		<td class="pointer" ng-click="interface.findClass(record.timeschedule.id, true)"
 		    ng-bind="::getName(record.timeschedule.id)" ng-if="::record.timeschedule.index > -1"></td>
 		<td class="text-right">
 			<div ng-hide="record.pending">
@@ -123,7 +123,29 @@
 	</div>
 </form>
 </div>
-<h2>Recommended Courses</h2>
+<!--
+<h2>Past Courses</h2>
+<small><table class="table table-bordered">
+	<thead>
+		<tr>
+			<th class="text-right">Quarter</th>
+			<th>1</th>
+			<th>2</th>
+			<th>3</th>
+			<th>4</th>
+			<th>5</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="quarter in user.transcript.getQuarters()" ng-if="user.transcript.getRecords(quarter, true)">
+			<td class="text-right"><strong ng-bind="::quarter"></strong></td>
+			<td ng-repeat="record in user.transcript.getRecords(quarter, true)" ng-bind="::record.id" tooltip="{{::getName(record.id)}}" tooltip-append-to-body="true" ng-class="{'text-danger':!record.quality}" class="pointer" ng-click="interface.findClass(record.id, quarter)">
+			</td>
+		</tr>
+	</tbody>
+</table></small>
+-->
+<!--<h2>Recommended Courses</h2>
 <alert type="info" ng-if="!recommendations.length">Add courses or import your data.</alert>
 <accordion>
 	<accordion-group ng-repeat="recommend in recommendations" is-open="showDetails">
@@ -136,4 +158,4 @@
 		</accordion-heading>
 		<div ng-init="child=recommend" ng-include="'/templates/partials/class-info.html'" ng-if="showDetails"></div>
 	</accordion-group>
-</accordion>
+</accordion>-->

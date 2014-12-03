@@ -15,5 +15,7 @@ while(($page = post('https://classes.uchicago.edu/courseDetail.php?courseName=' 
 $matches = array();
 // make the also haphazard assumption that all sections have the same additional notes. :v
 preg_match('/Additional notes:\<\/strong\>(.+)/', $page, $matches);
-echo html_entity_decode(trim($matches[1]));
+if(sizeof($matches) > 1) {
+	echo html_entity_decode(trim($matches[1]));
+}
 unlink($cookie_file);

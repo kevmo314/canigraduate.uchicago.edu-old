@@ -48,7 +48,7 @@
 						</td>
 					</tr>
 					<tr ng-if="::section.notes">
-						<td colspan="6"><gravitate ng-bind="::section.notes" class="text-muted"></gravitate></td>
+						<td colspan="6"><gravitate class="text-muted"><span department="::section.id.substring(0,4)" notes="::section.notes"></span></gravitate></td>
 					</tr>
 				</tbody>
 			</table>

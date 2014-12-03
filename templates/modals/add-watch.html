@@ -17,13 +17,13 @@
 			</div>
 		</div>
 		<alert ng-if="quarters.indexOf(data.quarter) > 2" type="warning">Historical quarters do not receive frequent monitoring updates. Notifications to enrollment changes may be delayed up to or over an hour after they occur.</alert>
-		<div class="form-group" ng-class="{'has-warning':!matches() && data.course.length}">
-			<label for="class" class="col-sm-2 control-label">Class</label>
+		<div class="form-group" ng-class="{'has-warning':!matches()}">
+			<label for="course" class="col-sm-2 control-label">Course</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" ng-model="data.course" typeahead-wait-ms="200" typeahead="class for class in searchClasses($viewValue, 20)"/>
+				<input type="text" name="course" class="form-control" ng-model="data.course" typeahead-wait-ms="200" typeahead="class for class in searchClasses($viewValue, 20)"/>
 			</div>
 		</div>
-		<alert ng-if="!matches() && data.course.length" type="warning">Watches must exactly match the pattern <code>DEPT #####</code>. Wildcard matches are not permitted. While <strong>Can I Graduate?</strong> will accept the value as provided, it is probably not your intention. Please review and correct if necessary.</alert>
+		<alert ng-if="!matches()" type="warning">Watches must exactly match the pattern <code>DEPT #####</code>. Wildcard matches are not permitted. While <strong>Can I Graduate?</strong> will accept the value as provided, it is probably not your intention. Please review and correct if necessary.</alert>
 		<div class="form-group">
 			<label for="class" class="col-sm-2 control-label">Section</label>
 			<div class="col-sm-10">
@@ -39,6 +39,6 @@
 	</form>
 </div>
 <div class="modal-footer">
-	<input type="submit" value="Watchitize me, Captain!" class="btn btn-success" ng-click="$close(data)" ng-disabled="data.timeschedule.selected==-1"/>
+	<input type="submit" value="Watchitize me, Captain!" class="btn btn-success" ng-click="$close(data)" ng-disabled="!data.course.length"/>
 	<button class="btn btn-default" ng-click="$dismiss()" type="button">nvm</button>
 </div>

@@ -115,6 +115,10 @@ var GROUPS = {
 		'MUSI 10100','MUSI 10200','MUSI 10300','MUSI 10400'
 	],
 	GEOS:{
+		LISTA:['GEOS 21000','GEOS 21005','GEOS 21100','GEOS 21200','GEOS 21205','GEOS 21400','GEOS 22000','GEOS 22040','GEOS 22050','GEOS 22060','GEOS 22200','GEOS 23200','GEOS 23205','GEOS 23400','GEOS 23800','GEOS 23805','GEOS 23900','GEOS 24200','GEOS 24500','GEOS 24600','GEOS 24705','GEOS 25400','GEOS 26300','GEOS 26600','GEOS 27000','GEOS 28000','GEOS 28100','GEOS 28300','GEOS 29700','GEOS 29001','GEOS 29002','GEOS 29003'],
+		LISTB:['GEOS 21000','GEOS 23200','GEOS 23205','GEOS 23400','GEOS 23800','GEOS 23805','GEOS 23900','GEOS 24200','GEOS 24500','GEOS 24600','GEOS 24705','GEOS 26600','GEOS 28000','GEOS 29700','BIOS 20196','BIOS 22244','BIOS 23232','BIOS 23266','BIOS 23289','BIOS 23406','BIOS 25206','BIOS 23280','GEOS 29005'],
+		LISTC:['BIOS 20191','BIOS 20194','BIOS 20196','BIOS 20200','BIOS 21208','BIOS 22243','BIOS 22244','BIOS 23289','BIOS 23404','BIOS 23406','BIOS 25206','CHEM 20100','CHEM 20200','CHEM 22000','CHEM 22100','CHEM 22200','CHEM 23000','CHEM 23100','CHEM 23200','CHEM 26100','CHEM 26200','CHEM 26300','PHYS 18500','PHYS 19700','PHYS 22500','PHYS 22700','PHYS 22600'],
+		LISTD:['CHEM 20100','CHEM 20200','CHEM 22000','CHEM 22100','CHEM 22200','CHEM 23000','CHEM 23100','CHEM 23200','CHEM 26100','CHEM 26200','CHEM 26300','BIOS 2018','BIOS 2019','BIOS 20200','BIOS 20242','BIOS 21208','BIOS 25206','BIOS 23252','BIOS 23254','BIOS 23258','BIOS 23289'],
 		LISTE:['ENST 24102','ENST 29000','PBPL 21800','PBPL 23100','PBPL 24701','ECON 19800','ECON 19900','ECON 26500','ECON 26510','PPHA 38900','PPHA 39901'],
 		LISTF:['GEOS 25400','MATH 19620','MATH 20000','MATH 20100','MATH 20300','MATH 20400','MATH 20500','MATH 21100','MATH 22000','MATH 27000','MATH 27300','MATH 27500','MATH 38300','PHYS 22100','STAT 2','CMSC 28510','CMSC 34200']
 	},
@@ -125,6 +129,14 @@ var GROUPS = {
 		ENV_ECON:['ANTH 22000','ANTH 24500','ECON 26500','ECON 26510','BPRO 29000','GEOG 22700','GEOG 23500','GEOG 26100','GEOG 26300','GEOG 26600','GEOG 42400','ENST 23100','ENST 23500','ENST 23600','ENST 23700','ENST 24101','ENST 24301','ENST 24400','ENST 24701','ENST 24800','ENST 24901','ENST 25501','ENST 28001','PLSC 20407','PLSC 21308','PLSC 22200','PBPL 20000','PBPL 21800','PBPL 22100','PBPL 22200','PBPL 22300','PBPL 23000','PBPL 24600','PBPL 24800','SOCI 20104','SOCI 20122','SOCI 20129','SOCI 20146','SOCI 20152'],
 		SOCI_NATURAL:['ANTH 21204','ANTH 22000','ANTH 22400','ANTH 28000','ANTH 28210','ANTH 28410','ANTH 28500','ANTH 29100','ANTH 39205','ARTH 15700','ARTH 26305','EALC 26300','ENGL 18903','ENGL 25104','ENGL 25403','ENST 22501','ENST 23500','ENST 23600','ENST 23700','ENST 24400','ENST 24800','ENST 25501','ENST 28001','ENST 28402','ENST 28600','ENST 28700','GEOG 20100','GEOG 21900','GEOG 22100','GEOG 22700','GEOG 23500','GEOG 25300','GEOG 25500','GEOG 26100','GEOG 26600','GEOG 29400','GEOG 42400','HIPS 17502','HIPS 29507','HIST 22705','CHDV 21500','INST 23101','INST 23102','PHIL 20300','PHIL 22201','PHIL 24901','PHIL 25100','PLSC 20407','PLSC 21308','PLSC 22200','SOCI 20104','SOCI 20122','SOCI 20129','SOCI 20146','SOCI 20152'],
 		GENERAL:['ANTH 28100','ANTH 28300','ANTH 28400','ANTH 28600','BIOS 02810','BIOS 10110','BIOS 20184','BIOS 20185','BIOS 11104','BIOS 11109','BIOS 13106','BIOS 13107','BIOS 13109','BIOS 13113','BIOS 23232','BIOS 23233','BIOS 23241','BIOS 23246','BIOS 23248','BIOS 23252','BIOS 23254','BIOS 23266','BIOS 23280','BIOS 23289','BIOS 23299','BIOS 23351','BIOS 23401','BIOS 23406','BIOS 29286','BIOS 29291','BIOS 29299','ENST 11101','ENST 11201','ENST 11301','ENST 12100','ENST 12402','ENST 14200','ENST 14300','ENST 27400','GEOS 13100','GEOS 13300','GEOS 13400','GEOS 21200','GEOS 23200','GEOS 23300','GEOS 23400','GEOS 23800','GEOS 23900','GEOS 24500','GEOS 25300','NTSC 10300','PHSC 10900','PHSC 11000']
+	},
+	LLSO:{
+		LETTERS:['LLSO 20601','LLSO 20702','LLSO 21710','LLSO 21810','LLSO 21811','LLSO 22104','LLSO 22612','LLSO 23501','LLSO 23900','LLSO 24300','LLSO 24711','LLSO 25411','LLSO 25417','LLSO 25612','LLSO 25903','LLSO 26815','LLSO 28233','LLSO 28500','LLSO 28611'],
+		SOCIETY:['LLSO 20602','LLSO 20603','LLSO 20606','LLSO 20911','LLSO 21103','LLSO 21210','LLSO 22106','LLSO 22209','LLSO 22210','LLSO 22612','LLSO 22707','LLSO 22710','LLSO 23100','LLSO 23114','LLSO 23402','LLSO 23415','LLSO 24000','LLSO 24011','LLSO 24901','LLSO 25100','LLSO 25203','LLSO 25204','LLSO 25215','LLSO 25610','LLSO 25903','LLSO 25904','LLSO 26000','LLSO 26109','LLSO 26201','LLSO 26202','LLSO 26500','LLSO 26601','LLSO 26702','LLSO 26802','LLSO 26803','LLSO 26804','LLSO 27100','LLSO 27101','LLSO 27200','LLSO 27306','LLSO 27307','LLSO 27601','LLSO 27704','LLSO 27801','LLSO 28000','LLSO 28010','LLSO 28100','LLSO 28212','LLSO 28311','LLSO 28313','LLSO 28314','LLSO 28604','LLSO 28613','LLSO 28710','LLSO 28711','LLSO 29000','LLSO 29201']
+	},
+	PBPL:{
+		METHODS:['PBPL 26200', 'PBPL 26500', 'PBPL 26605', 'PBPL 27040', 'GEOG 28200', 'SOCI 20001', 'SOCI 20111', 'PPHA 34600', 'PPHA 34810', 'SSAD 30200'],
+		WINDOWS:['PBPL 26300', 'PBPL 24751', 'PBPL 26801', 'SOCI 20140']
 	}
 };
 var CORE_EXCLUSION_LIST = GROUPS.CORE_CIV.concat(GROUPS.CORE_ART).concat(['HUMA 1', 'SOSC 1']).concat([
@@ -145,7 +157,7 @@ var CORE_EXCLUSION_LIST = GROUPS.CORE_CIV.concat(GROUPS.CORE_ART).concat(['HUMA 
 var LANGUAGES = {'AANL':'Hittite','ASLG':'American Sign Language','GREK':'Greek','LATN':'Latin','MOGK':'Modern Greek','CHIN':'Chinese','JAPN':'Japanese','KORE':'Korean','GRMN':'German','NORW':'Norwegian','YDDH':'Yiddish','BASQ':'Basque','SWAH':'Swahili','AKKD':'Akkadian','ARAB':'Arabic','ARAM':'Aramaic','ARME':'Armenian','EGPT':'Egyptian','HEBR':'Hebrew','KAZK':'Kazak','PERS':'Persian','TURK':'Turkish','UGAR':'Ugaritic','UZBK':'Uzbek','CATA':'Catalan','FREN':'French','ITAL':'Italian','PORT':'Portuguese','SPAN':'Spanish','BCSN':'Bosnian/Croatian/Serbian','CZEC':'Czech','GEOR':'Georgian','POLI':'Polish','RUSS':'Russian','BANG':'Bangla','HIND':'Hindi','MALA':'Malayalam','MARA':'Marathi','PALI':'Pali','SANS':'Sanskrit','TAML':'Tamil','TLGU':'Telugu','TBTN':'Tibetian','URDU':'Urdu'};
 var REQUIREMENTS = {
 	'College Core':{
-		notes:'Humanities and Civilization courses must be from the same sequence.',
+		notes:'Humanities and Civilization requirements cannot be fulfilled across multiple sequences.',
 		link:{
 			catalog:'thecurriculum/'
 		},
@@ -641,6 +653,70 @@ var REQUIREMENTS = {
 			notes:'Up to three may be in approved related fields.'}
 		]
 	},
+	'Geophysical Sciences BA':{
+		classes:[
+			angular.copy(SEQUENCES.CHEM3Q110),
+			angular.copy(SEQUENCES.MATH3Q130),
+			'BIOS 20197',
+			'BIOS 20198',
+			angular.copy(SEQUENCES.PHYS3Q120),
+			'GEOS 13100',
+			'GEOS 13200',
+			'GEOS 13300',
+			{require:1, max:1, classes:GROUPS.GEOS.LISTF, hidden:true, notes:'One Mathematics or Statistics course'},
+			{require:4, max:4, classes:GROUPS.GEOS.LISTA, hidden:true, notes:'Four courses from List A'},
+			{require:2, classes:[
+				'BIOS 2', 'BIOS 2',
+				'CHEM 2', 'CHEM 2',
+				'GEOS 2', 'GEOS 2',
+				'PHYS 2', 'PHYS 2',
+				'ASTR 2', 'ASTR 2',
+				'MATH 2', 'MATH 2',
+				'STAT 2', 'STAT 2',
+				'ECON 2', 'ECON 2', 
+				'ENST 2', 'ENST 2',
+				'PBPL 2', 'PBPL 2',
+				'PPHA 2', 'PPHA 2',
+				'CMSC 2', 'CMSC 2'
+			], hidden:true, notes:'Two additional science courses, up to two can be from List C and/or List F'}
+		],
+		link:{
+			catalog:'geophysicalsciences/#programrequirementsforthebaingeophysicalsciences'
+		},
+		notes:'Check which science elective courses you are using, as there are restrictions related to the relevant course lists.'
+	},
+	'Geophysical Sciences BS':{
+		classes:[
+			angular.copy(SEQUENCES.CHEM3Q110),
+			angular.copy(SEQUENCES.MATH3Q130),
+			'BIOS 20197',
+			'BIOS 20198',
+			angular.copy(SEQUENCES.PHYS3Q120),
+			'GEOS 13100',
+			'GEOS 13200',
+			'GEOS 13300',
+			{require:2, max:2, classes:GROUPS.GEOS.LISTF, hidden:true, notes:'One Mathematics or Statistics course'},
+			{require:3, max:3, classes:GROUPS.GEOS.LISTA, hidden:true, notes:'Three courses from List A'},
+			{require:5, classes:[
+				'BIOS 2', 'BIOS 2', 'BIOS 2', 'BIOS 2', 'BIOS 2',
+				'CHEM 2', 'CHEM 2', 'CHEM 2', 'CHEM 2', 'CHEM 2',
+				'GEOS 2', 'GEOS 2', 'GEOS 2', 'GEOS 2', 'GEOS 2',
+				'PHYS 2', 'PHYS 2', 'PHYS 2', 'PHYS 2', 'PHYS 2',
+				'ASTR 2', 'ASTR 2', 'ASTR 2', 'ASTR 2', 'ASTR 2',
+				'MATH 2', 'MATH 2', 'MATH 2', 'MATH 2', 'MATH 2',
+				'STAT 2', 'STAT 2', 'STAT 2', 'STAT 2', 'STAT 2',
+				'ECON 2', 'ECON 2', 'ECON 2', 'ECON 2', 'ECON 2',
+				'ENST 2', 'ENST 2', 'ENST 2', 'ENST 2', 'ENST 2',
+				'PBPL 2', 'PBPL 2', 'PBPL 2', 'PBPL 2', 'PBPL 2',
+				'PPHA 2', 'PPHA 2', 'PPHA 2', 'PPHA 2', 'PPHA 2',
+				'CMSC 2', 'CMSC 2', 'CMSC 2', 'CMSC 2', 'CMSC 2'
+			], hidden:true, notes:'Five additional science courses, up to three can be from List C and up to two can be from List F'}
+		],
+		link:{
+			catalog:'geophysicalsciences/#programrequirementsforthebsingeophysicalsciences'
+		},
+		notes:'Check which science elective courses you are using, as there are restrictions related to the relevant course lists.'
+	},
 	'History':{
 		classes:[
 			'HIST 29801','HIST 29802',
@@ -756,6 +832,20 @@ var REQUIREMENTS = {
 		],
 		link:{
 			catalog:'latinamericanstudies/#summaryofrequirementsminorprograminlatinamericanstudies'
+		}
+	},
+	'Law, Letters, and Society':{
+		classes:[
+			'LLSO 24200',
+			{require:2, classes:GROUPS.LLSO.LETTERS, hidden:true, notes:'Two Letters courses'},
+			{require:2, classes:GROUPS.LLSO.SOCIETY, hidden:true, notes:'Two Society courses'},
+			{require:6,
+				classes:['LLSO ', 'LLSO ', 'LLSO ', 'LLSO ', 'LLSO ', 'LLSO '],
+				notes:'Six Complementary courses'
+			}
+		],
+		link:{
+			catalog:'lawlettersandsociety/#programrequirements'
 		}
 	},
 	'Linguistics':{
@@ -1055,8 +1145,15 @@ var REQUIREMENTS = {
 			'PBPL 22100','PBPL 22200','PBPL 22300',
 			{require:1, classes:['ECON 20000','PBPL 20000']},
 			{require:1, classes:['STAT 22000','STAT 23400','STAT 24400']},
-			{require:3, notes:'Three courses in an area of specialization.'},
-			'PBPL 26200','PBPL 26300','PBPL 29800'
+			{require:3, classes:[
+				'ANTH ', 'ANTH ', 'ANTH ',
+				'ECON ', 'ECON ', 'ECON ',
+				'HIST ', 'HIST ', 'HIST ',
+				'LLSO ', 'LLSO ', 'LLSO '
+			], notes:'Three courses in an area of specialization.'},
+			{require:1, classes:GROUPS.PBPL.METHODS, hidden:true, notes:'One Methods class'},
+			{require:1, classes:GROUPS.PBPL.WINDOWS, hidden:true, notes:'One Windows class'},
+			'PBPL 29800'
 		],
 		link:{
 			catalog:'publicpolicystudies/#summaryofrequirements'
