@@ -77,6 +77,15 @@ var SEQUENCES = {
 	], notes:'Two quarters of organic chem',hidden:true}
 };
 var GROUPS = {
+	CORE_HUM:[
+		'HUMA 11000','HUMA 11100','HUMA 11200',
+		'HUMA 11500','HUMA 11600','HUMA 11700',
+		'HUMA 12000','HUMA 12100','HUMA 12200',
+		'HUMA 12300','HUMA 12400','HUMA 12500',
+		'HUMA 13500','HUMA 13600','HUMA 13700',
+		'HUMA 16000','HUMA 16100','HUMA 16200',
+		'HUMA 17000','HUMA 17100','HUMA 17200'
+	],
 	CORE_CIV:[
 		"CRES 24001","CRES 24002","CRES 24003",
 		"EALC 10800","EALC 10900","EALC 11000","EALC 15400",
@@ -155,6 +164,22 @@ var CORE_EXCLUSION_LIST = GROUPS.CORE_CIV.concat(GROUPS.CORE_ART).concat(['HUMA 
 	return p;
 }, []);
 var LANGUAGES = {'AANL':'Hittite','ASLG':'American Sign Language','GREK':'Greek','LATN':'Latin','MOGK':'Modern Greek','CHIN':'Chinese','JAPN':'Japanese','KORE':'Korean','GRMN':'German','NORW':'Norwegian','YDDH':'Yiddish','BASQ':'Basque','SWAH':'Swahili','AKKD':'Akkadian','ARAB':'Arabic','ARAM':'Aramaic','ARME':'Armenian','EGPT':'Egyptian','HEBR':'Hebrew','KAZK':'Kazak','PERS':'Persian','TURK':'Turkish','UGAR':'Ugaritic','UZBK':'Uzbek','CATA':'Catalan','FREN':'French','ITAL':'Italian','PORT':'Portuguese','SPAN':'Spanish','BCSN':'Bosnian/Croatian/Serbian','CZEC':'Czech','GEOR':'Georgian','POLI':'Polish','RUSS':'Russian','BANG':'Bangla','HIND':'Hindi','MALA':'Malayalam','MARA':'Marathi','PALI':'Pali','SANS':'Sanskrit','TAML':'Tamil','TLGU':'Telugu','TBTN':'Tibetian','URDU':'Urdu'};
+var EVALUATORS = {
+	REQUIRE:function(base, require, or) {
+		if(isString(require)) {
+			return EVALUATORS.REQUIRE(base, [require], or);
+		} else {
+			return {require:1, classes:base, evaluate:function(taken) {
+					if(or) {
+						return (require.some(function(r) { return taken.binarySearch(r) >= 0 }) ? true : 'Only accepted if ' + require.join(' or ') + ' also taken')
+					} else {
+						return (require.every(function(r) { return taken.binarySearch(r) >= 0 }) ? true : 'Only accepted if ' + require.join(', ') + ' also taken')
+					}
+				}
+			}
+		}
+	}
+};
 var REQUIREMENTS = {
 	'College Core':{
 		notes:'Humanities and Civilization requirements cannot be fulfilled across multiple sequences.',
@@ -163,10 +188,39 @@ var REQUIREMENTS = {
 		},
 		classes:[
 			// Humanities requirement
-			{require:2, classes:['HUMA 1','HUMA 1'], notes:'Two quarters of hum'},
+			{require:2, classes:angular.copy(GROUPS.CORE_HUM), notes:'Two quarters of hum', hidden:true, max:2},
 			{require:2, hidden:true, max:2, classes:angular.copy(GROUPS.CORE_CIV), notes:'Two quarters of civ'},
 			{require:1, hidden:true, max:1, classes:angular.copy(GROUPS.CORE_ART), notes:'One quarter of art'},
-			{require:1, hidden:true, classes:['HUMA 1'].concat(GROUPS.CORE_CIV).concat(GROUPS.CORE_ART), notes:'One quarter of hum, civ, or art'},
+			{require:1, hidden:true, classes:[
+				EVALUATORS.REQUIRE('HUMA 11200', ['HUMA 11000', 'HUMA 11100']),
+				EVALUATORS.REQUIRE('HUMA 11700', ['HUMA 11500', 'HUMA 11600']),
+				EVALUATORS.REQUIRE('HUMA 12200', ['HUMA 12000', 'HUMA 12100']),
+				EVALUATORS.REQUIRE('HUMA 12500', ['HUMA 12300', 'HUMA 12400']),
+				EVALUATORS.REQUIRE('HUMA 13700', ['HUMA 13500', 'HUMA 13600']),
+				EVALUATORS.REQUIRE('HUMA 16200', ['HUMA 16000', 'HUMA 16100']),
+				EVALUATORS.REQUIRE('HUMA 17200', ['HUMA 17000', 'HUMA 17100']),
+				EVALUATORS.REQUIRE('CRES 24003', ['CRES 24001', 'CRES 24002']),
+				EVALUATORS.REQUIRE('EALC 11000', ['EALC 10800', 'EALC 10900']),
+				'EALC 15400',
+				'HIPS 17300', 'HIPS 17400', 'HIPS 17402', 'HIPS 17501', 'HIPS 17502', 'HIPS 17503',
+				EVALUATORS.REQUIRE('HIST 13003', ['HIST 13001', 'HIST 13002']),
+				EVALUATORS.REQUIRE('HIST 13300', ['HIST 13100', 'HIST 13200']),
+				EVALUATORS.REQUIRE('HIST 13700', ['HIST 13500', 'HIST 13600']),
+				EVALUATORS.REQUIRE('HIST 16900', ['HIST 16700', 'HIST 16800']),
+				EVALUATORS.REQUIRE('JWSC 20003', ['JWSC 20001', 'JWSC 20002']),
+				EVALUATORS.REQUIRE('JWSC 20006', ['JWSC 20004', 'JWSC 20005']),
+				EVALUATORS.REQUIRE('LACS 16300', ['LACS 16100', 'LACS 16200']),
+				EVALUATORS.REQUIRE('NEHC 20003', ['NEHC 20001', 'NEHC 20002']),
+				EVALUATORS.REQUIRE('NEHC 20006', ['NEHC 20004', 'NEHC 20005']),
+				EVALUATORS.REQUIRE('NEHC 20013', ['NEHC 20011', 'NEHC 20012']),
+				EVALUATORS.REQUIRE('NEHC 20418', ['NEHC 20416', 'NEHC 20417']),
+				EVALUATORS.REQUIRE('NEHC 20503', ['NEHC 20501', 'NEHC 20502']),
+				EVALUATORS.REQUIRE('NEHC 20603', ['NEHC 20601', 'NEHC 20602']),
+				EVALUATORS.REQUIRE('SOSC 27701', ['SOSC 27501', 'SOSC 27601']),
+				EVALUATORS.REQUIRE('SOSC 19021', ['SOSC 19019', 'SOSC 19020']),
+				EVALUATORS.REQUIRE('SOSC 24800', ['SOSC 24600', 'SOSC 24700']),
+				EVALUATORS.REQUIRE('SOSC 19009', ['SOSC 19007', 'SOSC 19008'])
+			].concat(GROUPS.CORE_ART), notes:'One quarter of hum, civ, or art'},
 			// Social Sciences requirement
 			{require:3, classes:['SOSC 1','SOSC 1','SOSC 1'], notes:'Three quarters of sosc'},
 			// Physical Sciences requirement
@@ -175,7 +229,7 @@ var REQUIREMENTS = {
 				angular.copy(SEQUENCES.PHYS2Q120),
 				{require:2, classes:['PHSC 1','PHSC 1']}
 			],
-			hidden:true,
+			max:2, hidden:true,
 			notes:'Two quarters of phy sci'},
 			// Biological Sciences requirement
 			{require:1, classes:[
@@ -184,10 +238,21 @@ var REQUIREMENTS = {
 				{require:2, classes:['BIOS 20150', {require:1, classes:['BIOS 20151', 'BIOS 20152']}], notes:'For students majoring in the Biological Sciences'},
 				{require:2, classes:['NTSC 10', 'NTSC 10']}
 			],
-			hidden:true,
+			max:2, hidden:true,
 			notes:'Two quarters of bio'},
 			// Mathematical Sciences requirement
-			{require:1, classes:['CMSC 1', 'MATH 1', 'MATH 20', 'STAT 20000', 'STAT 22000', 'STAT 23400', 'STAT 24400'], notes:'One quarter of math'},
+			{require:1, classes:['CMSC 10200', 'CMSC 10500', 'CMSC 11000', 'CMSC 12100', 'CMSC 15100', 'CMSC 16100', 'MATH 11200',
+				EVALUATORS.REQUIRE('MATH 13100', ['MATH 13200', 'MATH 15200', 'MATH 16200'], true),
+				EVALUATORS.REQUIRE('MATH 15100', ['MATH 13200', 'MATH 15200', 'MATH 16200'], true),
+				EVALUATORS.REQUIRE('MATH 16100', ['MATH 13200', 'MATH 15200', 'MATH 16200'], true),
+				'STAT 20000', 'STAT 22000'], notes:'One quarter of math', hidden:true},
+			// 6th Phy Sci/Bio/Math requirement
+			{require:1, classes:['CMSC 10600', 'CMSC 11100', 'CMSC 12200', 'CMSC 15200', 'CMSC 16200', 
+				EVALUATORS.REQUIRE('MATH 13200', ['MATH 13100', 'MATH 15100', 'MATH 16100'], true),
+				EVALUATORS.REQUIRE('MATH 15200', ['MATH 13100', 'MATH 15100', 'MATH 16100'], true),
+				EVALUATORS.REQUIRE('MATH 16200', ['MATH 13100', 'MATH 15100', 'MATH 16100'], true),
+				'BIOS ','CHEM ','NTSC ','PHSC ','PHYS '
+				], notes:'One quarter of phy sci, bio, or math.', hidden:true},
 			// Language competency requirement
 			{require:1, classes:(function() {
 				var out = [];
@@ -197,10 +262,10 @@ var REQUIREMENTS = {
 							dept + ' 2', {
 								require:3,
 								classes:[dept + ' 1', dept + ' 1', dept + ' 1'],
-								notes:LANGUAGES[dept],
+								notes:LANGUAGES[dept] + ' 100\'s',
 								hidden:true
 							}
-						]});
+						], notes:LANGUAGES[dept], hidden:true});
 				}
 				return out;
 			})(),

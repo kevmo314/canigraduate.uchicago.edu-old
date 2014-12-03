@@ -14,8 +14,8 @@
 					<th class="col-sm-1">Size</th>
 					</tr>
 				</thead>
-				<tbody ng-repeat="section in child.sections | limitTo:child.displayLimit">
-					<tr ng-repeat="primary in section.primary" ng-class="{'success':section.quarter==timeschedules.quarters.active && isScheduled(section)}" ng-mouseenter="hover=true" ng-mouseleave="hover=false">
+				<tbody ng-repeat="section in child.sections | limitTo:child.displayLimit" ng-init="section.hover=false">
+					<tr ng-repeat="primary in section.primary" ng-class="{'success':section.quarter==timeschedules.quarters.active && isScheduled(section)}" ng-mouseenter="section.hover=true" ng-mouseleave="section.hover=false">
 						<td class="pointer" rowspan="{{section.primary.length}}" ng-if="$index==0" ng-click="section.showSecondary=!section.showSecondary"
 						    ng-init="getNotes(child, section)"
 						    tooltip-placement="right" tooltip-append-to-body="true">
@@ -26,8 +26,8 @@
 						<td><a ng-href="//classes.uchicago.edu/searchEvaluations.php?EvalSearchType=option-instructor-search&InstructorLastName={{primary.instructor}}&advancedSearch=SEARCH" ng-bind="::primary.instructor" target="_blank"></a></td>
 						<td location="primary.location"></td>
 						<td schedule="primary.schedule"></td>
-						<td enrollment="primary.enrollment" context="section" ng-if="!hover"></td>
-						<td ng-if="hover">
+						<td enrollment="primary.enrollment" context="section" ng-if="!section.hover"></td>
+						<td ng-if="section.hover && primary == section.primary[0]" ng-attr-rowspan="{{section.primary.length}}">
 							<a ng-click="textbooks.open(section, true)"><i class="fa fa-book" tooltip="Find textbooks"></i></a>
 							<a ng-if="section.quarter==timeschedules.quarters.active && !isScheduled(section)" ng-click="user.schedule.add(section)"><i class="fa fa-plus" tooltip="Add to schedule"></i></a>
 							<a ng-click="watch(section)" ng-if="authentication.cnetid.length"><i class="fa fa-bell" tooltip="Watch this section for changes" tooltip-append-to-body="true"></i></a>

@@ -1010,7 +1010,7 @@ app.service('UserService', function($rootScope, ClassService, RequirementService
 		});
 		data.transcript.filter(function(e) {
 			// fucking hum, making me make special cases.
-			return ((e.quality && e.gpa > 0) || e.gpa === null) && e.id != 'HUMA 19100'
+			return ((e.quality && e.gpa > 0) || e.gpa === null || e.gpa == 'P') && e.id != 'HUMA 19100'
 		}).forEach(function(e) { classes.insertOne(e.id) });
 		self.classes.clear();
 		self.credits.clear();
@@ -1479,6 +1479,15 @@ app.service('RequirementService', function($http, ClassService) {
 		function evaluateChild(node, core, duplicates) {
 			if(node.classes) {
 				if(typeof node.classes == 'string') {
+					if(node.evaluate) {
+						node.message = node.evaluate(taken);
+						if(node.message !== true) {
+							// check if there's an evaluation function and if it fails, don't evaluate
+							node.userClass = null;
+							node.complete = false; // reset completion indicators
+							return [0, 1];
+						}
+					}
 					var context = userClasses;
 					if(duplicates || node.duplicates) { context = taken } // restore all classes
 					if(node.noCore) { context = difference(context, coreClasses) }
@@ -2186,13 +2195,10 @@ app.directive('notes', function($rootScope, UserService, ClassService) {
 						// push the text node
 						scope.classes.push({id:scope.notes.substring(left, matches[i].index)});
 						// then push the identification node
-						var record = transcript.filter(function(record) { return record.id == id }).pop();
-						if(record) {
-							if(record.quality) {
-								scope.classes.push({id:id, icon:'fa-check', name:name, text:['text-success', 'pointer'], style:{'white-space':'nowrap'}});
-							} else {
-								scope.classes.push({id:id, icon:'fa-minus', name:name, text:['text-warning', 'pointer'], style:{'white-space':'nowrap'}});
-							}
+						if(UserService.classes.binarySearch(id) >= 0) {
+							scope.classes.push({id:id, icon:'fa-check', name:name, text:['text-success', 'pointer'], style:{'white-space':'nowrap'}});
+						} else if(transcript.filter(function(record) { return record.id == id }).length) {
+							scope.classes.push({id:id, icon:'fa-minus', name:name, text:['text-warning', 'pointer'], style:{'white-space':'nowrap'}});
 						} else {
 							scope.classes.push({id:id, icon:'fa-times', name:name, text:['text-danger', 'pointer'], style:{'white-space':'nowrap'}});
 						}

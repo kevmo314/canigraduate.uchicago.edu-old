@@ -179,7 +179,8 @@
 						<i class="fa fa-book" ng-hide="child.complete"></i>
 						<span ng-bind="::child.classes | fill"></span>
 						<span ng-bind="::getName(child.classes)"></span>
-						<small class="text-muted" ng-if="child.complete && isElectiveClass(child.classes)" ng-bind="child.userClass"></small>
+						<i class="fa fa-question-circle" ng-show="child.message.length" tooltip="{{child.message}}"></i>
+						<small class="text-muted" ng-if="child.complete && isElectiveClass(child.classes)" ng-bind="child.userClass" tooltip="{{getName(child.userClass)}}"></small>
 					</span>
 					<a class="pull-right pointer" ng-click="forceIgnore(child)" ng-show="!child.complete || child.force">
 						<i class="fa fa-volume-off" ng-show="!child.force && child.hover" tooltip="Ignore"></i><i class="fa fa-volume-up" ng-show="child.force" tooltip="Unignore"></i>
