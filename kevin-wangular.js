@@ -1503,30 +1503,47 @@ app.service('RequirementService', function($http, ClassService) {
 					if(self.coreClasses.length == 0 && core) { allCoreClasses.push(node.classes) }
 					return [(node.complete = (has != -1) || node.force) ? 1 : 0, 1];
 				} else {
+					// cap is the total number of classes required to complete this subtree
+					// count is the number of child nodes completed
+					// base is the list of requirements fulfilled by child
 					var cap = 0, count = 0, base = [];
 					for(var i = 0; i < node.classes.length; i++) {
 						var result = evaluateChild(node.classes[i], core, duplicates || node.duplicates);
-						if(result[0] == result[1]) { count++; }
+						// if the child is done, increment the count
+						if(node.classes[i].complete) { count++; }
+						// if the index is less than the require count, add that node's require count to cap
+						// recall that the set is "naturally" sorted. this says "let's fulfill the first node.require
+						// requirements and assume we succeed with those"
 						if(i < node.require) { cap += result[1]; }
 						base.push(result[0]);
+						// if we've exceeded our max limit, stop iterating
 						if('max' in node && count >= node.max) { break; }
 					}
+					// sort descending
 					base.sort(function(left, right) { return right - left; });
+					// sum is the number of classes fulfilled
 					var sum = 0;
 					if(!node.force) {
 						for(var i = 0; i < node.require; i++) {
+							// stop counting if we reach an unfilled child
 							if(!base[i]) {
 								break;
 							}
 							sum += base[i];
 						}
 					} else {
+						// if this node is forced, we just assume all classes fulfilled
 						sum = cap;
 					}
 					node.complete = (count >= node.require) || node.force;
+					// node.base is the number of classes fulfilled so far on this node
 					node.base = Math.min(cap, sum);
 					if(node.complete) { node.hidden = true } // collapse the object
-					return [node.base, (node.total = cap)];
+					else if(cap == node.base) { cap++ } // take care of edge condition where not finished,
+					// but count matches. this occurs when predicted number of classes is n, but the student
+					// decides to take the route that actually requires (n+k) classes. always show 1 remaining in that case.
+					// this is most obviously observed in the core language requirement.
+					return [node.base, (node.total = cap)]; // set the total to the cap
 				}
 			}
 			return [0, 0];

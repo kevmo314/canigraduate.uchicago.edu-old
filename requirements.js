@@ -962,7 +962,7 @@ var REQUIREMENTS = {
 			catalog:'mathematics/#minorprograminmathematics'
 		}
 	},
-	'Applied Mathematics BS':{
+	'Applied Mathematics':{
 		classes:[
 			{require:1, classes:[angular.copy(SEQUENCES.CHEM3Q100),angular.copy(SEQUENCES.PHYS3Q120)]},
 			angular.copy(SEQUENCES.MATH2Q130),
@@ -979,7 +979,10 @@ var REQUIREMENTS = {
 				{require:1, classes:['MATH 25500','MATH 25800']}
 			]},
 			'MATH 27000','MATH 27300','MATH 27500'
-		]
+		],
+		link:{
+			catalog:'mathematics/#programrequirements'
+		}
 	},
 	'Mathematics with Specialization in Economics':{
 		classes:[

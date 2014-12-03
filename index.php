@@ -126,7 +126,7 @@
 			</accordion-heading>
 			<div ng-if="interface.accordion[key]">
 				<alert type="danger" ng-if="val.total - val.base > remainingClassesCount()">
-					It is not possible to graduate within <abbr title="Assuming twelve classes a year">four years</abbr> and complete these requirements given the provided course list.
+					It is not possible to graduate within <abbr title="Assuming twelve classes a year">four years</abbr> and complete these requirements with the below course list.
 				</alert>
 				<span ng-bind="::val.notes"></span>
 				<h3>Requirements <small>
