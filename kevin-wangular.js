@@ -1009,8 +1009,7 @@ app.service('UserService', function($rootScope, ClassService, RequirementService
 			classes.insertOne(e);
 		});
 		data.transcript.filter(function(e) {
-			// fucking hum, making me make special cases.
-			return ((e.quality && e.gpa > 0) || e.gpa === null || e.gpa == 'P') && e.id != 'HUMA 19100'
+			return ((e.quality && e.gpa > 0) || e.gpa === null || e.gpa == 'P')
 		}).forEach(function(e) { classes.insertOne(e.id) });
 		self.classes.clear();
 		self.credits.clear();

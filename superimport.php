@@ -130,10 +130,9 @@ $languages = array('GREK','LATN','MOGK','CHIN','JAPN','KORE','GRMN','NORW','YDDH
 $ordinals = array('101', '102', '103', '201', '202', '203', '301', '302', '303'); // I don't think placements go any higher...
 foreach($languages as $lang) {
 	foreach($ordinals as $index => $ordinal) {
-		if(strpos($buf2, $lang . ' ' . $ordinal) !== false) {
-			// add all the subordinals
-			$subordinals = array_slice($ordinals, 0, min(2, $index)); // accept max two courses?
-			foreach($subordinals as $subordinal) {
+		if(strpos($buf2, 'Start in ' . $lang . ' ' . $ordinal) !== false) {
+			if($index > 0) {
+				$subordinal = $ordinals[$index - 1];
 				if(!array_key_exists('+' . $lang . ' ' . $subordinal . '00', $seen)) {
 					array_push($out_placements, '+' . $lang . ' ' . $subordinal . '00');
 					$seen[$lang . ' ' . $subordinal . '00'] = true;
