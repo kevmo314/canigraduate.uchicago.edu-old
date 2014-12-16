@@ -11,7 +11,7 @@
 <form ng-if="authentication.cnetid" method="POST" target="_blank" action="/data/export.php">
 	<input type="hidden" name="username" ng-value="authentication.cnetid"/>
 	<input type="hidden" name="password" ng-value="authentication.password"/>
-	<button style="margin-top:30px" class="btn btn-default btn-xs" tooltip="Only exports registered classes. May take a few seconds, UChicago's servers are slow. Sorry!"><i class="fa fa-calendar"></i> Export to iCalendar</button>
+	<button style="margin-top:30px" class="pull-right btn btn-default btn-xs" tooltip="Only exports registered classes. May take a few seconds, UChicago's servers are slow. Sorry!"><i class="fa fa-calendar"></i> Export to iCal</button>
 </form>
 	</div>
 </div>

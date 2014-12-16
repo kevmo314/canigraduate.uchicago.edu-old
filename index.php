@@ -152,9 +152,9 @@
 				<i ng-hide="child.hidden || !child.classes" class="fa fa-angle-down fa-fw"></i>
 				<i ng-show="child.hidden && child.classes" class="fa fa-angle-right fa-fw"></i>
 				<span ng-show="!child.complete">
-					<span ng-show="child.require==child.classes.length">All</span>
+					<span ng-show="child.require==child.classes.length" tooltip="{{::child.require}} total">All</span>
 					<span ng-hide="child.require==child.classes.length" ng-bind="::child.require"></span>
-					of the following:
+					of the following <span ng-if="child.base" class="label label-danger"><span ng-bind="child.total - child.base"></span> remaining</span>
 				</span>
 				<span ng-show="child.complete" class="text-success">
 					<span ng-bind="::child.require"></span>

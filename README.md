@@ -23,14 +23,15 @@ The data maintained for class dependency resolution is produced manually. This i
 If you wish to contribute a major, please see `requirements.js`. The file begins with a couple common sequences and predefined lists, but the main requirements variable provides each major's requirements. Each major starts as a requirement and the object can have the properties `classes`, `require`, and `notes`.
 
 - `require` is the number of classes (requirement nodes or individual classes) that are required for this node to be considered complete. The root node has a default require of all classes.
-- `classes` is an array of either requirement nodes or strings. A string represents that a single class is required. A requirement node indicates a group of classes that will fulfill one group towards the `require` count.
+- `classes` is an array of either requirement nodes or strings. A string represents that a single class is required. A requirement node indicates a group of classes that will fulfill one group towards the `require` count. Crosslistings are automatically taken care of, so it is only necessary to list one of the crosslisted courses.
 - `notes` is a string of human-readable notes to indicate complications and difficulties that were not easy to represent in the dependency structure.
 - `noCore` is a boolean if truthy will not permit core classes to populate this branch of the dependency tree.
 - `hidden` is a boolean if truthy will default to not showing the tree. This improves rendering performance, so is preferable for large trees.
 - `max` is a number indicating the maximum number of classes that can go towards fulfilling this branch. This is useful in scenarios where overflow is desired. See the requirements for Computer Science.
 - `duplicates` is a boolean if truthy will permit previously used classes to fulfill this branch. See the requirements for Biological Sciences.
+- `evaluate` is a `function(taken)` that is evaluated to prematurely reject a class if a non `true` value is returned. A string is commonly returned as an error message and behaves as one in place of `false`. `taken` is a sorted list of classes the student has taken. This is most commonly used in sequence enforcement.
 
-The `classes` strings are matched with prefix searching. That is, `'HUMA 1'` matches any class with the string `HUMA 1xxxx`. Similarly, `'HUMA '` matches any humanities class. Note the space after the department. While currently all departments are four letters long, the space reduces potential complications in the future.
+The `classes` strings are matched with prefix searching. That is, `'HUMA 1'` matches any class with the string `HUMA 1xxxx`. Similarly, `'HUMA '` matches any humanities class. Note the space after the department, while not required, is there for aesthetic purposes and clarity, as `'HUMA'` evaluates to `HUMAxxxxxx`. Additionally, the space reduces potential complications in the future.
 
 Dependency resolution is done such that once a class fulfills a requirement, it cannot fulfill future requirements. Thus, it is important to list the most specific classes first. That is, `'ECON 2'`, representing an econ elective, should be listed after `'ECON 20000'` to ensure that the `'ECON 20000'` class does not fulfill the `'ECON 2'` requirement, thus failing to fulfill the exact match.
 

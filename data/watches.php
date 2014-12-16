@@ -15,7 +15,8 @@ $request = json_decode(file_get_contents('php://input'));
 // note that ldap doesn't work because ldap auth isn't as reliable. apparently. >.>
 $cookie_file = '/tmp/cookie-this-is-really-stupid';
 get('https://my.uchicago.edu/Shibboleth.sso/Login?target=https://my.uchicago.edu/Login', $cookie_file);
-$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/UserPassword', array(
+$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
+	'performauthentication' => true,
 	'j_username' => $request->cnetid,
 	'j_password' => $request->password
 ), $cookie_file);
@@ -37,7 +38,7 @@ if(property_exists($request, 'action') && ($request->action == 'add' || $request
 		$qry->bindValue('qid', toTermOrdinal($request->quarter));
 		$qry->bindValue('course', $request->course);
 		$qry->bindValue('section', $request->section);
-		$qry->bindValue('activity', $request->activity);
+		$qry->bindValue('activity', @$request->activity);
 	} else {
 		$qry = $db->prepare('DELETE FROM watches WHERE email=:email AND id=:id');
 		$qry->bindValue('id', $request->id);

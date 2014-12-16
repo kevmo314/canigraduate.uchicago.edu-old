@@ -604,7 +604,7 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 				$modalScope.message = "";
 				$modalScope.error = null;
 				$modalScope.load = function() {
-					if($modalScope.data.cnet != '') {
+					if($modalScope.data.cnet != '' && $modalScope.data.password != '') {
 						$modalScope.message = "Querying... (may take a while, usually ~15s)";
 						$modalScope.error = null;
 						$http.post('/superimport.php', $modalScope.data).success(function(response) {
@@ -1187,7 +1187,7 @@ app.service('TextbookService', function($http, $modal, $q, ClassService) {
 	};
 	self.get = function(cls) {
 		var defer = $q.defer();
-		if(cls.textbooks) {
+		if('textbooks' in cls && cls.textbooks) {
 			defer.resolve(cls.textbooks)
 		} else {
 			$http.post('/data/textbooks.php', cls).success(function(data) {
@@ -1251,8 +1251,13 @@ app.service('ClassService', function($http, $injector, DEFAULT_FILTERS) {
 		Array.prototype.push.apply(self.keys, Object.keys(data));
 		self.keys.sort();
 
+		// construct the sorted department set
 		var departments = SortedList.create([], { unique:true, compare:'string' });
-		self.keys.forEach(function(e) { departments.insertOne(e.substring(0, 4)) });
+		self.keys.forEach(function(e) {
+			departments.insertOne(e.substring(0, 4));
+			// sort the crosslistings
+			self.data[e].crosslist.sort();
+		});
 		departments.forEach(function(e) { self.departments.push(e) });
 
 		// postprocess class weights
@@ -1332,6 +1337,7 @@ app.service('ClassService', function($http, $injector, DEFAULT_FILTERS) {
 	};
 	self.descriptions = {};
 	self.distributions = {};
+	self.distributionCount = {};
 	self.loadData = function(cls) {
 		if(!cls.description) {
 			if(cls.classes in self.descriptions) {
@@ -1343,6 +1349,7 @@ app.service('ClassService', function($http, $injector, DEFAULT_FILTERS) {
 		if(!cls.distribution) {
 			if(cls.classes in self.distributions) {
 				cls.distribution = self.distributions[cls.classes];
+				cls.distributionCount = self.distributionCount[cls.classes];
 			} else {
 				$http.get('/data/distribution.php?class=' + cls.classes).success(function(json) {
 					const unmap = {
@@ -1350,16 +1357,19 @@ app.service('ClassService', function($http, $injector, DEFAULT_FILTERS) {
 					};
 					if(cls.classes in json) {
 						var data = [], max = 0;
+						self.distributionCount[cls.classes] = 0;
 						for(var grade in json[cls.classes]) {
 							data.push([grade, json[cls.classes][grade]]);
 							max = Math.max(max, json[cls.classes][grade]);
 						}
 						for(var i = 0; i < data.length; i++) {
+							self.distributionCount[cls.classes] += data[i][1];
 							data[i][1] /= max * 0.01;
 						}
+						cls.distributionCount = self.distributionCount[cls.classes];
 						data.sort(function(a, b) { return parseFloat(b[0]) - parseFloat(a[0]) });
 						cls.distribution = self.distributions[cls.classes] = data.map(function(e) {
-							return [unmap[e[0]], e[1]];
+							return [unmap[e[0]], e[1]]
 						});
 					}
 				});
@@ -1544,6 +1554,7 @@ app.service('RequirementService', function($http, ClassService) {
 						sum = cap;
 					}
 					node.complete = (count >= node.require) || node.force;
+					node.count = Math.min(count, node.require);
 					// node.base is the number of classes fulfilled so far on this node
 					node.base = Math.min(cap, sum);
 					if(node.complete) { node.hidden = true } // collapse the object

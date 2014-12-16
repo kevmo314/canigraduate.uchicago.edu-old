@@ -98,7 +98,7 @@
 				<div class="col-sm-6">
 					<h4>Grades</h4>
 					<div style="height:16px">
-						<strong tooltip="Data based on users who use this site.">Observed Frequency</strong>
+						<strong tooltip="Data based on users who use this site.">Observed Frequency (n=<span ng-bind="child.distributionCount"></span>)</strong>
 					</div>
 					<div ng-repeat="grade in child.distribution">
 						<div ng-style="{width:{{grade[1]}} + '%'}" ng-bind="::grade[0]"

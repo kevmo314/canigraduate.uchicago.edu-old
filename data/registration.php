@@ -21,7 +21,8 @@ $cookie_file = '/tmp/cookies' . rand();
 while(get('https://classes.uchicago.edu/', $cookie_file, $proxy) === false);
 
 get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file, $proxy);
-$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/UserPassword', array(
+$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
+	'performauthentication' => true,
 	'j_username' => $request->cnetid,
 	'j_password' => $request->password
 ), $cookie_file, $proxy);

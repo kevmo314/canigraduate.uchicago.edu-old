@@ -59,8 +59,9 @@ function gradeToGPA($grade) {
 
 // The actual script
 
-get('https://my.uchicago.edu/Shibboleth.sso/Login?target=https://my.uchicago.edu/Login', $cookie_file);
-$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/UserPassword', array(
+$posted = get('https://my.uchicago.edu/Shibboleth.sso/Login?target=https://my.uchicago.edu/Login', $cookie_file);
+$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
+	'performauthentication' => 'true',
 	'j_username' => $request->cnet,
 	'j_password' => $request->password
 ), $cookie_file);
@@ -126,7 +127,7 @@ foreach($placements as $k => $v) {
 	}
 }
 // check language placement/competency
-$languages = array('GREK','LATN','MOGK','CHIN','JAPN','KORE','GRMN','NORW','YDDH','BASQ','SWAH','AKKD','ARAB','ARAM','ARME','EGPT','HEBR','KAZK','PERS','TURK','UGAR','UZBK','CATA','FREN','ITAL','PORT','SPAN','BCSN','CZEC','GEOR','POLI','RUSS','BANG','HIND','MALA','MARA','PALI','SANS','TAML','TLGU','TBTN','URDU');
+/*$languages = array('GREK','LATN','MOGK','CHIN','JAPN','KORE','GRMN','NORW','YDDH','BASQ','SWAH','AKKD','ARAB','ARAM','ARME','EGPT','HEBR','KAZK','PERS','TURK','UGAR','UZBK','CATA','FREN','ITAL','PORT','SPAN','BCSN','CZEC','GEOR','POLI','RUSS','BANG','HIND','MALA','MARA','PALI','SANS','TAML','TLGU','TBTN','URDU');
 $ordinals = array('101', '102', '103', '201', '202', '203', '301', '302', '303'); // I don't think placements go any higher...
 foreach($languages as $lang) {
 	foreach($ordinals as $index => $ordinal) {
@@ -141,7 +142,7 @@ foreach($languages as $lang) {
 			break;
 		}
 	}
-}
+}*/
 $transcript = array();
 foreach($out as $record) {
 	if(property_exists($request, 'suppress_gpa') && $request->suppress_gpa) {
