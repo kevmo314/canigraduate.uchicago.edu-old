@@ -16,7 +16,7 @@ def emit(quarter, id, section, activity, old, new, newest=True):
 			'section':section or '',
 			'activity':activity or ''
 		})
-		email(row[0], '%s %s Enrollment Notification' % (quarter, id), 'Hi there! One of your watches on Can I Graduate? was triggered. Exciting!\n\nQuarter: %s\nClass: %s\nSection: %s\nActivity: %s\n\nPrevious: %d/%s\nCurrent: %d/%s\n\nVisit this link to add this class: https://canigraduate.uchicago.edu/quickadd.php?%s\n\nMuuuuuugit!\nMagister Mugit\n\nDidn\'t expect this email? Questions or comments? Want to unsubscribe? Send it to Magister.Mugit@uchicago.edu!' % (quarter, id, section, activity, old[0], old[1] if old[1] > -1 else 'NO LIMIT', new[0], new[1] if new[1] > -1 else 'NO LIMIT', get_param))
+		email(row[0], '%s %s Enrollment Notification' % (quarter, id), 'Hi there! One of your watches on Can I Graduate? was triggered. Exciting!\n\nQuarter: %s\nClass: %s\nSection: %s\nActivity: %s\n\nPrevious: %d/%s\nCurrent: %d/%s\n\nVisit this link to add this class: https://canigraduate.uchicago.edu/quickadd.php?%s\n\nMuuuuuugit!\nMagister Mugit\n\nDidn\'t expect this email? Questions or comments? Send it to Magister.Mugit@uchicago.edu! Want to unsubscribe? Remove your watch on http://canigraduate.uchicago.edu/' % (quarter, id, section, activity, old[0], old[1] if old[1] > -1 else 'NO LIMIT', new[0], new[1] if new[1] > -1 else 'NO LIMIT', get_param))
 	connection.close()
 
 def email(to, subject, message):

@@ -83,7 +83,7 @@
 							}).success(function(d) {
 								$modalScope.data.registrations = [];
 								for(var i = 0; i < d.courses.length; i++) {
-									$modalScope.data.registrations.push(d.courses[i].course);
+									$modalScope.data.registrations.push(d.courses[i].id);
 								}
 							}).error(function(d) {
 								$scope.errors.push(d);

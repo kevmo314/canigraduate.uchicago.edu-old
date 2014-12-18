@@ -72,7 +72,7 @@ preg_match_all('/value="(\w{6} \d{4})"/', $context, $quarters);
 
 get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file, $proxy);
 $saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
-	'performauthentication' => true,
+	'performauthentication' => 'true',
 	'j_username' => $request->cnetid,
 	'j_password' => $request->password
 ), $cookie_file, $proxy);

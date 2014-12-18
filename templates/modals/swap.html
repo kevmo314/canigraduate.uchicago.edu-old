@@ -1,6 +1,8 @@
 <div class="modal-header"><h4>Swap a Course</h4></div>
 <div class="modal-body">
 	<p>Select the course you want to swap with</p>
+	<div class="alert alert-info" ng-if="!data.registrations">Loading...</div>
+	<div class="alert alert-danger" ng-if="data.registrations && !data.registrations.length">No classes to swap with</div>
 	<div class="list-group">
 		<a ng-repeat="registration in data.registrations" ng-bind="registration"
 		   ng-click="data.selected[registration]=!data.selected[registration]"
