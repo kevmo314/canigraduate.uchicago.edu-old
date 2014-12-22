@@ -7,6 +7,9 @@ include('../include/db.php');
 
 function runUpdate($quarter, $id, $section, $activity, $new) {
 	global $db;
+	if($new[0] == -1 && $new[1] == -1) {
+		echo "FAIL $quarter $id $section $activity\n";
+	}
 	$results = $db->query("SELECT * FROM enrollment WHERE quarter='$quarter' AND id='$id' AND section='$section' AND activity='$activity'");
 	$old = array(0, 0);
 	while($row = $results->fetchArray()) {

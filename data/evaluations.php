@@ -18,7 +18,7 @@ $saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', arra
 	'j_password' => $request->password
 ), $cookie_file, $proxy);
 preg_match_all('/name="(.+?)" value="(.+?)"/', $saml_intermediary, $matches);
-if(sizeof($matches[0]) == 0) {
+if(sizeof($matches[0]) < 2) {
 	http_response_code(400);
 	die('Authentication failed.');
 }
