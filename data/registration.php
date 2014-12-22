@@ -10,7 +10,7 @@ function findErrors($content, $course) {
 	return $errors;
 }
 
-$proxy = '54.183.147.66:3128';
+$proxy = '54.174.139.219:3128';
 
 $postdata = file_get_contents("php://input");
 $request = json_decode($postdata);
