@@ -30,11 +30,11 @@
 						</ul>
 						<div class="nav navbar-nav navbar-right">
 							<span class="navbar-text" style="float:none" ng-bind="authentication.cnetid"></span>
-							<button ng-click="load()" class="pointer btn btn-success navbar-btn" id="tutorial-import"><span class="glyphicon glyphicon-import"></span> Import</button>
-							<button ng-click="save()" class="pointer btn btn-default navbar-btn" id="tutorial-save"><span class="glyphicon glyphicon-export"></span> Save</button>
+							<button ng-click="load()" class="pointer btn btn-success navbar-btn" id="tutorial-import"><span class="glyphicon glyphicon-import"></span> <span class="hidden-sm hidden-md">Import</span></button>
+							<button ng-click="save()" class="pointer btn btn-default navbar-btn" id="tutorial-save"><span class="glyphicon glyphicon-export"></span> <span class="hidden-sm hidden-md">Save</span></button>
 							<div class="btn-group" dropdown>
 								<button type="button" class="btn btn-primary dropdown-toggle">
-									<i class="fa fa-cog"></i> Settings
+									<i class="fa fa-cog"></i> <span class="hidden-sm hidden-md">Settings</span>
 								</button>
 								<ul class="dropdown-menu" role="menu">
 									<li><a href="#" ng-click="settings.expanded=!settings.expanded"><i ng-class="{'fa-check':settings.expanded}" class="fa"></i> Fluid Container</a></li>
