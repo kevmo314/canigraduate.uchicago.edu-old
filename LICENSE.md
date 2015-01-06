@@ -1,7 +1,7 @@
 #### Can I Graduate?
 
 - Kevin Wang (http://kevmo314.com/)
-- Copyright (c) 2014 Kevin Wang
+- Copyright (c) 2014 Kevin Wang, portions copyright Google, Inc.
 
 Contact Kevin Wang at kdwang@uchicago.edu for use with other universities.
 
