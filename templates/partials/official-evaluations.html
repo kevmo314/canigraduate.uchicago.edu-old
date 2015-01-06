@@ -1,0 +1,16 @@
+<table ng-if="child.evaluations.official.length" class="table table-hover table-condensed">
+<thead>
+	<tr>
+		<th>Quarter</th>
+		<th>Section</th>
+		<th>Instructor</th>
+		<th></th>
+	</tr>
+</thead><tbody>
+	<tr ng-repeat="evaluation in child.evaluations.official">
+		<td ng-bind="::evaluation.quarter"></td>
+		<td ng-bind="::evaluation.section"></td>
+		<td ng-bind="::evaluation.instructor"></td>
+		<td><a ng-href="//classes.uchicago.edu/loggedin/evaluation.php?id={{evaluation.id}}" target="_blank">View</a></td>
+	</tr>
+</table>
