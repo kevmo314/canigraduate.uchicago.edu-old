@@ -4,7 +4,7 @@ app.config(function($routeProvider, $locationProvider) {
 		.when('/', {templateUrl:'templates/courses.html'})
 		.when('/scheduler', {templateUrl:'templates/scheduler.html'})
 		.when('/exchange', {templateUrl:'templates/exchange.html', controller:'ExchangeCtrl'})
-		.when('/evaluations', {templateUrl:'templates/evaluations.html'})
+		.when('/evaluations', {templateUrl:'templates/evaluations.html', controller:'EvaluationsCtrl'})
 		.when('/transcript', {templateUrl:'templates/transcript.html', lock:true})
 		.otherwise({redirectTo:'/'});
 	$locationProvider.html5Mode(true);
@@ -411,6 +411,19 @@ app.factory('SocketFactory', function($rootScope) {
 			});*/
 		}
 	}
+});
+app.controller('EvaluationsCtrl', function($scope, ClassService, EvaluationService) {
+	$scope.getName = function(c) { return (c in ClassService.data ? ClassService.data[c].name : 'Elective') };
+	$scope.searchClasses = ClassService.search;
+	// this is just for convenience
+	// TODO: move to directive or something
+	$scope.child = {evaluations:{official:[]}};
+	$scope.loadEvaluation = function(id) {
+		EvaluationService.getOfficial(id).then(function(data) {
+			$scope.child.classes = id;
+			$scope.child.evaluations.official = data
+		});
+	};
 });
 app.controller('ExchangeCtrl', function($q, $scope, $http, $modal, ClassService, WatchService, TimeschedulesService, AUTHENTICATION, SocketFactory) {
 	$http.get('/data/status.php').success(function() {
