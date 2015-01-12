@@ -155,6 +155,7 @@
 					<span ng-show="child.require==child.classes.length" tooltip="{{::child.require}} total">All</span>
 					<span ng-hide="child.require==child.classes.length" ng-bind="::child.require"></span>
 					of the following <span ng-if="child.base" class="label label-danger"><span ng-bind="child.total - child.base"></span> remaining</span>
+					<i class="fa fa-lock" ng-show="child.message.length" tooltip="{{child.message}}"></i>
 				</span>
 				<span ng-show="child.complete" class="text-success">
 					<span ng-bind="::child.require"></span>
@@ -179,7 +180,7 @@
 						<i class="fa fa-book" ng-hide="child.complete"></i>
 						<span ng-bind="::child.classes | fill"></span>
 						<span ng-bind="::getName(child.classes)"></span>
-						<i class="fa fa-question-circle" ng-show="child.message.length" tooltip="{{child.message}}"></i>
+						<i class="fa fa-lock" ng-show="child.message.length" tooltip="{{child.message}}"></i>
 						<small class="text-muted" ng-if="child.complete && isElectiveClass(child.classes)" ng-bind="child.userClass" tooltip="{{getName(child.userClass)}}"></small>
 					</span>
 					<a class="pull-right pointer" ng-click="forceIgnore(child)" ng-show="!child.complete || child.force">

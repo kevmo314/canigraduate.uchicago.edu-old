@@ -129,7 +129,7 @@ var GROUPS = {
 		DISTRIBUTION:{
 			A:['PSYC 20300','CHDV 21500','CHDV 21800','CHDV 22201','CHDV 23249','CHDV 26227','CHDV 26232','CHDV 26660','CHDV 27950','CHDV 30901','CHDV 34800','CHDV 37850','CHDV 40900'],
 			B:['CHDV 20150','CHDV 20207','CHDV 20209','CHDV 21000','CHDV 21901','CHDV 23900','CHDV 25900','CHDV 26226','CHDV 26233','CHDV 26235','CHDV 30405','CHDV 41160','CHDV 41601','CHDV 45501','CHDV 45601'],
-			C:['CHDV 20150','CHDV 20207','CHDV 20405','CHDV 21000','CHDV 21401','CHDV 21901','CHDV 23204','CHDV 23301','CHDV 26000','CHDV 26228','CHDV 26233','CHDV 27501','CHDV 27821','CHDV 30302','CHDV 30320','CHDV 30405','CHDV 32101','CHDV41160','CHDV 42212','CHDV 42213','CHDV 45600','CHDV 45601','CHDV 48415'],
+			C:['CHDV 20150','CHDV 20207','CHDV 20405','CHDV 21000','CHDV 21401','CHDV 21901','CHDV 23204','CHDV 23301','CHDV 26000','CHDV 26228','CHDV 26233','CHDV 27501','CHDV 27821','CHDV 30302','CHDV 30320','CHDV 30405','CHDV 32101','CHDV 41160','CHDV 42212','CHDV 42213','CHDV 45600','CHDV 45601','CHDV 48415'],
 			D:['CHDV 20209','CHDV 23204','CHDV 23301','CHDV 23620','CHDV 23800','CHDV 26233','CHDV 26310','CHDV 27700','CHDV 30320','CHDV 30405','CHDV 40110','CHDV 41160','CHDV 44200']
 		}
 	},
@@ -189,11 +189,23 @@ var EVALUATORS = {
 			}
 		}
 	},
-	CHDV:function(sets, requirements) {
-		// sets is the list of requirement sets A, B, C, D
-		// requirements is the list of possible solutions, each of length |sets|
-		// evaluate function returns true if a solution exists for the given base class.
-		// evaluator produces the entire tree.
+	CHDV:function(title, set, exclude) {
+		// only approve the course set if and only if at least the max number is satisfied, ie all or nothing behavior
+		return {require:3, notes:title, max:3, classes:angular.copy(set), hidden:true, evaluate:function(taken) {
+				console.log(set, taken);
+				var resp = (set.filter(function(s) {
+					return taken.binarySearch(s) > -1
+				}).length >= 3 ? true : 'Sequence accepted when all three classes are completed.');
+				for(var i = 0; i < exclude.length; i++) {
+					if(exclude[i].filter(function(s) {
+						return taken.binarySearch(s) > -1
+					}).length >= 3) {
+						return 'Distribution requirement already fulfilled.';
+					}
+				}
+				return resp;
+			}
+		};
 	}
 };
 var REQUIREMENTS = {
@@ -506,6 +518,24 @@ var REQUIREMENTS = {
 			catalog:'classicalstudies/#programrequirements'
 		}
 	},
+	'Comparative Human Development':{
+		notes:'This section runs off an experimental algorithm. It may not work correctly. If it doesn\'t, please email me your class list at kdwang@uchicago.edu, and I\'ll get it fixed. Thanks!',
+		classes:[
+			'CHDV 20000', 'CHDV 20100',
+			{require:1, classes:[
+				EVALUATORS.CHDV('Comparative Behavioral Biology', GROUPS.CHDV.DISTRIBUTION.A, []),
+				EVALUATORS.CHDV('Life Course Development', GROUPS.CHDV.DISTRIBUTION.B, [GROUPS.CHDV.DISTRIBUTION.A]),
+				EVALUATORS.CHDV('Culture and Community', GROUPS.CHDV.DISTRIBUTION.C, [GROUPS.CHDV.DISTRIBUTION.A, GROUPS.CHDV.DISTRIBUTION.B]),
+				EVALUATORS.CHDV('Mental Health and Personality', GROUPS.CHDV.DISTRIBUTION.D, [GROUPS.CHDV.DISTRIBUTION.A, GROUPS.CHDV.DISTRIBUTION.B, GROUPS.CHDV.DISTRIBUTION.C])
+			]},
+			{require:1, classes:GROUPS.CHDV.METHODS, max:1, hide:true},
+			{require:3, classes:GROUPS.CHDV.DISTRIBUTION.A.concat(GROUPS.CHDV.DISTRIBUTION.B).concat(GROUPS.CHDV.DISTRIBUTION.C).concat(GROUPS.CHDV.DISTRIBUTION.D), max:3, hide:true},
+			{require:3, classes:['CHDV ', 'CHDV ', 'CHDV ']}
+		],
+		link:{
+			catalog:'comparativehumandevelopment/#summaryofrequirements'
+		}
+	},
 	'Computational Neuroscience Minor':{
 		classes:['BIOS 24231', 'BIOS 24232', 'BIOS 26210', 'BIOS 26211', 'BIOS 29408'],
 		link:{
@@ -553,7 +583,7 @@ var REQUIREMENTS = {
 			angular.copy(SEQUENCES.CMSC2Q150),
 			'CMSC 15400',
 			{require:2, max:2, classes:[
-				'CMSC 22100','CMSC 22200','CMSC 22610','CMSC 23000','CMSC 23300',
+				'CMSC 22100','CMSC 22200','CMSC 22610','CMSC 23000','CMSC 23200','CMSC 23300',
 				'CMSC 23400','CMSC 23500','CMSC 23700','CMSC 23710'],
 			notes:'Programming Languages and Systems', hidden:true},
 			{require:3, classes:['CMSC 27100','CMSC 27200',

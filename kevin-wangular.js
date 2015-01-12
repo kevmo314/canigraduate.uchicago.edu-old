@@ -1460,6 +1460,21 @@ app.service('RequirementService', function($http, ClassService) {
 		}
 		// construct items, data bound by reference so evaluate still works.
 		self.items.push({title:major.replace('Minor', ''), data:record});
+		// EXPERIMENTAL: construct child content nodes
+		(function collapseChildren(node) {
+			if(!node.classes) {
+				return []; // some nodes don't have content
+			} else if(isString(node.classes)) {
+				return [node.classes];
+			} else {
+				node.children = [];
+				for(var i = 0; i < node.classes.length; i++) {
+					Array.prototype.push.apply(node.children, collapseChildren(node.classes[i]));
+				}
+				node.children.sort(); // sort it so searching is easier
+				return node.children;
+			}
+		})(record);
 	}
 	self.getItems = function(major, alternateSort) {
 		self.items.sort(function(a, b) {
@@ -1494,7 +1509,38 @@ app.service('RequirementService', function($http, ClassService) {
 			return cls.startsWith(self.coreClasses[index]);
 		}
 	};
+	function expandCrosslistings(taken) {
+		var out = [];
+		for(var i = 0; i < taken.length; i++) {
+			Array.prototype.push.apply(out, ClassService.getCrosslists(taken[i]));
+			out.push(taken[i]);
+		}
+		out.sort();
+		return out;
+	}
+	function revoke(node) {
+		console.log(node);
+		node.complete = false;
+		if(node.classes) {
+			if(isString(node.classes)) {
+				node.userClass = null;
+			} else {
+				node.total = node.base = 0;
+				for(var i = 0; i < node.classes.length; i++) {
+					revoke(node.classes[i]);
+				}
+			}
+		}
+	}
+	// we have to do this via greedy because solving it with dp is too inefficient
+	// and will only tell us if the solution exists or not, not the best solution.
+	// 
+	// ideally what we want to do is solve via dfs first, then if it fails, use greedy
+	// to try and find a partial solution
+	//
+	// however, dfs is too slow. I think better heuristics will end up being the answer.
 	self.evaluate = function(taken) {
+		var takenWithCrosslistings = expandCrosslistings(taken);
 		var userClasses;
 		var coreClasses = [];
 		var allCoreClasses = [];
@@ -1502,7 +1548,7 @@ app.service('RequirementService', function($http, ClassService) {
 			if(node.classes) {
 				if(typeof node.classes == 'string') {
 					if(node.evaluate) {
-						node.message = node.evaluate(taken);
+						node.message = node.evaluate(takenWithCrosslistings);
 						if(node.message !== true) {
 							// check if there's an evaluation function and if it fails, don't evaluate
 							node.userClass = null;
@@ -1534,6 +1580,13 @@ app.service('RequirementService', function($http, ClassService) {
 					if(self.coreClasses.length == 0 && core) { allCoreClasses.push(node.classes) }
 					return [(node.complete = (has != -1) || node.force) ? 1 : 0, 1];
 				} else {
+					if(node.evaluate) {
+						node.message = node.evaluate(takenWithCrosslistings);
+						if(node.message !== true) {
+							revoke(node);
+							return [0, node.require];
+						}
+					}
 					// cap is the total number of classes required to complete this subtree
 					// count is the number of child nodes completed
 					// base is the list of requirements fulfilled by child

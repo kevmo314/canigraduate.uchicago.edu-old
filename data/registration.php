@@ -35,7 +35,7 @@ post('https://classes.uchicago.edu/Shibboleth.sso/SAML2/POST', array(
 	'RelayState' => html_entity_decode($matches[2][0]),
 	'SAMLResponse' => html_entity_decode($matches[2][1])
 ), $cookie_file, $proxy);
-
+sleep(1);
 // authenticated, then "agree" to terms
 post('https://classes.uchicago.edu/loggedin/agreeToTerms.php', array(
 	'submit' => 'I Agree' // lol
@@ -43,7 +43,7 @@ post('https://classes.uchicago.edu/loggedin/agreeToTerms.php', array(
 // get current registrations
 $errors = array();
 if(empty($request->quarter)) {
-	sleep(0.6);
+	sleep(1);
 	$buffer = get('https://classes.uchicago.edu/loggedin/myCourses.php', $cookie_file, $proxy);
 } else {
 	if(!empty($request->drop)) {
@@ -53,10 +53,10 @@ if(empty($request->quarter)) {
 		), $cookie_file, $proxy);
 		foreach($request->drop as $drop) {
 			// determine course section, activity, units
-			sleep(0.6);
+			sleep(1);
 			preg_match('/confirmEnrollment\.php\?CourseName=' . preg_quote(urlencode($drop->id)) . '&amp;SectionName=' . preg_quote(urlencode($drop->section)) . '&amp;ActivityName=' . preg_quote(urlencode($drop->activity)) . '&amp;Units=(\S*)&amp;E/', $buffer, $matches);
 			if(sizeof($matches) > 0) {
-				sleep(0.6);
+				sleep(1);
 				$errors = array_merge($errors, findErrors(
 					post('https://classes.uchicago.edu/loggedin/register/processEnrollment.php', array(
 						'CourseName' => $drop->id,
@@ -71,7 +71,7 @@ if(empty($request->quarter)) {
 	}
 	if(!empty($request->add)) {
 		foreach($request->add as $add) {
-			sleep(0.6);
+			sleep(1);
 			$errors = array_merge($errors, findErrors(
 				post('https://classes.uchicago.edu/loggedin/register/processEnrollment.php', array(
 					'CourseName' => $add->id,
@@ -83,7 +83,7 @@ if(empty($request->quarter)) {
 				), $cookie_file, $proxy), $add->id));
 		}
 	}
-	sleep(0.6);
+	sleep(1);
 	$buffer = post('https://classes.uchicago.edu/loggedin/myCourses.php', array(
 		'TermName' => $request->quarter
 	), $cookie_file, $proxy);
