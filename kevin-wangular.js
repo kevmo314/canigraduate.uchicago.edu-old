@@ -1546,8 +1546,8 @@ app.service('RequirementService', function($http, ClassService) {
 						if(node.message !== true) {
 							// check if there's an evaluation function and if it fails, don't evaluate
 							node.userClass = null;
-							node.complete = false; // reset completion indicators
-							return [0, 1];
+							node.complete = node.force; // reset completion indicators
+							return [(node.force ? 1 : 0), 1];
 						}
 					}
 					var context = userClasses;
@@ -1578,7 +1578,8 @@ app.service('RequirementService', function($http, ClassService) {
 						node.message = node.evaluate(takenWithCrosslistings);
 						if(node.message !== true) {
 							revoke(node);
-							return [0, node.require];
+							node.complete = node.force;
+							return [(node.force ? node.require : 0), node.require];
 						}
 					}
 					// cap is the total number of classes required to complete this subtree
