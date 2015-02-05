@@ -192,7 +192,6 @@ var EVALUATORS = {
 	CHDV:function(title, set, exclude) {
 		// only approve the course set if and only if at least the max number is satisfied, ie all or nothing behavior
 		return {require:3, notes:title, max:3, classes:angular.copy(set), hidden:true, evaluate:function(taken) {
-				console.log(set, taken);
 				var resp = (set.filter(function(s) {
 					return taken.binarySearch(s) > -1
 				}).length >= 3 ? true : 'Sequence accepted when all three classes are completed.');

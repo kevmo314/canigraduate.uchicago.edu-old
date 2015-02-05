@@ -861,9 +861,11 @@ app.service('EvaluationService', function(UserService, ClassService, $http, $mod
 			$http.post('/data/rate.php', angular.extend({
 				action:'check', id:records
 			}, AUTHENTICATION), {timeout:existingRequest.promise}).success(function(result) {
-				self.data.clear();
-				Array.prototype.push.apply(self.data, result.filter(function(e) { return e in ClassService.data }));
-				self.data.sort();
+				ClassService.onLoad(function() {
+					self.data.clear();
+					Array.prototype.push.apply(self.data, result.filter(function(e) { return e in ClassService.data }));
+					self.data.sort();
+				});
 				defer.resolve(self.data);
 			});
 		} else {
@@ -1249,10 +1251,16 @@ app.service('WatchService', function($http, $modal, TimeschedulesService, ClassS
 		$http.post('/data/watches.php', AUTHENTICATION).success(self.apply);
 	};
 });
-app.service('ClassService', function($http, $injector, DEFAULT_FILTERS) {
+app.service('ClassService', function($rootScope, $http, $injector, DEFAULT_FILTERS) {
 	var self = this;
-	self.data = {}, self.keys = [], self.departments = [];
-	self.weight = {};
+	self.data = {}, self.keys = [], self.departments = [], self.weight = {};
+	self.onLoad = function(callback) {
+		if(self.keys.length > 0) {
+			callback(); // short circuit, we've already loaded
+		} else {
+			$rootScope.$on('ClassService:load', callback);
+		}
+	}
 	var start = getTime();
 	$http.get('/data/classes.json').success(function(data) {
 		var end = getTime();
@@ -1304,6 +1312,7 @@ app.service('ClassService', function($http, $injector, DEFAULT_FILTERS) {
 				delete self.weight[ap]; // hang the leftover node
 			}
 		})();
+		$rootScope.$emit('ClassService:load');
 	});
 	self.getCrosslists = function(cls) {
 		var ind = prefixBinarySearch(self.keys, cls);
@@ -1460,21 +1469,6 @@ app.service('RequirementService', function($http, ClassService) {
 		}
 		// construct items, data bound by reference so evaluate still works.
 		self.items.push({title:major.replace('Minor', ''), data:record});
-		// EXPERIMENTAL: construct child content nodes
-		(function collapseChildren(node) {
-			if(!node.classes) {
-				return []; // some nodes don't have content
-			} else if(isString(node.classes)) {
-				return [node.classes];
-			} else {
-				node.children = [];
-				for(var i = 0; i < node.classes.length; i++) {
-					Array.prototype.push.apply(node.children, collapseChildren(node.classes[i]));
-				}
-				node.children.sort(); // sort it so searching is easier
-				return node.children;
-			}
-		})(record);
 	}
 	self.getItems = function(major, alternateSort) {
 		self.items.sort(function(a, b) {
