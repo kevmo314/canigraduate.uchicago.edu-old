@@ -1519,7 +1519,7 @@ app.service('RequirementService', function($http, ClassService) {
 		return out;
 	}
 	function revoke(node) {
-		console.log(node);
+		//console.log(node);
 		node.complete = false;
 		if(node.classes) {
 			if(isString(node.classes)) {

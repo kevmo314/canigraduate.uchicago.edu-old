@@ -46,11 +46,14 @@ class SetEncoder(json.JSONEncoder):
 class ClassResolver(object):
 	def __init__(self, session, filename):
 		self.session = session
-		try:
-			with file(filename) as f:
-				self.data = json.loads(f.read())
-		except:
-			print('Failed to parse')
+		if filename:
+			try:
+				with file(filename) as f:
+					self.data = json.loads(f.read())
+			except:
+				print('Failed to parse')
+				self.data = {}
+		else:
 			self.data = {}
 		self.resolvable = {}
 		self.predefined = {}
