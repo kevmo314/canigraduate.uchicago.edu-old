@@ -1657,6 +1657,7 @@ app.factory('RegistrationFactory', function($rootScope, $http, $modal, $q, Times
 	return function(quarter) {
 		var records = [], self = this;
 		var hidden = [];
+		self.loaded = false;
 		function load(out) {
 			var data = out.courses;
 			records = data.map(function(e) {
@@ -1666,6 +1667,7 @@ app.factory('RegistrationFactory', function($rootScope, $http, $modal, $q, Times
 				}
 			});
 			$rootScope.$broadcast('scheduling:updated', self);
+			self.loaded = true;
 		}
 		function response(data) {
 			load(data);
