@@ -5,18 +5,25 @@
 	</div>
 	<ul class="list-group">
 		<li class="list-group-item">
-			Hide sections that meet on
+			Show only sections on
 			<div class="btn-group">
-				<toggle target="interface.find.filters.dow.M" color="danger">M</toggle>
-				<toggle target="interface.find.filters.dow.T" color="danger">T</toggle>
-				<toggle target="interface.find.filters.dow.W" color="danger">W</toggle>
-				<toggle target="interface.find.filters.dow.H" color="danger">Th</toggle>
-				<toggle target="interface.find.filters.dow.F" color="danger">F</toggle>
-				<toggle target="interface.find.filters.dow.S" color="danger">Sa</toggle>
-				<toggle target="interface.find.filters.dow.U" color="danger">Su</toggle>
+				<toggle target="interface.find.filters.dow.M" color="danger" invert="1">M</toggle>
+				<toggle target="interface.find.filters.dow.T" color="danger" invert="1">T</toggle>
+				<toggle target="interface.find.filters.dow.W" color="danger" invert="1">W</toggle>
+				<toggle target="interface.find.filters.dow.H" color="danger" invert="1">Th</toggle>
+				<toggle target="interface.find.filters.dow.F" color="danger" invert="1">F</toggle>
+				<toggle target="interface.find.filters.dow.S" color="danger" invert="1">Sa</toggle>
+				<toggle target="interface.find.filters.dow.U" color="danger" invert="1">Su</toggle>
 			</div>
 			<div class="btn-group" title="ARR is my favorite day of the week">
-				<toggle target="interface.find.filters.dow.ARR" color="danger">ARR</toggle>
+				<toggle target="interface.find.filters.dow.ARR" color="danger" invert="1">ARR</toggle>
+			</div>
+			in the
+			<div class="btn-group">
+				<toggle target="interface.find.filters.quarter.AUTUMN" color="warning" invert="1">F</toggle>
+				<toggle target="interface.find.filters.quarter.WINTER" color="info" invert="1">W</toggle>
+				<toggle target="interface.find.filters.quarter.SPRING" color="success" invert="1">S</toggle>
+				<toggle target="interface.find.filters.quarter.SUMMER" color="danger" invert="1">S</toggle>
 			</div>
 		</li>
 		<li class="list-group-item">

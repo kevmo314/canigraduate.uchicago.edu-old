@@ -3,7 +3,7 @@ app.config(function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {templateUrl:'templates/courses.html'})
 		.when('/scheduler', {templateUrl:'templates/scheduler.html'})
-		.when('/exchange', {templateUrl:'templates/exchange.html', controller:'ExchangeCtrl'})
+		.when('/watches', {templateUrl:'templates/exchange.html', controller:'ExchangeCtrl'})
 		.when('/evaluations', {templateUrl:'templates/evaluations.html', controller:'EvaluationsCtrl'})
 		.when('/transcript', {templateUrl:'templates/transcript.html', lock:true})
 		.otherwise({redirectTo:'/'});
@@ -25,7 +25,7 @@ app.directive('navTab', function($location) {
 		}
 	}
 });
-app.constant('DEFAULT_FILTERS', {departments:[], instructors:[], dow:{ARR:false, U:false, M:false, T:false, W:false, H:false, F:false, S:false}, taken:false, tested:false, prereq:false, core:false, conflict:false, archive:false, search:'', dead:false, full:false});
+app.constant('DEFAULT_FILTERS', {departments:[], instructors:[], quarter:{AUTUMN:false, WINTER:false, SPRING:false, SUMMER:false}, dow:{ARR:false, U:false, M:false, T:false, W:false, H:false, F:false, S:false}, taken:false, tested:false, prereq:false, core:false, conflict:false, archive:false, search:'', dead:false, full:false});
 app.run(function($rootScope, InterfaceManagerService) {
 	$rootScope.interface = InterfaceManagerService;
 });
@@ -220,8 +220,8 @@ app.service('TutorialService', function($q, $location, $rootScope, $cookies, $ti
 		prepare('tutorial-transcript', '<p>On this page, you can view your transcript for each quarter by clicking on each of the rows, as well as view your projected GPA targets by hovering over the graph below.</p><p>Explore the transcript page a bit, then click <a id="tutorial-next">here</a> to continue.</p>', {
 			trigger:'tutorial-next'
 		}),
-		prepare('tutorial-navigation', '<p>Click the <kbd>Exchange</kbd> tab to continue.</p>', {
-			watch:function() { return $location.path() == '/exchange' }
+		prepare('tutorial-navigation', '<p>Click the <kbd>Watches</kbd> tab to continue.</p>', {
+			watch:function() { return $location.path() == '/watches' }
 		}),
 		prepare('tutorial-watches', '<p>From this page, you can see the class enrollment watches that you have signed up for. You can either add them directly from this page or use the <kbd><i class="fa fa-bell"></i> Add Watch</kbd> button in the sections on the "Find Classes" tab. You\'ll get an email to your <code>@uchicago.edu</code> email address whenever one of your watches gets triggered.</p><p>Click <a id="tutorial-next">here</a> to continue.</p>', {
 			trigger:'tutorial-next'
@@ -2063,7 +2063,10 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 	function checkFullFilter(timeschedule) {
 		return timeschedule[3][0][4][0] == timeschedule[3][0][4][1];
 	}
-	function isDOWFilterNecessary(filter) {
+	function checkQuarterFilter(timeschedule, filter) {
+		return filter[timeschedule[0].substring(0, 6).toUpperCase()];
+	}
+	function isFilterNecessary(filter) {
 		for(var d in filter) {
 			if(filter[d]) { return true }
 		}
@@ -2077,7 +2080,8 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 		var taken = exclusions[0], tested = exclusions[1];
 		var out = [];
 		var class_group = {};
-		var checkDOW = isDOWFilterNecessary(filter.dow);
+		var checkDOW = isFilterNecessary(filter.dow);
+		var checkQuarter = isFilterNecessary(filter.quarter);
 		var start = getTime();
 		var research = null;
 		if(filter.search && filter.search.length > 0) {
@@ -2099,6 +2103,7 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 			if(filter.taken && taken.binarySearch(id) >= 0) { continue }
 			if(filter.tested && tested.binarySearch(id) >= 0) { continue }
 			if(filter.archive && timeschedules[i][0] != self.quarters.active) { continue }
+			if(checkQuarter && checkQuarterFilter(timeschedules[i], filter.quarter)) { continue }
 			if(research && checkSearchFilter(research, timeschedules[i])) { continue }
 			if(filter.departments.length > 0 && checkTagFilter(filter.departments, id.substring(0, 4))) { continue }
 			if(filter.instructors.length > 0 && checkInstructorFilter(filter.instructors, timeschedules[i])) { continue }
@@ -2216,7 +2221,7 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 					self.section_count = timeschedules.length;
 					processingTime += (getTime() - start);
 					self.status = 'Loaded all classes after ' + quarter;
-					process(processingTime <= 1000 ? index + 1 : quarters.length);
+					process(processingTime <= 5000 ? index + 1 : quarters.length);
 					// quick trick to make it look like data is loading faster
 					if(index == 4) {
 						timeschedules.sort(timeschedulesComparator);
@@ -2297,13 +2302,15 @@ app.directive('toggle', function() {
 		scope: {
 			target:'=',
 			color:'@',
-			disabled:'='
+			disabled:'=',
+			invert:'@'
 		},
-		template:'<button type="button" class="btn btn-xs btn-default" ng-class="{active:target}" ng-click="target=!target" ng-disabled="disabled" ng-transclude></button>',
+		template:'<button type="button" class="btn btn-xs btn-default" ng-class="{active:isActive}" ng-click="target=!target" ng-disabled="disabled" ng-transclude></button>',
 		link:function(scope, element, attrs) {
 			scope.$watch('target', function(value) {
+				scope.isActive = (scope.invert ? !value : value);
 				if(scope.color) {
-					element.toggleClass('btn-' + scope.color, value);
+					element.toggleClass('btn-' + scope.color, scope.isActive);
 				}
 			});
 		}
@@ -2395,7 +2402,7 @@ app.directive('schedule', function(parseSchedule) {
 	return {
 		restrict:'A',
 		scope: { schedule:'=', expanded:'=' },
-		template:'<span ng-repeat="s in parsed" class="label label-{{s.type}}" tooltip="{{s.start}}-{{s.end}}">{{s.dow}}</span>',
+		template:'<a ng-repeat="s in parsed" class="label label-{{s.type}}" tooltip="{{s.start}}-{{s.end}}">{{s.dow}}</a>',
 		link:function(scope, element, attrs) {
 			scope.parsed = [];
 			scope.$watch('schedule', function(data) {

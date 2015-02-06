@@ -5,8 +5,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="utf-8"/>
 		<meta name="description" content="Automated graduation dependency resolution"/>
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
 		<link rel="stylesheet" href="/css/style.css"/>
 		<base href="/"/>
 	</head>
@@ -24,7 +24,7 @@
 						<ul class="nav navbar-nav" id="tutorial-navigation">
 							<nav-tab href="/">Courses</nav-tab>
 							<nav-tab href="/scheduler">Scheduler</nav-tab>
-							<nav-tab href="/exchange">Exchange</nav-tab>
+							<nav-tab href="/watches">Watches</nav-tab>
 							<nav-tab href="/evaluations">Evaluations</nav-tab>
 							<nav-tab href="/transcript">Transcript</nav-tab>
 						</ul>
@@ -221,7 +221,7 @@
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular-cookies.min.js"></script>
 		<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/tripledes.js"></script>
 		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.2.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
 		<!-- <script src="//cdn.socket.io/socket.io-1.1.0.js"></script>-->
 		<script src="/js/angular-gravitate.js"></script>
 		<script src="/js/SortedList.js"></script>
