@@ -1,15 +1,19 @@
 <div id="tutorial-watches">
-<div class="row">
-	<div class="col-sm-9">
-		<h2>Your Watches <small>{{authentication.cnetid}}@uchicago.edu</small></h2>
-	</div>
-	<div class="col-sm-3">
-		<a style="margin-top:30px" class="pull-right btn btn-default btn-xs" ng-click="watches.remove()"><i class="fa fa-trash"></i> Remove all</a>
-	</div>
+<div ng-if="!authentication.cnetid.length">
+	<h2>Your Watches</h2>
+	<alert type="info">Import to add watches.</alert>
 </div>
-<p class="text-muted">Accuracy contingent on active users. For higher accuracy, ask IT Services for an API.</p>
-<alert type="info" ng-if="!watches.data.length">You don't have any watches. Import your data and click the <i class="fa fa-bell"></i> icon in the "Find Classes" panel to add one.</alert>
 <div ng-if="authentication.cnetid.length">
+	<div class="row">
+		<div class="col-xs-9">
+			<h2>Your Watches <small>{{authentication.cnetid}}@uchicago.edu</small></h2>
+		</div>
+		<div class="col-xs-3">
+			<a style="margin-top:30px" class="pull-right btn btn-default btn-xs" ng-click="watches.remove()"><i class="fa fa-trash"></i> Remove all</a>
+		</div>
+	</div>
+	<p class="text-muted">Accuracy contingent on active users. For higher accuracy, ask IT Services for an API.</p>
+	<alert type="info" ng-if="!watches.data.length">You don't have any watches. Import your data and click the <i class="fa fa-bell"></i> icon in the "Find Classes" panel to add one.</alert>
 	<table class="table table-condensed table-hover">
 		<thead>
 			<tr>

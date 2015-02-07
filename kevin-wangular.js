@@ -2243,7 +2243,7 @@ app.directive('notes', function($rootScope, UserService, ClassService) {
 			notes:'=',
 			department:'='
 		},
-		template:'<span ng-repeat="cls in ::classes" tooltip="{{::cls.name}}" ng-class="cls.text" ng-style="cls.style" ng-click="open(cls)"><i class="fa" ng-class="::cls.icon" ng-if="::cls.icon"></i><span ng-if="::cls.icon"> </span><span ng-bind="::cls.id"></span></span>',
+		template:'<span ng-repeat="cls in ::classes" tooltip="{{::cls.name}}" ng-class="cls.text" ng-click="open(cls)"><i class="fa" ng-class="::cls.icon" ng-if="::cls.icon"></i><span ng-if="::cls.icon"> </span><span ng-bind="::cls.id"></span></span>',
 		link:function(scope, element, attrs) {
 			scope.open = function(cls) {
 				if(cls.name) {
@@ -2274,11 +2274,11 @@ app.directive('notes', function($rootScope, UserService, ClassService) {
 						scope.classes.push({id:scope.notes.substring(left, matches[i].index)});
 						// then push the identification node
 						if(UserService.classes.binarySearch(id) >= 0) {
-							scope.classes.push({id:id, icon:'fa-check', name:name, text:['text-success', 'pointer'], style:{'white-space':'nowrap'}});
+							scope.classes.push({id:id, icon:'fa-check', name:name, text:['text-success', 'pointer', 'text-nowrap']});
 						} else if(transcript.filter(function(record) { return record.id == id }).length) {
-							scope.classes.push({id:id, icon:'fa-minus', name:name, text:['text-warning', 'pointer'], style:{'white-space':'nowrap'}});
+							scope.classes.push({id:id, icon:'fa-minus', name:name, text:['text-warning', 'pointer', 'text-nowrap']});
 						} else {
-							scope.classes.push({id:id, icon:'fa-times', name:name, text:['text-danger', 'pointer'], style:{'white-space':'nowrap'}});
+							scope.classes.push({id:id, icon:'fa-times', name:name, text:['text-danger', 'pointer', 'text-nowrap']});
 						}
 						if(containsDepartment) {
 							activeDepartment = id.substring(0, 4);

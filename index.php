@@ -70,9 +70,9 @@
 		</div>
 		<div ng-class="{'container':!settings.expanded, 'container-fluid':settings.expanded}" id="content" ng-cloak>
 			<div class="row">
-				<div class="col-md-6"><div ng-view></div></div>
+				<div class="col-md-6"><div ng-view></div><hr class="visible-xs-block visible-sm-block"/></div>
 				<div class="col-md-6" id="tutorial-right">
-					<alert type="success" close="closeCongratulations()" ng-if="showCongratulations()"><i class="fa fa-graduation-cap"></i> Congratulations on graduating from UChicago! <a href="//portalapps.uchicago.edu/applyfordegree/?from=canigraduate" target="_blank">Apply for your degree.</a></alert>
+					<alert type="success" close="closeCongratulations()" ng-if="showCongratulations()"><i class="fa fa-graduation-cap"></i> Congratulations on graduating from UChicago! <a href="//portalapps.uchicago.edu/applyfordegree/?from=canigraduate" target="_blank" class="text-nowrap">Apply for your degree.</a></alert>
 					<tabset justified="true">
 						<tab active="interface.tabs[0]">
 							<tab-heading class="pointer">Core <span class="label label-danger" tooltip="Classes left" ng-hide="val.base == val.total">{{val.total - val.base}}</span></tab-heading>

@@ -13,7 +13,7 @@
 			<td colspan="2" class="col-xs-6">
 				<i class="fa fa-angle-right fa-fw" ng-hide="show"></i>
 				<i class="fa fa-angle-down fa-fw" ng-show="show"></i>
-				<strong ng-bind="::quarter"></strong> (<span ng-bind="count"></span> quality grade<span ng-if="::count!=1">s</span>)
+				<strong ng-bind="::quarter"></strong> (<span ng-bind="count"></span> <span class="visible-sm-inline visible-lg-inline">quality</span> grade<span ng-if="::count!=1">s</span>)
 			</td>
 			<td ng-if="::!count" colspan="2" ng-hide="show"></td>
 			<td ng-if="::count" class="text-right col-xs-2" ng-hide="show">Quarter</td>
