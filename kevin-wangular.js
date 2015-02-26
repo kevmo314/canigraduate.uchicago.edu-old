@@ -48,17 +48,6 @@ app.run(function($modal, $timeout, $cookies, TutorialService) {
 	if(mobileCheck() && !$cookies.mobileokay) {
 		window.location = 'https://canigraduate.uchicago.edu/mobile.php';
 	}
-	if(!$cookies.tutorial && !mobileCheck()) {
-		$modal.open({templateUrl:'/templates/modals/tutorial.html'}).result.then(TutorialService.start, function() {
-			$cookies.tutorial = 'ignored';
-		});
-	} else if(!$cookies.survey) { // only prompt if it's not your first time
-		$timeout(function() {
-			$modal.open({templateUrl:'/templates/modals/survey.html'}).result.then(function() {
-				$cookies.survey = 'prompted';
-			});
-		}, 15 * 60 * 1000);
-	}
 });
 // this is one thing that might've been easier with jquery...
 app.service('TutorialService', function($q, $location, $rootScope, $cookies, $timeout, $interval, InterfaceManagerService, UserService, UserService, TimeschedulesService) {
@@ -1361,6 +1350,8 @@ app.service('ClassService', function($rootScope, $http, $injector, DEFAULT_FILTE
 	self.distributions = {};
 	self.distributionCount = {};
 	self.loadData = function(cls) {
+		if(cls.loaded) { return }
+		cls.loaded = true; // prevent race conditions as much as possible
 		if(!cls.description) {
 			if(cls.classes in self.descriptions) {
 				cls.description = self.descriptions[cls.classes];

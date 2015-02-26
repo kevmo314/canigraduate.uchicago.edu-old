@@ -7,10 +7,12 @@
 			angular.module('app', ['gravitate'])
 				.controller('GravitateController', ['$scope', '$interval', function($scope, $interval) {
 					$scope.style = {height:'50px'};
+					$scope.padding = {padding:'1em'};
 					var t = 0;
 					$interval(function() {
 						t += 0.05;
 						$scope.style = {height:(Math.sin(t) * 25 + 50) + 'px'};
+						$scope.padding = {padding:(Math.sin(t)) + 'em'};
 					}, 10);
 				}]);
 		</script>
@@ -18,14 +20,13 @@
 	<body ng-controller="GravitateController">
 		<div style="margin:200px;height:10000px;">
 			<button ng-click="gravitator=!gravitator">Toggle Gravitator</button>
-			<gravitate ng-if="!gravitator">
+	<div ng-style="padding">
+			<gravitate ng-if="!gravitator" id="gravitator">
 				<div style="border:1px solid black;width:50px;margin:20px;padding:20px;background-color:red" ng-style="style">
 					Gravitator
 				</div>
 			</gravitate>
-			<div ng-if="gravitator" style="border:1px solid black;width:50px;margin:20px;padding:20px;background-color:red" ng-style="style">
-				Gravitator
-			</div>
+</div>
 			<button>Imagine this is a submit button!</button>
 		</div>
 </html>

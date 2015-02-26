@@ -51,12 +51,12 @@ header {
 #find-results td {
 	border:none;
 }
-#find-results tbody:nth-child(even) {
-	background-color:#F9F9F9;
-}
 #find-results tbody {
 	border:0;
 	border-top:1px solid #ddd;
+}
+#find-results tbody:hover {
+	background-color:#F9F9F9;
 }
 footer {
 	background-color:#1E1E1E;

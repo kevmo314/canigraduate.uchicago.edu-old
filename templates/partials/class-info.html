@@ -47,9 +47,11 @@
 							<a ng-if="section.quarter==timeschedules.quarters.available[0]" ng-href="//classes.uchicago.edu/loggedin/consentForm.php?CourseName={{::section.id}}&SectionName={{::section.section}}&ActivityName={{::secondary.id}}&Units=100&EnrollmentStatus=" target="_blank"><i class="fa fa-exclamation-circle" tooltip="Consent form"></i></a>
 						</td>
 					</tr>
+					<gravitate class="text-muted">
 					<tr ng-if="::section.notes">
-						<td colspan="6"><gravitate class="text-muted"><span department="::section.id.substring(0,4)" notes="::section.notes"></span></gravitate></td>
+						<td colspan="6"><span department="::section.id.substring(0,4)" notes="::section.notes"></span></td>
 					</tr>
+</gravitate>
 				</tbody>
 			</table>
 			<div class="btn-group btn-block" ng-if="child.displayLimit < child.sections.length" dropdown>
