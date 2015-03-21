@@ -55,7 +55,6 @@
 		</header>
 		<div class="container clearfix" id="content">
 			<div class="alert alert-warning text-center">Still under construction kthx &lt;3</div>
-<?php die(); ?>
 			<div class="text-center">
 				<h2>Departments</h2>
 				<hr/>
@@ -216,11 +215,19 @@
 				<div class="col-md-6" id="department-content">
 					<div id="department-all">
 						<h3>All Classes</h3>
+						<p>Notes from Kevin:</p>
+						<ul>
+							<li>I haven't had time to rewrite the data analysis, but enough people wanted the aggregate data. I'll probably publish something more formal near the beginning of summer.</li>
+							<li>GPA is largely ordinal data. This means that averaging GPA can be somewhat deceptive and should be taken with a salt shaker.</li>
+							<li>The grades <b>are not</b> by major, they are by the issuing department. That means if I'm a math major and I took stats 234, my stats grade counts towards <a class="hover" data-department="STAT">STAT</a>, not <a class="hover" data-department="MATH">MATH</a>.</li>
+							<li>Small sample size departments aren't filtered out so hover over them with your mouse and figure out if they're significant on your own.</li>
+						</ul>
+<?php /*
 						<p>The difference in grade distribution provides insight into the relative difficulty of the department and relative intelligence (within the subject) of the students who take it.</p>
 						<p><a class="hover" data-department="CHIN">Chinese</a> appears at the bottom of the distribution with the highest average GPA. This is possibly due to the language requirement and the relatively <a href="https://registrar.uchicago.edu/sites/registrar.uchicago.edu/files/uploads/pdf/statistics/race/Race-Spr14.pdf">large fraction of Asian</a> students. It is possible that those who wish to complete the language requirement choose the one likely to be the easiest to them, thus Chinese students are more likely to take Chinese. This is consistent with other languages as well, as <a class="hover" data-department="GRMN">German</a>, <a class="hover" data-department="FREN">French</a>, and <a class="hover" data-department="SPAN">Spanish</a> also rank near the bottom of the distribution.</p>
-						<p>On the other side of the spectrum, math and science subjects tend to have relatively lower grades compared to humanities. Yet, subjects that are commonly associated with being notoriously difficult, for example <a class="hover" data-department="MATH">math</a> and <a class="hover" data-department="BIOS">biology</a>, do not necessarily rank among the top, whereas subjects such as <a class="hover" data-department="STAT">statistics</a> rank higher overall. This effect is possibly due to the existence of the core and general education requirements that intersect with these departments. Among core classes, grades likely tend to be higher (analysis coming soon), thus departments that do not host as many general education requirements are more likely to have a lower overall GPA.</p>
+						<p>On the other side of the spectrum, math and science subjects tend to have relatively lower grades compared to humanities. Yet, subjects that are commonly associated with being notoriously difficult, for example <a class="hover" data-department="MATH">math</a> and <a class="hover" data-department="BIOS">biology</a>, do not necessarily rank among the top, whereas subjects such as <a class="hover" data-department="">statistics</a> rank higher overall. This effect is possibly due to the existence of the core and general education requirements that intersect with these departments. Among core classes, grades likely tend to be higher (analysis coming soon), thus departments that do not host as many general education requirements are more likely to have a lower overall GPA.</p>
 						<p><a class="hover" data-department="BUSF">Booth school classes</a> rank relatively near the top, but Booth school also has a policy <a href="http://programs.chicagobooth.edu/docs/handbook.pdf">restricting the average grade in a class to a 3.33</a>. This may indicate that the average GPA is artificially low due to this policy. <em>Thanks, Frank Pinter.</em></p>
-						<em>For sample sizes, see <a href="#department-dominance">Department Dominance</a>.</em>
+						<em>For sample sizes, see <a href="#department-dominance">Department Dominance</a>.</em> */ ?>
 					</div>
 					<div style="height:100vh" id="department-core">
 						<h3>Core Excluded</h2>
@@ -230,6 +237,7 @@
 					</div>
 				</div>
 			</div>
+<?php die(); ?>
 			<div class="row">
 				<div class="col-md-12">
 					<svg id="quarter-index-table" style="width:100%;height:50vh"></svg>

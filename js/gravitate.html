@@ -20,13 +20,14 @@
 	<body ng-controller="GravitateController">
 		<div style="margin:200px;height:10000px;">
 			<button ng-click="gravitator=!gravitator">Toggle Gravitator</button>
-	<div ng-style="padding">
 			<gravitate ng-if="!gravitator" id="gravitator">
 				<div style="border:1px solid black;width:50px;margin:20px;padding:20px;background-color:red" ng-style="style">
-					Gravitator
+					Gravitator On
 				</div>
 			</gravitate>
-</div>
-			<button>Imagine this is a submit button!</button>
+			<div ng-if="gravitator" style="border:1px solid black;width:50px;margin:20px;padding:20px;background-color:red" ng-style="style">
+				Gravitator Off
+			</div>
+			<button>Click me!</button>
 		</div>
 </html>

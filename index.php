@@ -222,7 +222,8 @@
 		<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/tripledes.js"></script>
 		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.2.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-		<!-- <script src="//cdn.socket.io/socket.io-1.1.0.js"></script>-->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angulartics/0.17.2/angulartics.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angulartics/0.17.2/angulartics-ga.min.js"></script>
 		<script src="/js/angular-gravitate.js"></script>
 		<script src="/js/SortedList.js"></script>
 		<script src="/js/IntervalTree.js"></script>
@@ -230,5 +231,12 @@
 		<script src="utility.js"></script>
 		<script src="requirements.js"></script>
 		<script src="kevin-wangular.js"></script>
+		<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-54175222-1', 'auto');
+		</script>
 	</body>
 </html>

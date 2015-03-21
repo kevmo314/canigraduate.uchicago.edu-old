@@ -41,7 +41,7 @@
 			<div class="mugit-wrapper text-left"><div class="mugit"></div><p class="text-info">Mugit sez: {{message}}</p></div>
 		</div>
 		<div ng-if="!message">
-			<input type="submit" value="Import, please! :D" class="btn btn-success" ng-enter="load()" ng-click="load()"/>
+			<input type="submit" value="Import, please! :D" class="btn btn-success" ng-enter="load()" ng-click="load()" analytics-category="data" analytics-on="click" analytics-event="import"/>
 			<button class="btn btn-default" ng-click="$dismiss()" type="button">nvm</button>
 		</div>
 	</div>

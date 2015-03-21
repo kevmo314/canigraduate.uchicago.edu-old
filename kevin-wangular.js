@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngRoute', 'ngCookies', 'ui.bootstrap', 'decipher.tags', 'gravitate']);
+var app = angular.module('app', ['ngRoute', 'ngCookies', 'ui.bootstrap', 'decipher.tags', 'gravitate', 'angulartics', 'angulartics.google.analytics']);
 app.config(function($routeProvider, $locationProvider) {
 	$routeProvider
 		.when('/', {templateUrl:'templates/courses.html'})
@@ -223,7 +223,9 @@ app.service('TutorialService', function($q, $location, $rootScope, $cookies, $ti
 			backdrop:false
 		})
 	];
-	self.start = function() { self.showStep(0) };
+	self.start = function() {
+		self.showStep(0);
+	};
 	self.showStep = function(i) {
 		if(i == tutorial.length) {
 			self.end()
@@ -376,31 +378,6 @@ app.controller('ManualRecordCtrl', function($scope, UserService, TimeschedulesSe
 		clear($scope.$parent.timeschedules.quarters.active);
 	};
 });
-app.factory('SocketFactory', function($rootScope) {
-	var socket = null; //io.connect('https://canigraduate.uchicago.edu:1820');
-	return {
-		on:function(eventName, callback) {
-			console.log(eventName);
-/*			socket.on(eventName, function() {
-				var args = arguments;
-				$rootScope.$apply(function() {
-					callback.apply(socket, args);
-				});
-			});*/
-		},
-		emit:function(eventName, data, callback) {
-			console.log(eventName);
-/*			socket.emit(eventName, data, function() {
-				var args = arguments;
-				$rootScope.$apply(function() {
-					if(callback) {
-						callback.apply(socket, args);
-					}
-				});
-			});*/
-		}
-	}
-});
 app.controller('EvaluationsCtrl', function($scope, ClassService, EvaluationService) {
 	$scope.getName = function(c) { return (c in ClassService.data ? ClassService.data[c].name : 'Elective') };
 	$scope.searchClasses = ClassService.search;
@@ -414,29 +391,10 @@ app.controller('EvaluationsCtrl', function($scope, ClassService, EvaluationServi
 		});
 	};
 });
-app.controller('ExchangeCtrl', function($q, $scope, $http, $modal, ClassService, WatchService, TimeschedulesService, AUTHENTICATION, SocketFactory) {
-	$http.get('/data/status.php').success(function() {
-		$scope.negotiationServer = true
-	});
-	var cancel = null;
-	function updateCourses(value) {
-		if(value != '' && AUTHENTICATION.cnetid != '') {
-			$scope.availableCourses = null;
-			if(cancel) { cancel.resolve() }
-			cancel = $q.defer();
-			$http.post('/data/registration.php',
-				angular.extend({quarter:value}, AUTHENTICATION),
-				{timeout:cancel.promise}).success(function(data) {
-				$scope.availableCourses = data.courses;
-			});
-		}
-	}
-	$scope.authentication = AUTHENTICATION;
+app.controller('ExchangeCtrl', function($q, $scope, $http, $modal, ClassService, WatchService, TimeschedulesService, AUTHENTICATION) {
 	$scope.watches = WatchService;
 	$scope.$watch(function() { return AUTHENTICATION.cnetid }, function(value) {
 		if(value != '') { WatchService.refresh() }
-		SocketFactory.emit('authentication', AUTHENTICATION);
-		updateCourses($scope.offer.quarter);
 	});
 	$scope.add = function() {
 		WatchService.open({ // separate object in case the user modifies the data, it shouldn't modify ts
@@ -444,56 +402,6 @@ app.controller('ExchangeCtrl', function($q, $scope, $http, $modal, ClassService,
 			section:'',
 			course:'',
 			activity:''
-		});
-	};
-	$scope.offers = [];
-	$scope.offer = {quarter:TimeschedulesService.quarters.active};
-	$scope.quarters = TimeschedulesService.quarters.available;
-	$scope.availableCourses = null;
-	$scope.$watch('offer.quarter', updateCourses);
-	$scope.getName = function(c) { return (c in ClassService.data ? ClassService.data[c].name : '') };
-	$scope.submit = function() {
-		SocketFactory.emit('offer:create', $scope.offer);
-	};
-	$scope.cancel = function(offer) {
-		SocketFactory.emit('offer:remove', offer);
-	};
-	SocketFactory.on('offer:index', function(data) {
-		$scope.offers = data
-	});
-	SocketFactory.on('negotiation:receive', function(data) {
-		console.log(data);
-	});
-	$scope.negotiate = function(offer) {
-		$modal.open({
-			templateUrl:'/templates/modals/negotiate.html',
-			controller:function($scope, $modalInstance, offers, quarters) {
-				$scope.$watch('negotiation.quarter', function(quarter) {
-					$scope.availableCourses = null;
-					$http.post('/data/registration.php', angular.extend({quarter:quarter}, AUTHENTICATION)).success(function(data) {
-						for(var i = 0; i < data.courses.length; i++) {
-							for(var j = 0; j < offers.length; j++) {
-								if(offers[j].cnetid == AUTHENTICATION.cnetid
-									&& offers[j].quarter == offer.quarter
-									&& offers[j].id == data.courses[i].id) {
-									data.courses[i].disabled = true;
-								}
-							}
-						}
-						$scope.availableCourses = data.courses;
-					});
-				});
-				$scope.quarters = quarters;
-				$scope.offer = offer;
-				$scope.negotiation = {cnetid:AUTHENTICATION.cnetid, quarter:offer.quarter};
-			},
-			resolve:{
-				quarters:function() { return TimeschedulesService.quarters.available },
-				offers:function() { return $scope.offers }
-			}
-		}).result.then(function(negotiation) {
-			offer.negotiation = negotiation;
-			SocketFactory.emit('negotiation:create', offer);
 		});
 	};
 });
