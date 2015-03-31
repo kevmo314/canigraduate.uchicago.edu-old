@@ -95,7 +95,8 @@ $dom->loadHTML($buffer);
 foreach((new DOMXPath($dom))->query('//comment()') as $comment) {
 	$comment->parentNode->removeChild($comment);
 }
-$rows = $dom->getElementsByTagName('tr');
+            // make sure we're in the right tab
+$rows = $dom->getElementById('tabs-2')->getElementsByTagName('tr');
 $data = array();
 foreach($rows as $row) {
 	if($row->getAttribute('class') == 'section first') {
