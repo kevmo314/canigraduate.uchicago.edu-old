@@ -116,7 +116,9 @@ var GROUPS = {
 		// classes abroad, vienna
 		'SOSC 24600', 'SOSC 24700', 'SOSC 24800',
 		// classes abroad, athens
-		'SOSC 19007', 'SOSC 19008', 'SOSC 19009'
+		'SOSC 19007', 'SOSC 19008', 'SOSC 19009',
+		// classes abroad, jerusalem
+		'SOSC 19028', 'SOSC 19029', 'SOSC 19030'
 	],
 	CORE_ART:[
 		'ARTH 1','CRWR 121','TAPS 10','TAPS 28400',
