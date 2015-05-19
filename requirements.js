@@ -111,6 +111,7 @@ var GROUPS = {
 		'SALC 20100','SALC 20200',
 		// classes abroad, paris
 		'SOSC 27501', 'SOSC 27601', 'SOSC 27701',
+		'SOSC 22551', 'SOSC 22552', 'SOSC 22553',
 		// classes abroad, oaxaca
 		'SOSC 19019', 'SOSC 19020', 'SOSC 19021',
 		// classes abroad, vienna

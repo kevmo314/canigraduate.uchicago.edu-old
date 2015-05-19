@@ -10,22 +10,20 @@ function findErrors($content, $course) {
 	return $errors;
 }
 
-$proxy = '54.174.139.219:3128';
-
 $postdata = file_get_contents("php://input");
 $request = json_decode($postdata);
 
 $cookie_file = '/tmp/cookies' . rand();
 
 // wait until the tunnel is established, may take non-negligible time.
-while(get('https://classes.uchicago.edu/', $cookie_file, $proxy) === false);
+while(get('https://classes.uchicago.edu/', $cookie_file) === false);
 
-get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file, $proxy);
+get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file);
 $saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
 	'performauthentication' => 'true',
 	'j_username' => $request->cnetid,
 	'j_password' => $request->password
-), $cookie_file, $proxy);
+), $cookie_file);
 preg_match_all('/name="(.+?)" value="(.+?)"/', $saml_intermediary, $matches);
 if(sizeof($matches[0]) == 0) {
 	http_response_code(400);
@@ -34,23 +32,23 @@ if(sizeof($matches[0]) == 0) {
 post('https://classes.uchicago.edu/Shibboleth.sso/SAML2/POST', array(
 	'RelayState' => html_entity_decode($matches[2][0]),
 	'SAMLResponse' => html_entity_decode($matches[2][1])
-), $cookie_file, $proxy);
+), $cookie_file);
 sleep(1);
 // authenticated, then "agree" to terms
 post('https://classes.uchicago.edu/loggedin/agreeToTerms.php', array(
 	'submit' => 'I Agree' // lol
-), $cookie_file, $proxy);
+), $cookie_file);
 // get current registrations
 $errors = array();
 if(empty($request->quarter)) {
 	sleep(1);
-	$buffer = get('https://classes.uchicago.edu/loggedin/myCourses.php', $cookie_file, $proxy);
+	$buffer = get('https://classes.uchicago.edu/loggedin/myCourses.php', $cookie_file);
 } else {
 	if(!empty($request->drop)) {
 		// drop if requested
 		$buffer = post('https://classes.uchicago.edu/loggedin/myCourses.php', array(
 			'TermName' => $request->quarter
-		), $cookie_file, $proxy);
+		), $cookie_file);
 		foreach($request->drop as $drop) {
 			// determine course section, activity, units
 			sleep(1);
@@ -65,7 +63,7 @@ if(empty($request->quarter)) {
 						'ActivityName' => $drop->activity,
 						'Units' => $matches[1],
 						'TermName' => $request->quarter
-					), $cookie_file, $proxy), $drop->id));
+					), $cookie_file), $drop->id));
 			}
 		}
 	}
@@ -80,13 +78,13 @@ if(empty($request->quarter)) {
 					'ActivityName' => $add->activity,
 					'Units' => 100, // JUST GUESS :v
 					'TermName' => $request->quarter
-				), $cookie_file, $proxy), $add->id));
+				), $cookie_file), $add->id));
 		}
 	}
 	sleep(1);
 	$buffer = post('https://classes.uchicago.edu/loggedin/myCourses.php', array(
 		'TermName' => $request->quarter
-	), $cookie_file, $proxy);
+	), $cookie_file);
 }
 
 $dom = new DOMDocument();

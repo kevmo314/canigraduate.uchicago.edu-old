@@ -40,11 +40,11 @@ function parseEnrollment($left, $right) {
 	}
 	return array($left, $right);
 }
-function checkClass($quarter, $class, $cookie_file, $proxy) {
+function checkClass($quarter, $class, $cookie_file) {
 	sleep(1);
 	$buffer = post('https://classes.uchicago.edu/courseDetail.php?courseName=' . urlencode($class), array(
 		'TermName' => $quarter
-	), $cookie_file, $proxy);
+	), $cookie_file);
 	preg_match_all('/div class="name"\>(?:\s+?)' . $class . '\/(\S+?)\s(?:.+?)enrolled"\>(.*?)\/(.*?)\s\</smi', $buffer, $matches, PREG_OFFSET_CAPTURE);
 	for($j = 0; $j < sizeof($matches[0]); $j++) {
 		$start_index = $matches[1][$j][1];
@@ -61,24 +61,22 @@ function checkClass($quarter, $class, $cookie_file, $proxy) {
 		}
 	}
 }
-$proxy = '54.174.139.219:3128';
-
 $postdata = file_get_contents("php://input");
 $request = json_decode($postdata);
 
 $cookie_file = '/tmp/cookies' . rand();
 
 // wait until the tunnel is established, may take non-negligible time.
-while(($context = get('https://classes.uchicago.edu/', $cookie_file, $proxy)) === false);
+while(($context = get('https://classes.uchicago.edu/', $cookie_file)) === false);
 // extract quarters
 preg_match_all('/value="(\w{6} \d{4})"/', $context, $quarters);
 
-get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file, $proxy);
+get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file);
 $saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
 	'performauthentication' => 'true',
 	'j_username' => $request->cnetid,
 	'j_password' => $request->password
-), $cookie_file, $proxy);
+), $cookie_file);
 preg_match_all('/name="(.+?)" value="(.+?)"/', $saml_intermediary, $matches);
 if(sizeof($matches[0]) == 0) {
 	http_response_code(400);
@@ -87,12 +85,12 @@ if(sizeof($matches[0]) == 0) {
 post('https://classes.uchicago.edu/Shibboleth.sso/SAML2/POST', array(
 	'RelayState' => html_entity_decode($matches[2][0]),
 	'SAMLResponse' => html_entity_decode($matches[2][1])
-), $cookie_file, $proxy);
+), $cookie_file);
 
 // authenticated, then "agree" to terms
 post('https://classes.uchicago.edu/loggedin/agreeToTerms.php', array(
 	'submit' => 'I Agree' // lol
-), $cookie_file, $proxy);
+), $cookie_file);
 sleep(1);
 
 // get the classes that are watched
@@ -107,7 +105,7 @@ if(count($data) == 1) { // fuck php man
 }
 // choose five to check
 foreach($selected as $index) {
-	checkClass($data[$index]['quarter'], $data[$index]['course'], $cookie_file, $proxy);
+	checkClass($data[$index]['quarter'], $data[$index]['course'], $cookie_file);
 }
 // for the remainder, rely on timeschedules.
 unlink($cookie_file);

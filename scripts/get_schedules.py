@@ -13,8 +13,6 @@ sys.setdefaultencoding('utf-8')
 
 def main(stochastic=False, resolve_classes=False):
 	session = requesocks.session()
-	session.proxies = {'http':'54.174.139.219:3128',
-									   'https':'54.174.139.219:3128'}
 	resolver = ClassResolver(session, resolve_classes)
 	timeschedules = TimeSchedules(session)
 	print('loaded')
