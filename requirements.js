@@ -1120,6 +1120,37 @@ var REQUIREMENTS = {
 			'ECON 2','ECON 2'
 		]
 	},
+	'Molecular Engineering': {
+		classes:[
+			angular.copy(SEQUENCES.CHEM3Q110),
+			angular.copy(SEQUENCES.MATH2Q130),
+			{require:1, classes:[
+				{require:2, classes:['BIOS 10602', 'BIOS 10603']},
+				{require:2, classes:['BIOS 20186', 'BIOS 20187']},
+				{require:2, classes:['BIOS 20234', 'BIOS 20235']}
+			]},
+			angular.copy(SEQUENCES.PHYS3Q130),
+			{require:1, classes:[
+				{require:3, classes:[
+					{require:1, classes:['MATH 13300', 'MATH 15300', 'MATH 16300', 'MATH 19620']},
+					'MATH 20000', 'MATH 20100']},
+				{require:3, classes:['PHYS 22000', 'PHYS 22100',
+					{require:1, classes:['MATH 2', 'STAT 2'], notes:'An approved course advanced course in mathematics or statistics'}]},
+				{require:3, classes:[
+					'MATH 16300', {require:1, classes:['MATH 20500', 'MATH 20900']}, 'MATH 27300']}
+			]},
+			'MENG 26200',
+			'MENG 26400',
+			'MENG 26410',
+			{require:1, classes:[
+				{require:3, classes:['MENG 26300', 'MENG 26310', 'MENG 26000']},
+				{require:3, classes:['MENG 23400', 'MENG 23500', {require:1, classes:['MENG 26100', 'PHYS 32200', 'PHYS 22600']}]}
+			]},
+			{require:1, classes:['MENG 27100', 'MENG 27200', 'MENG 27300']},
+			'MENG 29501', 'MENG 29500',
+			'MENG 2', 'MENG 2'
+		]
+	},
 	'Molecular Engineering Minor':{
 		classes:['MENG 20000', 'MENG 29700', 'MENG ', 'MENG ', 'MENG '],
 		link:{
