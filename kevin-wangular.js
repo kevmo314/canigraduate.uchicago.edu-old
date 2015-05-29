@@ -1686,9 +1686,9 @@ app.factory('TranscriptFactory', function($http) {
 		};
 		var getExpectedTotalGPA = function(include, restrict) {
 			return self.getRecords(include, restrict).filter(function(e) {
-				return e.quality
+				return e.expectedGPA
 			}).reduce(function(sum, e) {
-				return sum + e.expectedGPA
+				return sum + (isNaN(e.expectedGPA) ? e.gpa : e.expectedGPA)
 			}, 0);
 		};  
 		self.serialize = function() { return data }; // used for serialization

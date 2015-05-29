@@ -7,7 +7,7 @@
 		<th class="col-xs-3 text-right">Class</th>
 		<th class="col-xs-7" colspan="4">Title</th>
 		<th class="col-xs-1">GPA</th>
-		<th class="col-xs-1 text-muted pointer" tooltip="UChicago average GPA given your transcript. This is what the average student would have if they took the same classes as you." tooltip-placement="left" tooltip-append-to-body="true"><small>EGPA</small></th>
+		<th class="col-xs-1 text-muted pointer" tooltip="E(GPA|your classes). The average UChicago student's transcript, taking the same classes as you, would look like this." tooltip-placement="left" tooltip-append-to-body="true"><small>EGPA</small></th>
 	</tr></thead>
 	<tbody ng-repeat="quarter in user.transcript.getQuarters()">
 		<tr class="info pointer" ng-click="show=!show" ng-init="count=user.transcript.getRecordCount(quarter,true)">
@@ -18,10 +18,10 @@
 			</td>
 			<td ng-if="::!count" colspan="2" ng-hide="show"></td>
 			<td ng-if="::count" class="text-right col-xs-2" ng-hide="show">Quarter</td>
-			<td ng-if="::count" class="col-xs-1" ng-hide="show"><strong ng-bind="::user.transcript.getQuarterGPA(quarter).toFixed(2)" tooltip="E(GPA) = {{::user.transcript.getExpectedQuarterGPA(quarter).toFixed(2)}}"></strong></td> 
+			<td ng-if="::count" class="col-xs-1" ng-hide="show"><strong ng-bind="::user.transcript.getQuarterGPA(quarter).toFixed(2)" tooltip="E(GPA) = {{user.transcript.getExpectedQuarterGPA(quarter).toFixed(2)}}"></strong></td> 
 			<td class="text-right col-xs-2" ng-hide="show">Cumulative</td>
 			<td ng-hide="show"><strong ng-bind="::user.transcript.getCumulativeGPA(quarter).toFixed(2)"></strong></td>
-			<td ng-hide="show" class="text-center text-muted" ng-bind="::user.transcript.getExpectedCumulativeGPA(quarter).toFixed(2)"></td>
+			<td ng-hide="show" class="text-center text-muted" ng-bind="user.transcript.getExpectedCumulativeGPA(quarter).toFixed(2)"></td>
 			<td colspan="5" ng-show="show"></td>
 		</tr>
 		<tr ng-repeat="record in user.transcript.getRecords(quarter, true)" ng-show="show" class="pointer" ng-click="interface.findClass(record.id, quarter)">
@@ -34,10 +34,10 @@
 			<td colspan="2"></td>
 			<td colspan="2" ng-if="::!count"></td>
 			<td ng-if="count" class="text-right col-xs-2">Quarter</td>
-			<td ng-if="count" class="col-xs-1"><strong ng-bind="::user.transcript.getQuarterGPA(quarter).toFixed(2)" tooltip="E(GPA) = {{::user.transcript.getExpectedQuarterGPA(quarter).toFixed(2)}}"></strong></td> 
+			<td ng-if="count" class="col-xs-1"><strong ng-bind="::user.transcript.getQuarterGPA(quarter).toFixed(2)" tooltip="E(GPA) = {{user.transcript.getExpectedQuarterGPA(quarter).toFixed(2)}}"></strong></td> 
 			<td class="text-right col-xs-2">Cumulative</td>
 			<td class="col-xs-1"><strong ng-bind="::user.transcript.getCumulativeGPA(quarter).toFixed(2)"></strong></td>
-			<td class="col-xs-1 text-muted text-center" ng-bind="::user.transcript.getExpectedCumulativeGPA(quarter).toFixed(2)"></td>
+			<td class="col-xs-1 text-muted text-center" ng-bind="user.transcript.getExpectedCumulativeGPA(quarter).toFixed(2)"></td>
 		</tr>
 	</tbody>
 </table>

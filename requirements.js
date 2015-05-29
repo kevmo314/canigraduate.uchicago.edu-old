@@ -136,6 +136,11 @@ var GROUPS = {
 			D:['CHDV 20209','CHDV 23204','CHDV 23301','CHDV 23620','CHDV 23800','CHDV 26233','CHDV 26310','CHDV 27700','CHDV 30320','CHDV 30405','CHDV 40110','CHDV 41160','CHDV 44200']
 		}
 	},
+	CMSC:{
+		ARTIFICIAL_INTELLIGENCE:['CMSC 25010', 'CMSC 25020', 'CMSC 25025', 'CMSC 25050', 'CMSC 25400', 'CMSC 27600'],
+		ADVANCED_SYSTEMS:['CMSC 22010', 'CMSC 22100', 'CMSC 22200', 'CMSC 22300', 'CMSC 22610', 'CMSC 22620', 'CMSC 23000', 'CMSC 23010', 'CMSC 23300', 'CMSC 23310', 'CMSC 23400', 'CMSC 23500', 'CMSC 23700', 'CMSC 23710', 'CMSC 23800'],
+		SCIENTIFIC_COMPUTING:['CMSC 23710', 'CMSC 27610', 'CMSC 28510']
+	},
 	GEOS:{
 		LISTA:['GEOS 21000','GEOS 21005','GEOS 21100','GEOS 21200','GEOS 21205','GEOS 21400','GEOS 22000','GEOS 22040','GEOS 22050','GEOS 22060','GEOS 22200','GEOS 23200','GEOS 23205','GEOS 23400','GEOS 23800','GEOS 23805','GEOS 23900','GEOS 24200','GEOS 24500','GEOS 24600','GEOS 24705','GEOS 25400','GEOS 26300','GEOS 26600','GEOS 27000','GEOS 28000','GEOS 28100','GEOS 28300','GEOS 29700','GEOS 29001','GEOS 29002','GEOS 29003'],
 		LISTB:['GEOS 21000','GEOS 23200','GEOS 23205','GEOS 23400','GEOS 23800','GEOS 23805','GEOS 23900','GEOS 24200','GEOS 24500','GEOS 24600','GEOS 24705','GEOS 26600','GEOS 28000','GEOS 29700','BIOS 20196','BIOS 22244','BIOS 23232','BIOS 23266','BIOS 23289','BIOS 23406','BIOS 25206','BIOS 23280','GEOS 29005'],
@@ -192,16 +197,16 @@ var EVALUATORS = {
 			}
 		}
 	},
-	CHDV:function(title, set, exclude) {
-		// only approve the course set if and only if at least the max number is satisfied, ie all or nothing behavior
-		return {require:3, notes:title, max:3, classes:angular.copy(set), hidden:true, evaluate:function(taken) {
+	ALL_OR_NOTHING:function(title, set, exclude, count) {
+		// only approve the course set if and only if at least the max number is satisfied, ie all or nothing behavior, excluding exclude.
+		return {require:count, notes:title, max:count, classes:angular.copy(set), hidden:true, evaluate:function(taken) {
 				var resp = (set.filter(function(s) {
 					return taken.binarySearch(s) > -1
-				}).length >= 3 ? true : 'Sequence accepted when all three classes are completed.');
+				}).length >= count ? true : 'Sequence accepted when all ' + count + ' classes are completed.');
 				for(var i = 0; i < exclude.length; i++) {
 					if(exclude[i].filter(function(s) {
 						return taken.binarySearch(s) > -1
-					}).length >= 3) {
+					}).length >= count) {
 						return 'Distribution requirement already fulfilled.';
 					}
 				}
@@ -525,10 +530,10 @@ var REQUIREMENTS = {
 		classes:[
 			'CHDV 20000', 'CHDV 20100',
 			{require:1, classes:[
-				EVALUATORS.CHDV('Comparative Behavioral Biology', GROUPS.CHDV.DISTRIBUTION.A, []),
-				EVALUATORS.CHDV('Life Course Development', GROUPS.CHDV.DISTRIBUTION.B, [GROUPS.CHDV.DISTRIBUTION.A]),
-				EVALUATORS.CHDV('Culture and Community', GROUPS.CHDV.DISTRIBUTION.C, [GROUPS.CHDV.DISTRIBUTION.A, GROUPS.CHDV.DISTRIBUTION.B]),
-				EVALUATORS.CHDV('Mental Health and Personality', GROUPS.CHDV.DISTRIBUTION.D, [GROUPS.CHDV.DISTRIBUTION.A, GROUPS.CHDV.DISTRIBUTION.B, GROUPS.CHDV.DISTRIBUTION.C])
+				EVALUATORS.ALL_OR_NOTHING('Comparative Behavioral Biology', GROUPS.CHDV.DISTRIBUTION.A, [], 3),
+				EVALUATORS.ALL_OR_NOTHING('Life Course Development', GROUPS.CHDV.DISTRIBUTION.B, [GROUPS.CHDV.DISTRIBUTION.A], 3),
+				EVALUATORS.ALL_OR_NOTHING('Culture and Community', GROUPS.CHDV.DISTRIBUTION.C, [GROUPS.CHDV.DISTRIBUTION.A, GROUPS.CHDV.DISTRIBUTION.B], 3),
+				EVALUATORS.ALL_OR_NOTHING('Mental Health and Personality', GROUPS.CHDV.DISTRIBUTION.D, [GROUPS.CHDV.DISTRIBUTION.A, GROUPS.CHDV.DISTRIBUTION.B, GROUPS.CHDV.DISTRIBUTION.C], 3)
 			]},
 			{require:1, classes:GROUPS.CHDV.METHODS, max:1, hide:true},
 			{require:3, classes:GROUPS.CHDV.DISTRIBUTION.A.concat(GROUPS.CHDV.DISTRIBUTION.B).concat(GROUPS.CHDV.DISTRIBUTION.C).concat(GROUPS.CHDV.DISTRIBUTION.D), max:3, hide:true},
@@ -592,9 +597,9 @@ var REQUIREMENTS = {
 				{require:1, classes:['CMSC 28000','CMSC 28100']}
 			], notes:'Algorithms and Theory', hidden:true},
 			{require:1, classes:[
-				{require:2, classes:['CMSC 25010', 'CMSC 25020', 'CMSC 25025', 'CMSC 25050', 'CMSC 25400', 'CMSC 27600'], hidden:true, notes:'Artificial Intelligence', max:2},
-				{require:2, classes:['CMSC 22010', 'CMSC 22100', 'CMSC 22200', 'CMSC 22300', 'CMSC 22610', 'CMSC 22620', 'CMSC 23000', 'CMSC 23010', 'CMSC 23300', 'CMSC 23310', 'CMSC 23400', 'CMSC 23500', 'CMSC 23700', 'CMSC 23710', 'CMSC 23800'], hidden:true, notes:'Advanced Systems', max:2},
-				{require:2, classes:['CMSC 23710', 'CMSC 27610', 'CMSC 28510'], hidden:true, notes:'Scientific Computing', max:2}
+				EVALUATORS.ALL_OR_NOTHING('Artificial Intelligence', GROUPS.CMSC.ARTIFICIAL_INTELLIGENCE, [], 2),
+				EVALUATORS.ALL_OR_NOTHING('Advanced Systems', GROUPS.CMSC.ADVANCED_SYSTEMS, [GROUPS.CMSC.ARTIFICIAL_INTELLIGENCE], 2),
+				EVALUATORS.ALL_OR_NOTHING('Scientific Computing', GROUPS.CMSC.SCIENTIFIC_COMPUTING, [GROUPS.CMSC.ADVANCED_SYSTEMS, GROUPS.CMSC.ARTIFICIAL_INTELLIGENCE], 2)
 			]},
 			{require:4, classes:['CMSC 2','CMSC 2','CMSC 2','CMSC 2']}
 		],
