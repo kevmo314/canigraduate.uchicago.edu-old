@@ -1,5 +1,6 @@
 var app = angular.module('app', ['ngRoute', 'ngCookies', 'ui.bootstrap', 'decipher.tags', 'gravitate', 'angulartics', 'angulartics.google.analytics']);
-app.config(function($routeProvider, $locationProvider) {
+app.config(function($routeProvider, $locationProvider, $compileProvider) {
+	$compileProvider.debugInfoEnabled(false);
 	$routeProvider
 		.when('/', {templateUrl:'templates/courses.html'})
 		.when('/scheduler', {templateUrl:'templates/scheduler.html'})
@@ -1654,12 +1655,27 @@ app.factory('RegistrationFactory', function($rootScope, $http, $modal, $q, Times
 		};
 	};
 });
-app.factory('TranscriptFactory', function() {
+app.factory('TranscriptFactory', function($http) {
 	return function(data) {
-		var records = data || [], self = this;
+		var records = data || [], self = this, distributionLoaded = false;
 		records.sort(function(a, b) {
 			var termdelta = toTermOrdinal(a.quarter) - toTermOrdinal(b.quarter);
 			return (termdelta == 0 ? strcmp(a.id, b.id) : termdelta);
+		});
+		// Populate average GPAs. We must reissue distribution.php requests because
+		// ClassService.loadData assumes the object has certain properties, which we do not
+		// have because we have an id.
+		$http.get('/data/distribution.php').success(function(json) {
+			for(var i = 0; i < records.length; i++) {
+				records[i].expectedGPA = 0;
+				var count = 0;
+				for(var key in json[records[i].id]) {
+					records[i].expectedGPA += parseFloat(key) * json[records[i].id][key];
+					count += json[records[i].id][key];
+				}
+				records[i].expectedGPA /= count;
+			}
+			distributionLoaded = true;
 		});
 		var getTotalGPA = function(include, restrict) {
 			return self.getRecords(include, restrict).filter(function(e) {
@@ -1668,6 +1684,13 @@ app.factory('TranscriptFactory', function() {
 				return sum + e.gpa
 			}, 0);
 		};
+		var getExpectedTotalGPA = function(include, restrict) {
+			return self.getRecords(include, restrict).filter(function(e) {
+				return e.quality
+			}).reduce(function(sum, e) {
+				return sum + e.expectedGPA
+			}, 0);
+		};  
 		self.serialize = function() { return data }; // used for serialization
 		self.getRecords = function(include, restrict) {
 			if(records.length == 0) { return [] }
@@ -1713,8 +1736,25 @@ app.factory('TranscriptFactory', function() {
 			});
 			return data.length ? data.reduce(sum) / data.length : 0;
 		};
+		self.getExpectedRecordGPA = function(record) {
+			if(distributionLoaded) {
+				return (isNaN(record.expectedGPA) ? "" : record.expectedGPA.toFixed(2))
+			} else {
+				return null
+			}
+		};
+		self.getExpectedQuarterGPA = function(quarter) {
+			if(distributionLoaded) {
+				return Math.round(getExpectedTotalGPA(quarter, true) * 100 / self.getRecordCount(quarter, true)) / 100;
+			}
+		};
 		self.getQuarterGPA = function(quarter) {
 			return Math.round(getTotalGPA(quarter, true) * 100 / self.getRecordCount(quarter, true)) / 100;
+		};
+		self.getExpectedCumulativeGPA = function(include) {
+			if(distributionLoaded) {
+				return records.length > 0 ? Math.round(getExpectedTotalGPA(include) * 100 / self.getRecordCount(include)) / 100 : 0;
+			}
 		};
 		self.getCumulativeGPA = function(include) {
 			return records.length > 0 ? Math.round(getTotalGPA(include) * 100 / self.getRecordCount(include)) / 100 : 0;
