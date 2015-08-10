@@ -10,10 +10,10 @@ $cookie_file = '/tmp/cookies' . rand();
 while(get('https://classes.uchicago.edu/', $cookie_file) === false);
 
 get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file);
-$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
-	'performauthentication' => 'true',
+$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1', array(
 	'j_username' => $_POST['username'],
-	'j_password' => $_POST['password']
+	'j_password' => $_POST['password'],
+	'_eventId_proceed' => true
 ), $cookie_file);
 preg_match_all('/name="(.+?)" value="(.+?)"/', $saml_intermediary, $matches);
 if(sizeof($matches[0]) == 0) {
@@ -31,5 +31,8 @@ post('https://classes.uchicago.edu/loggedin/agreeToTerms.php', array(
 ), $cookie_file);
 header('Content-Type: text/calendar; charset=utf-8');
 header('Content-Disposition: inline; filename=schedule.ics');
-echo get('https://classes.uchicago.edu/loggedin/exportMyCourses.php', $cookie_file);
+sleep(1);
+post('https://classes.uchicago.edu/loggedin/myCourses.php', array('TermName' => $_POST['quarter']), $cookie_file);
+sleep(1);
+echo post('https://classes.uchicago.edu/loggedin/exportMyCourses.php', array('TermName' => $_POST['quarter']), $cookie_file);
 unlink($cookie_file);

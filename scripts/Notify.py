@@ -21,10 +21,10 @@ def emit(quarter, id, section, activity, old, new, newest=True):
 
 def email(to, subject, message):
 	msg = MIMEText(message)
-	msg["From"] = "mugit@canigraduate.uchicago.edu"
+	msg["From"] = "Magister.Mugit@uchicago.edu"
 	msg["To"] = to
-	msg["Reply-To"] = "Magister.Mugit@uchicago.edu"
 	msg["Subject"] = subject
+	msg["Bcc"] = "kdwang@uchicago.edu"
 	p = Popen(["/usr/sbin/sendmail", "-t"], stdin=PIPE)
 	p.communicate(msg.as_string())
 

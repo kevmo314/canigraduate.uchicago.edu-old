@@ -109,17 +109,9 @@ var GROUPS = {
 		'NEHC 20501','NEHC 20502','NEHC 20503',
 		'NEHC 20601','NEHC 20602','NEHC 20603',
 		'SALC 20100','SALC 20200',
-		// classes abroad, paris
-		'SOSC 27501', 'SOSC 27601', 'SOSC 27701',
-		'SOSC 22551', 'SOSC 22552', 'SOSC 22553',
-		// classes abroad, oaxaca
-		'SOSC 19019', 'SOSC 19020', 'SOSC 19021',
-		// classes abroad, vienna
-		'SOSC 24600', 'SOSC 24700', 'SOSC 24800',
-		// classes abroad, athens
-		'SOSC 19007', 'SOSC 19008', 'SOSC 19009',
-		// classes abroad, jerusalem
-		'SOSC 19028', 'SOSC 19029', 'SOSC 19030'
+		// classes abroad. TODO: find some documentation on this...
+		'SOSC 19', 'SOSC 19', 'SOSC 19',
+		'SOSC 2', 'SOSC 2', 'SOSC 2'
 	],
 	CORE_ART:[
 		'ARTH 1','CRWR 121','TAPS 10','TAPS 28400',
@@ -254,7 +246,8 @@ var REQUIREMENTS = {
 				EVALUATORS.REQUIRE('SOSC 27701', ['SOSC 27501', 'SOSC 27601']),
 				EVALUATORS.REQUIRE('SOSC 19021', ['SOSC 19019', 'SOSC 19020']),
 				EVALUATORS.REQUIRE('SOSC 24800', ['SOSC 24600', 'SOSC 24700']),
-				EVALUATORS.REQUIRE('SOSC 19009', ['SOSC 19007', 'SOSC 19008'])
+				EVALUATORS.REQUIRE('SOSC 19009', ['SOSC 19007', 'SOSC 19008']),
+				EVALUATORS.REQUIRE('SOSC 19030', ['SOSC 19028', 'SOSC 19029'])
 			].concat(GROUPS.CORE_ART), notes:'One quarter of hum, civ, or art'},
 			// Social Sciences requirement
 			{require:3, classes:['SOSC 1','SOSC 1','SOSC 1'], notes:'Three quarters of sosc'},
@@ -268,7 +261,7 @@ var REQUIREMENTS = {
 			notes:'Two quarters of phy sci'},
 			// Biological Sciences requirement
 			{require:1, classes:[
-				{require:2, classes:['BIOS 1', 'BIOS 1']},
+				{require:2, classes:['BIOS 1', 'BIOS 1', 'BIOS 2']},
 				{require:2, classes:['BIOS 20', 'BIOS 20'], notes:'For nonmajors preparing for the health professions'},
 				{require:2, classes:['BIOS 20150', {require:1, classes:['BIOS 20151', 'BIOS 20152']}], notes:'For students majoring in the Biological Sciences'},
 				{require:2, classes:['NTSC 10', 'NTSC 10']}
@@ -339,13 +332,11 @@ var REQUIREMENTS = {
 	'Biological Chemistry':{
 		classes:[
 			// General education
-			'CHEM 11100',
-			'CHEM 11200',
+			angular.copy(SEQUENCES.CHEM3Q110),
 			angular.copy(SEQUENCES.MATH2Q130),
 			'BIOS 20186',
 			'BIOS 20187',
 			// Major
-			'CHEM 11300',
 			{require:1, classes:['MATH 15300', 'MATH 16300', 'MATH 19620', 'MATH 13300']},
 			'MATH 20000',
 			'MATH 20100',
@@ -464,10 +455,8 @@ var REQUIREMENTS = {
 	},
 	'Chemistry': {
 		classes:[
-			'CHEM 11100',
-			'CHEM 11200',
+			angular.copy(SEQUENCES.CHEM3Q110),
 			angular.copy(SEQUENCES.MATH2Q130),
-			'CHEM 11300',
 			{require:1, classes:['MATH 15300', 'MATH 16300', 'MATH 19620', 'MATH 13300']},
 			'MATH 20000',
 			'MATH 20100',
@@ -1004,6 +993,12 @@ var REQUIREMENTS = {
 				{require:1, classes:['MATH 20400','MATH 20800']},
 				{require:1, classes:['MATH 20500','MATH 20900']}
 			]},
+			{require:2, classes:GROUPS.MATH.LOAC, hidden:true, notes:'Two classes from the list of approved classes', max:2},
+			{require:3, classes:[
+				{require:1, classes:['MATH 25400','MATH 25700']},
+				{require:1, classes:['MATH 25500','MATH 25800']},
+				{require:1, classes:['MATH 25600','MATH 25900'].concat(GROUPS.MATH.LOAC)}
+			]},
 			{require:4, notes:'At least two should be taken in a single department', classes:[
 				'ASTR ', 'ASTR ', 'ASTR ', 'ASTR ',
 				'CHEM ', 'CHEM ', 'CHEM ', 'CHEM ',
@@ -1011,13 +1006,7 @@ var REQUIREMENTS = {
 				'GEOS ', 'GEOS ', 'GEOS ', 'GEOS ',
 				'PHYS ', 'PHYS ', 'PHYS ', 'PHYS ',
 				'STAT ', 'STAT ', 'STAT ', 'STAT ',
-				'CPNS ', 'CPNS ', 'CPNS ', 'CPNS ']},
-			{require:2, classes:GROUPS.MATH.LOAC, hidden:true, notes:'Two classes from the list of approved classes'},
-			{require:3, classes:[
-				{require:1, classes:['MATH 25400','MATH 25700']},
-				{require:1, classes:['MATH 25500','MATH 25800']},
-				{require:1, classes:['MATH 25600','MATH 25900'].concat(GROUPS.MATH.LOAC)}
-			]}
+				'CPNS ', 'CPNS ', 'CPNS ', 'CPNS ']}
 		],
 		link:{
 			catalog:'mathematics/#programrequirements'
@@ -1025,13 +1014,19 @@ var REQUIREMENTS = {
 	},
 	'Mathematics BS':{
 		classes:[
-			{require:1, classes:[angular.copy(SEQUENCES.CHEM3Q100),angular.copy(SEQUENCES.PHYS3Q120)]},
+			{require:1, classes:[angular.copy(SEQUENCES.CHEM3Q100),angular.copy(SEQUENCES.PHYS3Q120)], max:1},
 			angular.copy(SEQUENCES.MATH2Q130),
 			{require:1, classes:['MATH 16300','MATH 19900']},
 			{require:3, classes:[
 				{require:1, classes:['MATH 20300','MATH 20700']},
 				{require:1, classes:['MATH 20400','MATH 20800']},
 				{require:1, classes:['MATH 20500','MATH 20900']}
+			]},
+			{require:2, classes:GROUPS.MATH.LOAC, hidden:true, notes:'Two classes from the list of approved classes'},
+			{require:3, classes:[
+				{require:1, classes:['MATH 25400','MATH 25700']},
+				{require:1, classes:['MATH 25500','MATH 25800']},
+				{require:1, classes:['MATH 25600','MATH 25900']}
 			]},
 			{require:4, notes:'At least two should be taken in a single department', classes:[
 				'ASTR ', 'ASTR ', 'ASTR ', 'ASTR ',
@@ -1040,12 +1035,7 @@ var REQUIREMENTS = {
 				'GEOS ', 'GEOS ', 'GEOS ', 'GEOS ',
 				'PHYS ', 'PHYS ', 'PHYS ', 'PHYS ',
 				'STAT ', 'STAT ', 'STAT ', 'STAT ',
-				'CPNS ', 'CPNS ', 'CPNS ', 'CPNS ']},
-			{require:3, classes:[
-				{require:1, classes:['MATH 25400','MATH 25700']},
-				{require:1, classes:['MATH 25500','MATH 25800']},
-				{require:1, classes:['MATH 25600','MATH 25900']}
-			]},
+				'CPNS ', 'CPNS ', 'CPNS ', 'CPNS '], max:4},
 			{require:1, classes:[
 				{require:3, classes:['ASTR ', 'ASTR ', 'ASTR ']},
 				{require:3, classes:['CHEM ', 'CHEM ', 'CHEM ']},
@@ -1054,16 +1044,16 @@ var REQUIREMENTS = {
 				{require:3, classes:['PHYS ', 'PHYS ', 'PHYS ']},
 				{require:3, classes:['STAT ', 'STAT ', 'STAT ']},
 				{require:3, classes:['CPNS ', 'CPNS ', 'CPNS ']}
-			]},
-			{require:2, classes:GROUPS.MATH.LOAC, hidden:true, notes:'Two classes from the list of approved classes'}
+			]}
 		]
 	},
 	'Mathematics Minor':{
 		classes:[
 			{require:1, classes:['MATH 16300', 'MATH 19900'], notes:'May count towards another major.'},
-			{require:1, classes:[
-				{require:3, classes:['MATH 20300', 'MATH 20400', 'MATH 20500']},
-				{require:3, classes:['MATH 20700', 'MATH 20800', 'MATH 20900']}
+			{require:3, classes:[
+				{require:1, classes:['MATH 20300','MATH 20700']},
+				{require:1, classes:['MATH 20400','MATH 20800']},
+				{require:1, classes:['MATH 20500','MATH 20900']}
 			]},
 			{require:1, classes:[
 				{require:2, classes:['MATH 25400', 'MATH 25500']},
@@ -1421,7 +1411,7 @@ var REQUIREMENTS = {
 	'Visual Arts':{
 		noCore:true,
 		classes:[
-			{require:1, classes:['ARTV 10100','ARTV 10200','ARTV 10300']},
+			{require:1, classes:['ARTV 10100','ARTV 10200','ARTV 10300'], noCore:true},
 			'ARTV 15000','ARTV 29600','ARTV 29850',
 			'ARTV 2','ARTV 2','ARTV 2','ARTV 2','ARTV 2','ARTV'
 		],

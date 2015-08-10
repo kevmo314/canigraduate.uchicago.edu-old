@@ -1,7 +1,7 @@
 <h2>Course Evaluations</h2>
 <div class="row">
 	<div class="col-md-12">
-		<input type="text" class="form-control" id="searchClasses" placeholder="Math 162" ng-model="addClassValue" typeahead-wait-ms="200" typeahead-on-select="loadEvaluation($item)" typeahead="class as class+' :: '+getName(class) for class in searchClasses($viewValue, 20)" typeahead-editable="false"/>
+		<input type="text" class="form-control" id="searchClasses" placeholder="Econ 198" ng-model="addClassValue" typeahead-wait-ms="200" typeahead-on-select="loadEvaluation($item)" typeahead="class as class+' :: '+getName(class) for class in searchClasses($viewValue, 20)" typeahead-editable="false"/>
 	</div>
 </div>
 <div class="alert alert-info" ng-if="!child.evaluations.official.length">No evaluations found <span ng-if="child.classes">for {{child.classes}}</span> :(</div>

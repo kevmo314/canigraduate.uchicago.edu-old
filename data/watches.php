@@ -15,10 +15,10 @@ $request = json_decode(file_get_contents('php://input'));
 // note that ldap doesn't work because ldap auth isn't as reliable. apparently. >.>
 $cookie_file = '/tmp/cookie-this-is-really-stupid';
 get('https://my.uchicago.edu/Shibboleth.sso/Login?target=https://my.uchicago.edu/Login', $cookie_file);
-$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
-	'performauthentication' => true,
+$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1', array(
 	'j_username' => $request->cnetid,
-	'j_password' => $request->password
+	'j_password' => $request->password,
+	'_eventId_proceed' => true
 ), $cookie_file);
 preg_match_all('/name="(.+?)" value="(.+?)"/', $saml_intermediary, $matches);
 unlink($cookie_file);

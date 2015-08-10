@@ -42,7 +42,7 @@
 	</tbody>
 </table>
 <div ng-if="user.transcript.getRecordCount() && user.transcript.getCumulativeGPA()">
-	<h2>GPA Targets <span>GPA vs Classes Remaining</span></h2>
+	<h2>GPA Targets <small>GPA vs Classes Remaining</small></h2>
 	<gpa-visualization transcript="user.transcript" ng-if="user.transcript.getRecordCount()"></gpa-visualization>
 </div>
 </div>

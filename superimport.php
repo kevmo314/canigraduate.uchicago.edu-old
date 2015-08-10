@@ -60,10 +60,10 @@ function gradeToGPA($grade) {
 // The actual script
 
 $posted = get('https://my.uchicago.edu/Shibboleth.sso/Login?target=https://my.uchicago.edu/Login', $cookie_file);
-$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
-	'performauthentication' => 'true',
+$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1', array(
 	'j_username' => $request->cnet,
-	'j_password' => $request->password
+	'j_password' => $request->password,
+	'_eventId_proceed' => true
 ), $cookie_file);
 preg_match_all('/name="(.+?)" value="(.+?)"/', $saml_intermediary, $matches);
 if(sizeof($matches[0]) < 2) {

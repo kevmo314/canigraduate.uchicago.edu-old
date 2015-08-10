@@ -207,7 +207,7 @@ app.service('TutorialService', function($q, $location, $rootScope, $cookies, $ti
 		prepare('tutorial-navigation', '<p>Now, let\'s take a look at the transcript page. Click the <kbd>Transcript</kbd> tab to go there.</p>', {
 			watch:function() { return $location.path() == '/transcript' }
 		}),
-		prepare('tutorial-transcript', '<p>On this page, you can view your transcript for each quarter by clicking on each of the rows, as well as view your projected GPA targets by hovering over the graph below.</p><p>Explore the transcript page a bit, then click <a id="tutorial-next">here</a> to continue.</p>', {
+		prepare('tutorial-transcript', '<p>On this page, you can view your transcript for each quarter by clicking on each of the rows, as well as view your projected GPA targets by hovering over the graph below.</p><p>The <var>EGPA</var> column gives you the expected GPA for your transcript. This is calculated by finding the average GPA for each class across UChicago students then calculating what the average cumulative GPA would be. Note that this <var>EGPA</var> does not represent the entire school\'s average GPA, but rather the GPA of the average student who takes the classes that you do.</p><p>Explore the transcript page a bit, then click <a id="tutorial-next">here</a> to continue.</p>', {
 			trigger:'tutorial-next'
 		}),
 		prepare('tutorial-navigation', '<p>Click the <kbd>Watches</kbd> tab to continue.</p>', {
@@ -1585,7 +1585,9 @@ app.factory('RegistrationFactory', function($rootScope, $http, $modal, $q, Times
 			}
 			return errors.length == 0;
 		}
-		$http.post('/data/registration.php', angular.extend({quarter:quarter}, AUTHENTICATION)).success(load);
+		$http.post('/data/registration.php', angular.extend({quarter:quarter}, AUTHENTICATION)).success(load).error(function(data) {
+	self.loaded = true;
+});
 		self.toggle = function(record) {
 			record.hidden = !record.hidden;
 			$rootScope.$broadcast('scheduling:updated', self);
@@ -1686,7 +1688,7 @@ app.factory('TranscriptFactory', function($http) {
 		};
 		var getExpectedTotalGPA = function(include, restrict) {
 			return self.getRecords(include, restrict).filter(function(e) {
-				return e.expectedGPA
+				return e.quality
 			}).reduce(function(sum, e) {
 				return sum + (isNaN(e.expectedGPA) ? e.gpa : e.expectedGPA)
 			}, 0);

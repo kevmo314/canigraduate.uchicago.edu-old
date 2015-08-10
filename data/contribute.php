@@ -72,10 +72,10 @@ while(($context = get('https://classes.uchicago.edu/', $cookie_file)) === false)
 preg_match_all('/value="(\w{6} \d{4})"/', $context, $quarters);
 
 get('https://classes.uchicago.edu/loggedin/login.php', $cookie_file);
-$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/Authn/MCB', array(
-	'performauthentication' => 'true',
+$saml_intermediary = post('https://shibboleth2.uchicago.edu/idp/profile/SAML2/Redirect/SSO?execution=e1s1', array(
 	'j_username' => $request->cnetid,
-	'j_password' => $request->password
+	'j_password' => $request->password,
+	'_eventId_proceed' => true
 ), $cookie_file);
 preg_match_all('/name="(.+?)" value="(.+?)"/', $saml_intermediary, $matches);
 if(sizeof($matches[0]) == 0) {

@@ -2,6 +2,7 @@
 function get($url, $cookie_file=false, $proxy=false) {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 	if($cookie_file !== false) {
 		curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
 		curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
@@ -13,12 +14,17 @@ function get($url, $cookie_file=false, $proxy=false) {
 		curl_setopt($ch, CURLOPT_PROXY, $proxy);
 	}
 	$buffer = curl_exec($ch);
+	if ($buffer === false) {
+		http_response_code(400);
+		die(curl_errno($ch) . " " . curl_error($ch));
+	}
 	curl_close($ch);
 	return $buffer;
 }
 function post($url, $data, $cookie_file=false, $proxy=false) {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 	if($cookie_file !== false) {
 		curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
 		curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
@@ -33,6 +39,10 @@ function post($url, $data, $cookie_file=false, $proxy=false) {
 		curl_setopt($ch, CURLOPT_PROXY, $proxy);
 	}
 	$buffer = curl_exec($ch);
+	if ($buffer === false) {
+		http_response_code(400);
+		die(curl_errno($ch) . " " . curl_error($ch));
+	}
 	curl_close($ch);
 	return $buffer;	
 }

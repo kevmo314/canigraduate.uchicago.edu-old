@@ -5,13 +5,14 @@
 	<span class="pointer dropdown-toggle text-nowrap">{{timeschedules.quarters.active}} <span ng-if="user.registration.loaded || !authentication.cnetid" class="caret"></span><i ng-if="!user.registration.loaded && authentication.cnetid" class="fa fa-cog fa-spin"></i></span>
 </small>
 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-	<li ng-repeat="quarter in timeschedules.quarters.available | limitTo:16"><a ng-click="timeschedules.quarters.active=quarter" ng-bind="::quarter"></a></li>
+	<li ng-repeat="quarter in timeschedules.quarters.available | limitTo:20"><a ng-click="timeschedules.quarters.active=quarter" ng-bind="::quarter"></a></li>
 </ul>
 	</div><div class="col-sm-2" ng-if="authentication.cnetid">
 	<form method="POST" target="_blank" action="/data/export.php">
 		<input type="hidden" name="username" ng-value="authentication.cnetid"/>
 		<input type="hidden" name="password" ng-value="authentication.password"/>
-		<button style="margin-top:30px" class="pull-right btn btn-default btn-xs" tooltip="Only exports registered classes. May take a few seconds, UChicago's servers are slow. Sorry!"><i class="fa fa-calendar"></i> Export</button>
+		<input type="hidden" name="quarter" ng-value="timeschedules.quarters.active"/>
+		<button ng-disabled="!user.registration.getRecords().length" style="margin-top:30px" class="pull-right btn btn-default btn-xs" tooltip="Only exports registered classes. May take a few seconds, UChicago's servers are slow. Sorry!"><i class="fa fa-calendar"></i> Export</button>
 	</form>
 	</div>
 </div>
