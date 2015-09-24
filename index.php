@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html ng-app="app" lang="en">
 	<head>
-		<title>Can I Graduate? | UChicago</title>
+		<title>Can I Graduate? :: UChicago</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="utf-8"/>
 		<meta name="description" content="Automated graduation dependency resolution"/>
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
 		<link rel="stylesheet" href="/css/style.css"/>
 		<base href="/"/>
 	</head>
@@ -33,7 +33,7 @@
 							<button ng-click="load()" class="pointer btn btn-success navbar-btn" id="tutorial-import"><span class="glyphicon glyphicon-import"></span> <span class="hidden-sm hidden-md">Import</span></button>
 							<button ng-click="save()" class="pointer btn btn-default navbar-btn" id="tutorial-save"><span class="glyphicon glyphicon-export"></span> <span class="hidden-sm hidden-md">Save</span></button>
 							<div class="btn-group" dropdown>
-								<button type="button" class="btn btn-primary dropdown-toggle">
+								<button type="button" class="btn btn-primary" dropdown-toggle>
 									<i class="fa fa-cog"></i> <span class="hidden-sm hidden-md">Settings</span>
 								</button>
 								<ul class="dropdown-menu" role="menu">
@@ -105,8 +105,10 @@
 							</accordion>
 							<div class="text-center text-muted">Listed GPAs are estimates and may be higher depending on class selections.</div>
 						</tab>
-						<tab heading="Find Classes" ng-controller="FindClassesCtrl" active="interface.tabs[3]" id="tutorial-find-classes">
-							<br/><div ng-include="'/templates/partials/find-classes.html'"></div>
+						<tab heading="Find Classes" active="interface.tabs[3]" id="tutorial-find-classes">
+							<div ng-controller="FindClassesCtrl">
+								<br/><div ng-include="'/templates/partials/find-classes.html'"></div>
+							</div>
 						</tab>
 					</tabset>
 				</div>
@@ -125,7 +127,7 @@
 				</div>
 			</accordion-heading>
 			<div ng-if="interface.accordion[key]">
-				<alert type="danger" ng-if="val.total - val.base > remainingClassesCount()">
+				<alert type="danger" ng-if="val.total - val.base > Math.max(1, remainingClassesCount())">
 					It is not possible to graduate within <abbr title="Assuming twelve classes a year">four years</abbr> and complete these requirements with the below course list.
 				</alert>
 				<span ng-bind="::val.notes"></span>
@@ -216,14 +218,14 @@
 				<p>Written by <a href="http://kevmo314.com/">Kevin Wang</a>, <a href="https://github.com/kevmo314/canigraduate.uchicago.edu">GitHub</a>, <a href="bitcoin:15AeuxTuPQpntVvq4KVGqSxZM3ry39PV6Q">15AeuxTuPQpntVvq4KVGqSxZM3ry39PV6Q</a>. This site is not affiliated with The University of Chicago.</p>
 			</div>			
 		</footer>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular-route.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular-cookies.min.js"></script>
-		<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/tripledes.js"></script>
-		<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.2.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angulartics/0.17.2/angulartics.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/angulartics/0.17.2/angulartics-ga.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-route.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-cookies.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/tripledes.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angulartics/0.19.3/angulartics.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/angulartics/0.19.3/angulartics-ga.min.js"></script>
 		<script src="/js/angular-gravitate.js"></script>
 		<script src="/js/SortedList.js"></script>
 		<script src="/js/IntervalTree.js"></script>

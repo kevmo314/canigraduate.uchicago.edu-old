@@ -1,6 +1,6 @@
 AddType application/json .json
 <IfModule mod_deflate.c>
-AddOutputFilterByType DEFLATE application/json
+	AddOutputFilterByType DEFLATE application/json
 </IfModule>
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} -s [OR]
@@ -11,4 +11,9 @@ RewriteRule ^(.*) /index.php [NC,L]
 
 <IfModule mod_headers.c>
 	Header set X-Powered-By "Fishbein Technologies"
+</IfModule>
+<IfModule mod_expires.c>
+	ExpiresActive on
+	ExpiresByType application/json "access plus 3 month"
+	ExpiresByType text/javascript "access plus 1 year"
 </IfModule>

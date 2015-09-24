@@ -46,12 +46,12 @@ app.run(function($modal, $timeout, $cookies, TutorialService) {
 		(function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check = true})(navigator.userAgent||navigator.vendor||window.opera);
 		return check
 	}
-	if(mobileCheck() && !$cookies.mobileokay) {
+	if(mobileCheck() && !$cookies.get('mobileokay')) {
 		window.location = 'https://canigraduate.uchicago.edu/mobile.php';
 	}
 });
 // this is one thing that might've been easier with jquery...
-app.service('TutorialService', function($q, $location, $rootScope, $cookies, $timeout, $interval, InterfaceManagerService, UserService, UserService, TimeschedulesService) {
+app.service('TutorialService', function($q, $location, $rootScope, $cookies, $timeout, $interval, InterfaceManagerService, UserService, TimeschedulesService) {
 	var tutorialElements = [], self = this;
 	function annotate(id, textContent, options, d) {
 		options = angular.extend({ backdrop:true, trigger:false, listen:false, watch:false, flip:false }, options);
@@ -235,14 +235,14 @@ app.service('TutorialService', function($q, $location, $rootScope, $cookies, $ti
 		}
 	};	
 	self.end = function() {
-		$cookies.tutorial = 'completed';
+		$cookies.put('tutorial', 'completed');
 		tutorialElements.forEach(function(e) { e.remove() });
 		if(userData) {
 			UserService.deserialize(userData, TimeschedulesService.quarters.active);
 		}
 	};
 });
-app.controller('FindClassesCtrl', function($rootScope, $scope, $modal, WatchService, TimeschedulesService, UserService, ClassService, AUTHENTICATION, DEFAULT_FILTERS, parseSchedule) {
+app.controller('FindClassesCtrl', function($rootScope, $scope, $modal, $location, WatchService, TimeschedulesService, UserService, ClassService, AUTHENTICATION, DEFAULT_FILTERS, parseSchedule) {
 	// TODO: Abstract this to a service so the filter can be modified from outside the controller
 	$scope.showDetails = {};
 	$scope.toggleDetails = function(cls) {
@@ -367,7 +367,7 @@ app.controller('ManualRecordCtrl', function($scope, UserService, TimeschedulesSe
 	$scope.createRecord = function() {
 		var start = $scope.from.getHours() * 60 + $scope.from.getMinutes();
 		var end = $scope.to.getHours() * 60 + $scope.to.getMinutes();
-		angular.forEach($scope.dow, function(dow, value) {
+		angular.forEach($scope.dow, function(value, dow) {
 			if(value) {
 				this.push(dow + ':' + start + ':' + end);
 			}
@@ -459,8 +459,8 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 	$scope.textbooks = TextbookService;
 	$scope.$watch('timeschedules.quarters.active', function(value, old) {
 		if(value != '') {
-			if(old == '' && $cookies.key) {
-				StorageService.load($cookies.key, value); // we have quarter data, load
+			if(old == '' && $cookies.get('key')) {
+				StorageService.load($cookies.get('key'), value); // we have quarter data, load
 			} else { // quarter changed, handle appropriately
 				if(!(value in UserService.scheduleCache)) {
 					UserService.scheduleCache[value] = new SchedulingFactory(value);
@@ -533,7 +533,7 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 						});
 					} else if($modalScope.data.str != '') {	
 						$modalInstance.close(function() {
-							$cookies.key = $modalScope.data.str;
+							$cookies.put('key', $modalScope.data.str);
 							StorageService.load($modalScope.data.str, TimeschedulesService.quarters.active);
 						});
 					} else {
@@ -593,13 +593,13 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 	$scope.showCongratulations = function() {
 		var core = $scope.requirements['College Core'].total - $scope.requirements['College Core'].base;
 		var majors = $scope.getCompletedCount('major');
-		return core == 0 && majors > 0 && !$cookies.haveIGraduated;
+		return core == 0 && majors > 0 && !$cookies.get('haveIGraduated');
 	};
 	$scope.closeCongratulations = function() {
-		$cookies.haveIGraduated = 'yep';
+		$cookies.put('haveIGraduated', 'yep');
 	};
 	$scope.logout = function() {
-		var key = $cookies.key;
+		var key = $cookies.get('key');
 		var finalize = function() {
 			$cookieStore.remove('key');
 			TimeschedulesService.quarters.active = TimeschedulesService.quarters.available[0];
@@ -692,7 +692,7 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 				}
 				// add whatever classes
 				// can we really apply any set of classes towards electives...?
-				var classes = difference(difference(UserService.classes, records), core);
+				var classes = UserService.classes.filter(function(x) { return records.indexOf(x) < 0 && core.indexOf(x) < 0 });
 				classes.sort(gpaComparator);
 				var numRequired = 27 - RequirementService.data[major].total;
 				for(var i = 0; i < Math.min(numRequired, classes.length); i++) { $scope.data.electives.push(classes[i]) }
@@ -773,7 +773,7 @@ app.service('EvaluationService', function(UserService, ClassService, $http, $mod
 		return defer.promise;
 	};
 	self.run = function() {
-		if(Math.random() < 0.5 && $cookies.tutorial) { // probability that an eval request will appear
+		if(Math.random() < 0.5 && $cookies.get('tutorial')) { // probability that an eval request will appear
 			self.refresh().then(function(data) {
 				self.showDialog(data[Math.floor(Math.random() * data.length)]);
 			});
@@ -834,8 +834,8 @@ app.service('StorageService', function($q, $cookies, $cookieStore, $modal, $inte
 	}
 	$interval(function() {
 		var settings = $cookieStore.get('settings');
-		if(settings && settings.autosave && $cookies.key && $cookies.key.length > 0) {
-			self.save($cookies.key); // save call is cheap. blindly do it, no diff.
+		if(settings && settings.autosave && $cookies.get('key') && $cookies.get('key').length > 0) {
+			self.save($cookies.get('key')); // save call is cheap. blindly do it, no diff.
 		}
 		// TODO: make this push/dirty flag instead of poll
 	}, 60 * 1000);
@@ -844,19 +844,19 @@ app.service('StorageService', function($q, $cookies, $cookieStore, $modal, $inte
 		var defer = $q.defer();
 		if(key) {
 			$http.post('/data/storage.php', {
-				key:$cookies.key.substr(0, 8),
-				value:CryptoJS.TripleDES.encrypt(JSON.stringify(UserService.serialize()), $cookies.key.substr(8)).toString()
+				key:$cookies.get('key').substr(0, 8),
+				value:CryptoJS.TripleDES.encrypt(JSON.stringify(UserService.serialize()), $cookies.get('key').substr(8)).toString()
 			}).success(function(response) { angular.extend(self.data, response);defer.resolve(); });
 		} else {
 			$modal.open({
 				templateUrl:'templates/modals/save.html',
 				controller:function($scope) {
-					$scope.data = $cookies;
+					$scope.data = $cookies.getAll();
 					$scope.record = self.data;
-					$scope.regenerate = function() { self.data.timestamp = null;$cookies.key = generateRandomKey() };
+					$scope.regenerate = function() { self.data.timestamp = null;$cookies.put('key', generateRandomKey()) };
 					$scope.save = function() {
-						if(!$cookies.key) { $scope.regenerate() }
-						self.save($cookies.key);
+						if(!$cookies.get('key')) { $scope.regenerate() }
+						self.save($cookies.get('key'));
 					};
 				}
 			}).result.then(defer.resolve);
@@ -870,7 +870,7 @@ app.service('StorageService', function($q, $cookies, $cookieStore, $modal, $inte
 			var data;
 			try{
 				self.data = response;
-				data = JSON.parse(CryptoJS.TripleDES.decrypt(response.data, $cookies.key.substr(8)).toString(CryptoJS.enc.Utf8));
+				data = JSON.parse(CryptoJS.TripleDES.decrypt(response.data, $cookies.get('key').substr(8)).toString(CryptoJS.enc.Utf8));
 			} catch(ex) {
 				console.error('Failed to load from crypto');
 				console.error(ex);
@@ -1257,7 +1257,7 @@ app.service('ClassService', function($rootScope, $http, $injector, DEFAULT_FILTE
 	};
 	self.descriptions = {};
 	self.distributions = {};
-	self.distributionCount = {};
+	self.distributionMeta = {};
 	self.loadData = function(cls) {
 		if(cls.loaded) { return }
 		cls.loaded = true; // prevent race conditions as much as possible
@@ -1271,25 +1271,36 @@ app.service('ClassService', function($rootScope, $http, $injector, DEFAULT_FILTE
 		if(!cls.distribution) {
 			if(cls.classes in self.distributions) {
 				cls.distribution = self.distributions[cls.classes];
-				cls.distributionCount = self.distributionCount[cls.classes];
+				cls.distributionMeta = self.distributionMeta[cls.classes];
 			} else {
 				$http.get('/data/distribution.php?class=' + cls.classes).success(function(json) {
-					const unmap = {
+					var unmap = {
 						'4':'A','3.7':'A-','3.3':'B+','3':'B','2.7':'B-','2.3':'C+','2':'C','1.7':'C-','1.3':'D+','1':'D'
 					};
 					if(cls.classes in json) {
 						var data = [], max = 0;
-						self.distributionCount[cls.classes] = 0;
+						self.distributionMeta[cls.classes] = {count:0, mean:0, median:0};
 						for(var grade in json[cls.classes]) {
 							data.push([grade, json[cls.classes][grade]]);
 							max = Math.max(max, json[cls.classes][grade]);
 						}
+						var sum = 0;
 						for(var i = 0; i < data.length; i++) {
-							self.distributionCount[cls.classes] += data[i][1];
+							sum += parseFloat(data[i][0]) * data[i][1];
+							self.distributionMeta[cls.classes].count += data[i][1];
+						}
+						// sort and calculate median in second pass
+						data.sort(function(a, b) { return parseFloat(b[0]) - parseFloat(a[0]) });
+						var cumulativeCount = 0;
+						for(var i = 0; i < data.length; i++) {
+							if (cumulativeCount <= self.distributionMeta[cls.classes].count / 2) {
+								self.distributionMeta[cls.classes].median = data[i][0] + "/" + unmap[data[i][0]];
+							}
+							cumulativeCount += data[i][1];
 							data[i][1] /= max * 0.01;
 						}
-						cls.distributionCount = self.distributionCount[cls.classes];
-						data.sort(function(a, b) { return parseFloat(b[0]) - parseFloat(a[0]) });
+						self.distributionMeta[cls.classes].mean = sum / self.distributionMeta[cls.classes].count;
+						cls.distributionMeta = self.distributionMeta[cls.classes];
 						cls.distribution = self.distributions[cls.classes] = data.map(function(e) {
 							return [unmap[e[0]], e[1]]
 						});
@@ -1413,7 +1424,6 @@ app.service('RequirementService', function($http, ClassService) {
 		return out;
 	}
 	function revoke(node) {
-		//console.log(node);
 		node.complete = false;
 		if(node.classes) {
 			if(isString(node.classes)) {
@@ -1452,7 +1462,7 @@ app.service('RequirementService', function($http, ClassService) {
 					}
 					var context = userClasses;
 					if(duplicates || node.duplicates) { context = taken } // restore all classes
-					if(node.noCore) { context = difference(context, coreClasses) }
+					if(node.noCore) { context = context.filter(function(x) { return coreClasses.indexOf(x) < 0 }) }
 					var has = ClassService.prefixCrosslistSearch(context, node.classes);
 					if(node.classes.length == 6 && /2$/.test(node.classes) && has == -1) {
 						// handle special case, 3xxxx classes replace 2xxxx classes
@@ -1460,10 +1470,10 @@ app.service('RequirementService', function($http, ClassService) {
 					}
 					if(has != -1) {
 						if(context == userClasses) { // edge case, don't need to relocate
-							node.userClass = userClasses.splice(has, 1)[0]
+							node.userClass = userClasses.splice(has, 1)[0];
 						} else { // need to reidentify
 							var index = prefixBinarySearch(userClasses, context[has]);
-															// if index == -1, then it's not in userClasses. just indicate fulfiller
+							// if index == -1, then it's not in userClasses. just indicate fulfiller
 							node.userClass = (index == -1 ? context[has] : userClasses.splice(index, 1)[0]);
 						}
 						if(core) {
@@ -1542,7 +1552,7 @@ app.service('RequirementService', function($http, ClassService) {
 				self.data[major].total += result[1];
 			}
 			self.data[major].complete = complete;
-			self.data[major].used = difference(taken, userClasses); // for calculating major gpa
+			self.data[major].used = taken.filter(function(x) { return userClasses.indexOf(x) < 0 }); // for calculating major gpa
 			if(major == 'College Core') {
 				coreClasses.sort();
 			}
@@ -2019,7 +2029,6 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 	self.filter = function(filter, exclusions, min, max) {
 		var defer = $q.defer();
 		var taken = exclusions[0], tested = exclusions[1];
-		var out = [];
 		var class_group = {};
 		var checkDOW = isFilterNecessary(filter.dow);
 		var checkQuarter = isFilterNecessary(filter.quarter);
@@ -2162,7 +2171,7 @@ app.service('TimeschedulesService', function($rootScope, $http, $q, ClassService
 					self.section_count = timeschedules.length;
 					processingTime += (getTime() - start);
 					self.status = 'Loaded all classes after ' + quarter;
-					process(processingTime <= 5000 ? index + 1 : quarters.length);
+					process(processingTime <= 2500 ? index + 1 : quarters.length);
 					// quick trick to make it look like data is loading faster
 					if(index == 4) {
 						timeschedules.sort(timeschedulesComparator);
@@ -2316,7 +2325,7 @@ app.directive('location', function(LocationService) {
 });
 app.value('parseSchedule', function(value, toMinutes, byWeek) {
 	var schedule = (value.length == 0 ? [] : value.split('|'));
-	const dow = {M:0, T:1, W:2, H:3, F:4, S:5, U:6};
+	var dow = {M:0, T:1, W:2, H:3, F:4, S:5, U:6};
 	// this is actually about 20% faster than map
 	for(var i = 0; i < schedule.length; i++) {
 		var e = schedule[i].split(':');
@@ -2348,7 +2357,7 @@ app.directive('schedule', function(parseSchedule) {
 			scope.parsed = [];
 			scope.$watch('schedule', function(data) {
 				var schedule = parseSchedule(data);
-				const map = {M:'M', T:'T', W:'W', H:'Th', F:'F', S:'Sa', U:'Su'};
+				var map = {M:'M', T:'T', W:'W', H:'Th', F:'F', S:'Sa', U:'Su'};
 				function toLabel(time) {
 					var minutes = time.hours() * 60 + time.minutes();
 					if(minutes < 10 * 60 + 30) { return 'warning' }

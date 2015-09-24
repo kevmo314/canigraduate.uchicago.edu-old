@@ -1,4 +1,4 @@
-<div class="text-info small" ng-init="getDescription(child)" ng-controller="ClassInfoCtrl">
+<div class="small" ng-init="getDescription(child)" ng-controller="ClassInfoCtrl">
 	<gravitate><p ng-bind="::child.description"></p></gravitate>
 	<p ng-if="child.evaluations.prerequisites.length > 0">Suggested prerequisites: <span ng-repeat="prerequisite in child.evaluations.prerequisites"><a href="#" ng-click="interface.findClass(prerequisite)" tooltip="{{getName(prerequisite)}}" ng-bind="::prerequisite"></a></span></p>
 	<tabset>
@@ -56,18 +56,18 @@
 			</table>
 			<div class="btn-group btn-block" ng-if="child.displayLimit < child.sections.length" dropdown>
 			<button type="button" class="btn col-xs-11 btn-default" ng-click="child.displayLimit=getNextQuarter(child)">Load <span compile="child.sections[child.displayLimit].quarter.slice(-4)"></span></button>
-			<button type="button" class="btn col-xs-1 btn-default dropdown-toggle"><span class="caret"></span></button>
+			<button type="button" class="btn col-xs-1 btn-default" dropdown-toggle><span class="caret"></span></button>
 			<ul class="dropdown-menu">
 				<li><a ng-click="child.displayLimit=child.sections.length" tooltip="WARNING: May take a while to load" tooltip-append-to-body="true">Load All</a></li>
 			</ul>
 			</div>
 		</tab>
-		<tab heading="Evaluations" disabled="!(child.evaluations.comments.length + child.evaluations.official.length)">
+		<tab heading="Evaluations" disable="!(child.evaluations.comments.length + child.evaluations.official.length)">
 			<br/>
 			<blockquote ng-repeat="comment in child.evaluations.comments" class="small"><p ng-bind="::comment"></p></blockquote>
 			<div ng-include="'/templates/partials/official-evaluations.html'"></div>
 		</tab>
-		<tab heading="Grades" disabled="!child.distribution.length">
+		<tab heading="Grades" disable="!child.distribution.length">
 			<div class="row">
 				<div class="col-sm-6">
 					<h4>Ratings</h4>
@@ -84,7 +84,7 @@
 				<div class="col-sm-6">
 					<h4>Grades</h4>
 					<div style="height:16px">
-						<strong tooltip="Data based on users who use this site.">Observed Frequency (n=<span ng-bind="child.distributionCount"></span>)</strong>
+						<strong tooltip="Data based on users who use this site.">Frequency</strong> (n=<span ng-bind="child.distributionMeta.count"></span>, x̄=<span ng-bind="child.distributionMeta.mean | number:2"></span>, x͂=<span ng-bind="child.distributionMeta.median"></span>)
 					</div>
 					<div ng-repeat="grade in child.distribution">
 						<div ng-style="{width:{{grade[1]}} + '%'}" ng-bind="::grade[0]"

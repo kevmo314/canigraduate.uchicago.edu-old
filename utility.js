@@ -1,6 +1,6 @@
 Array.prototype.binarySearch = function(v) {
 	var min = 0, max = this.length - 1;
-	var mid, e;
+	var mid, el;
 	while(min <= max) {
 		el = this[mid = (min + ((max - min) >> 1)) | 0];
 		if(el < v) {
@@ -13,9 +13,7 @@ Array.prototype.binarySearch = function(v) {
 	}
 	return ~min;
 };
-Array.prototype.clear = function() {
-	while(this.length > 0) { this.pop() }
-};
+Array.prototype.clear = function() { this.splice(0, this.length) };
 RegExp.compile = function(pattern, args) {
 	try {
 		return new RegExp(pattern, args);
@@ -91,15 +89,6 @@ function fetch(a, keys) {
 	var out = [];
 	for(var i = 0; i < keys.length; i++) {
 		out.push(a[keys[i]]);
-	}
-	return out;
-}
-function difference(a, b) {
-	var out = [];
-	for(var i = 0; i < a.length; i++) {
-		if(b.indexOf(a[i]) == -1) {
-			out.push(a[i]);
-		}
 	}
 	return out;
 }

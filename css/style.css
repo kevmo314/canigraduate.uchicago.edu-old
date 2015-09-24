@@ -32,7 +32,7 @@ header {
 .navbar .navbar-nav .dropdown-menu a {
 	color:#333;
 }
-.navbar .navbar-nav a:hover {
+.navbar .navbar-nav a:hover, .navbar .navbar-nav a:focus {
 	background-color:#8C8179;
 }
 .navbar .navbar-nav li.active {
