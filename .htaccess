@@ -8,9 +8,9 @@ RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^.*$ - [NC,L]
 RewriteRule ^(.*) /index.php [NC,L]
-
 <IfModule mod_headers.c>
 	Header set X-Powered-By "Fishbein Technologies"
+	Header set Access-Control-Allow-Origin "*"
 </IfModule>
 <IfModule mod_expires.c>
 	ExpiresActive on

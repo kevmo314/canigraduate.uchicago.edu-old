@@ -175,8 +175,8 @@
 					<li class="list-group-item" ng-repeat="child in child.classes track by $index" ng-include="'requirements.html'"></li>
 				</ul>
 			</div>
-			<span ng-if="isLeaf(child)" ng-class="{'text-danger':!child.complete, 'text-success':child.complete, 'text-info':child.complete && isCredited(child.classes)}" class="pointer">
-				<div class="clearfix" ng-mouseenter="child.hover=true" ng-mouseleave="child.hover=false">
+			<span ng-if="isLeaf(child)" class="pointer">
+				<div class="clearfix" ng-mouseenter="child.hover=true" ng-mouseleave="child.hover=false" ng-class="{'text-danger':!child.complete, 'text-success':child.complete, 'text-info':child.complete && isCredited(child.classes)}">
 					<span ng-click="isElectiveClass(child.classes) ? interface.findClass(child.classes) : (showDetail=!showDetail)">
 						<i class="fa fa-check" ng-show="child.complete"></i>
 						<i class="fa fa-book" ng-hide="child.complete"></i>

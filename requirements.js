@@ -545,7 +545,7 @@ var REQUIREMENTS = {
 				angular.copy(SEQUENCES.CHEM2Q120)
 			]},
 			{require:1,	classes:[
-				'MATH 16300','MATH 19900'
+				'MATH 16300','MATH 15900'
 			]},
 			{require:1,	classes:[
 				{require:3, classes:['MATH 20300', 'MATH 20400', 'MATH 20500']},
@@ -1210,7 +1210,7 @@ var REQUIREMENTS = {
 			angular.copy(SEQUENCES.PHYS3Q130),
 			angular.copy(SEQUENCES.MATH2Q150),
 			{require:1, classes:[
-				'MATH 15300','MATH 16300','MATH 22000'
+				'MATH 15300','MATH 16300','PHYS 22000'
 			]},
 			{require:1, classes:[
 				'MATH 20500','PHYS 22100','MATH 20900'
