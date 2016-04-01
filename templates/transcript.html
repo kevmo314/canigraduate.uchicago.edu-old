@@ -1,6 +1,6 @@
 <div id="tutorial-transcript">
 <h2>Transcript <small tooltip="Quality grades" ng-bind="user.transcript.getRecordCount()" ng-if="user.transcript.getRecordCount()"></small></h2>
-<alert type="info" ng-if="!user.transcript.getRecordCount()">Import to view transcript data.</alert>
+<alert type="info" ng-if="!user.transcript.getRecordCount()"><a ng-click="load()">Import your grades</a> to view your transcript data.</alert>
 <alert type="info" ng-if="user.transcript.getRecordCount() && !user.transcript.getCumulativeGPA()">Your data was imported with "Suppress Grades" enabled. This means that your transcript is imported as qualitative only. Re-import with "Suppress Grades" disabled to view your grades.</alert>
 <table class="table table-striped table-condensed" ng-if="user.transcript.getRecordCount()">
 	<thead><tr>

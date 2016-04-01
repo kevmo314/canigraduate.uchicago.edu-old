@@ -2,7 +2,7 @@
 <h2>Your Courses <small ng-if="user.classes.length">
 	<span ng-bind="user.classes.length - user.credits.length"></span><span class="text-info" ng-if="user.credits.length"> + <span ng-bind="user.credits.length" tooltip="Accreditations"></span></span>
 </small></h2>
-<alert type="info" ng-if="!user.classes.length">You don't have any classes added. Add them one at a time below or push the import button.</alert>
+<alert type="info" ng-if="!user.classes.length">You don't have any classes added. <a ng-click="load()">Import them</a> or add them manually below.</alert>
 <table class="table table-condensed table-striped" ng-show="user.classes.length > 0">
 	<thead><tr>
 		<th class="text-right">Class</th>

@@ -657,18 +657,15 @@ var REQUIREMENTS = {
 	'Environmental Science':{
 		classes:[
 			angular.copy(SEQUENCES.CHEM3Q110),
-			angular.copy(SEQUENCES.MATH3Q130),
+			angular.copy(SEQUENCES.MATH2Q130),
 			'BIOS 20197', 'BIOS 20198',
-			angular.copy(SEQUENCES.PHYS3Q120),
-			'GEOS 13300', 'GEOS 13400', 'GEOS 23900', 'BIOS 20196',
-			{require:4, classes:[
-				{require:1, classes:['GEOS 21000','GEOS 23200','GEOS 23205','GEOS 23400','GEOS 23800','GEOS 23805','GEOS 23900','GEOS 24500','GEOS 24600','GEOS 24705','GEOS 28000','GEOS 29700','GEOS 29005']},
-				{require:1, classes:['BIOS 20196','BIOS 22244','BIOS 23232','BIOS 23266','BIOS 23280','BIOS 23289','BIOS 23406','BIOS 25206']},
-				{require:2, notes:'Chosen from List B, D, or F'}
-			]},
-			{require:3, classes:angular.copy(GROUPS.GEOS.LISTE)},
-			'STAT 2',
-			{require:1, classes:angular.copy(GROUPS.GEOS.LISTF)}
+			'ENSC 13300', 'ENSC 23800', 'ENSC 23900', 'ENSC 24400',
+			{require:1, classes:['PHYS 12100', 'PHYS 13100', 'PHYS 14100']},
+			{require:1, classes:['MATH 19620', 'MATH 20000', 'PHYS 22000', 'BIOS 20152', 'MATH 13300', 'MATH 15300', 'MATH 16300']},
+			{require:4, notes:'Four courses designated ENSC or GEOS from List E-1: Physical and Biological Sciences'},
+			{require:1, notes:'One course from List E-2: Social Sciences'},
+			{require:3, notes:'Three courses from List E-3: Computational Sciences, of which one must be under the heading of Statistics'},
+			{require:3, notes:'Three more courses from any of the elective lists, but only up to two of these may be from List E-2: Social Sciences'}
 		],
 		link:{
 			catalog:'environmentalscience/#programrequirementsforthebsinenvironmentalscience'

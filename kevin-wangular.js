@@ -445,7 +445,7 @@ app.controller('ClassInfoCtrl', function($scope, $http, UserService, ClassServic
 		}
 	};
 });
-app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $cookies, $cookieStore, parseSchedule, TimeschedulesService, SchedulingFactory, LocationService, TranscriptFactory, RegistrationFactory, ClassService, RequirementService, UserService, RecommendationService, SequenceService, StorageService, EvaluationService, TutorialService, TextbookService, AUTHENTICATION, COLORS, DEFAULT_FILTERS) {
+app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $cookies, $cookieStore, $analytics, parseSchedule, TimeschedulesService, SchedulingFactory, LocationService, TranscriptFactory, RegistrationFactory, ClassService, RequirementService, UserService, RecommendationService, SequenceService, StorageService, EvaluationService, TutorialService, TextbookService, AUTHENTICATION, COLORS, DEFAULT_FILTERS) {
 	$scope.startTutorial = TutorialService.start;
 	$scope.colors = COLORS;
 	$scope.classes = ClassService.keys;
@@ -506,6 +506,11 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 		return records.some(function(e) { return e.timeschedule.id == cls.id && e.timeschedule.section == cls.section });
 	};
 	$scope.authentication = AUTHENTICATION;
+	$scope.dropout = function() {
+		$analytics.eventTrack('april-fools-2016');
+		alert('You\'ve successfully dropped out of UChicago!');
+		window.open('https://www.google.com/search?q=what+day+is+it', '_blank');
+	};
 	$scope.load = function() {
 		$modal.open({
 			templateUrl:'templates/modals/load.html',
@@ -515,6 +520,9 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 				$modalScope.message = "";
 				$modalScope.error = null;
 				$modalScope.load = function() {
+					if($modalScope.data.suppress_gpa) {
+						$analytics.eventTrack('import-suppressed-gpa');
+					}
 					if($modalScope.data.cnet != '' && $modalScope.data.password != '') {
 						$modalScope.message = "Querying... (may take a while, usually ~15s)";
 						$modalScope.error = null;
@@ -1265,7 +1273,7 @@ app.service('ClassService', function($rootScope, $http, $injector, DEFAULT_FILTE
 			if(cls.classes in self.descriptions) {
 				cls.description = self.descriptions[cls.classes];
 			} else {
-				$http.get('/data/descriptions.php?class=' + cls.classes).success(function(data) { cls.description = self.descriptions[cls.classes] = data; });
+				$http.get('/data/descriptions.php?class=' + cls.classes).success(function(data) { cls.description = self.descriptions[cls.classes] = data.trim(); });
 			}
 		}
 		if(!cls.distribution) {
