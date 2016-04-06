@@ -506,11 +506,6 @@ app.controller('AirTrafficCtrl', function($scope, $http, $location, $modal, $coo
 		return records.some(function(e) { return e.timeschedule.id == cls.id && e.timeschedule.section == cls.section });
 	};
 	$scope.authentication = AUTHENTICATION;
-	$scope.dropout = function() {
-		$analytics.eventTrack('april-fools-2016');
-		alert('You\'ve successfully dropped out of UChicago!');
-		window.open('https://www.google.com/search?q=what+day+is+it', '_blank');
-	};
 	$scope.load = function() {
 		$modal.open({
 			templateUrl:'templates/modals/load.html',

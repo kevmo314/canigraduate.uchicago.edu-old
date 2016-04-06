@@ -2,4 +2,5 @@ canigraduate.db
 *.swp
 data/timeschedules/*.json
 data/timeschedules-compressed/*.json
+scripts/catalog/data/*
 config.php

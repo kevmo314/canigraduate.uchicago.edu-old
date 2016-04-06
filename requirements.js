@@ -578,19 +578,14 @@ var REQUIREMENTS = {
 			angular.copy(SEQUENCES.MATH2Q130),
 			angular.copy(SEQUENCES.CMSC2Q150),
 			'CMSC 15400',
-			{require:2, max:2, classes:[
-				'CMSC 22100','CMSC 22200','CMSC 22610','CMSC 23000','CMSC 23200','CMSC 23300',
-				'CMSC 23400','CMSC 23500','CMSC 23700','CMSC 23710'],
+			{require:3, max:3, classes:[
+				'CMSC 22001','CMSC 22100','CMSC 22200','CMSC 22300','CMSC 22600','CMSC 23000','CMSC 23010','CMSC 23200','CMSC 23300',
+				'CMSC 23310','CMSC 23400','CMSC 23500','CMSC 23700','CMSC 23710','CMSC 23800'],
 			notes:'Programming Languages and Systems', hidden:true},
 			{require:3, classes:['CMSC 27100','CMSC 27200',
 				{require:1, classes:['CMSC 28000','CMSC 28100']}
-			], notes:'Algorithms and Theory', hidden:true},
-			{require:1, classes:[
-				EVALUATORS.ALL_OR_NOTHING('Artificial Intelligence', GROUPS.CMSC.ARTIFICIAL_INTELLIGENCE, [], 2),
-				EVALUATORS.ALL_OR_NOTHING('Advanced Systems', GROUPS.CMSC.ADVANCED_SYSTEMS, [GROUPS.CMSC.ARTIFICIAL_INTELLIGENCE], 2),
-				EVALUATORS.ALL_OR_NOTHING('Scientific Computing', GROUPS.CMSC.SCIENTIFIC_COMPUTING, [GROUPS.CMSC.ADVANCED_SYSTEMS, GROUPS.CMSC.ARTIFICIAL_INTELLIGENCE], 2)
-			]},
-			{require:4, classes:['CMSC 2','CMSC 2','CMSC 2','CMSC 2']}
+			], notes:'Theory', hidden:true},
+			{require:5, classes:['CMSC 2','CMSC 2','CMSC 2','CMSC 2']}
 		],
 		link:{
 			catalog:'computerscience/#programrequirements'
@@ -984,7 +979,8 @@ var REQUIREMENTS = {
 		classes:[
 			{require:1, classes:[angular.copy(SEQUENCES.CHEM3Q100),angular.copy(SEQUENCES.PHYS3Q120)]},
 			angular.copy(SEQUENCES.MATH2Q130),
-			{require:1, classes:['MATH 16300','MATH 19900']},
+			{require:1, classes:['MATH 16300','MATH 15910']},
+			'MATH 20250',
 			{require:3, classes:[
 				{require:1, classes:['MATH 20300','MATH 20700']},
 				{require:1, classes:['MATH 20400','MATH 20800']},
@@ -993,8 +989,7 @@ var REQUIREMENTS = {
 			{require:2, classes:GROUPS.MATH.LOAC, hidden:true, notes:'Two classes from the list of approved classes', max:2},
 			{require:3, classes:[
 				{require:1, classes:['MATH 25400','MATH 25700']},
-				{require:1, classes:['MATH 25500','MATH 25800']},
-				{require:1, classes:['MATH 25600','MATH 25900'].concat(GROUPS.MATH.LOAC)}
+				{require:1, classes:['MATH 25500','MATH 25800'].concat(GROUPS.MATH.LOAC)}
 			]},
 			{require:4, notes:'At least two should be taken in a single department', classes:[
 				'ASTR ', 'ASTR ', 'ASTR ', 'ASTR ',
@@ -1013,17 +1008,17 @@ var REQUIREMENTS = {
 		classes:[
 			{require:1, classes:[angular.copy(SEQUENCES.CHEM3Q100),angular.copy(SEQUENCES.PHYS3Q120)], max:1},
 			angular.copy(SEQUENCES.MATH2Q130),
-			{require:1, classes:['MATH 16300','MATH 19900']},
+			{require:1, classes:['MATH 16300','MATH 15910']},
+			'MATH 20250',
 			{require:3, classes:[
 				{require:1, classes:['MATH 20300','MATH 20700']},
 				{require:1, classes:['MATH 20400','MATH 20800']},
 				{require:1, classes:['MATH 20500','MATH 20900']}
 			]},
 			{require:2, classes:GROUPS.MATH.LOAC, hidden:true, notes:'Two classes from the list of approved classes'},
-			{require:3, classes:[
+			{require:2, classes:[
 				{require:1, classes:['MATH 25400','MATH 25700']},
-				{require:1, classes:['MATH 25500','MATH 25800']},
-				{require:1, classes:['MATH 25600','MATH 25900']}
+				{require:1, classes:['MATH 25500','MATH 25800']}
 			]},
 			{require:4, notes:'At least two should be taken in a single department', classes:[
 				'ASTR ', 'ASTR ', 'ASTR ', 'ASTR ',
@@ -1046,16 +1041,14 @@ var REQUIREMENTS = {
 	},
 	'Mathematics Minor':{
 		classes:[
-			{require:1, classes:['MATH 16300', 'MATH 19900'], notes:'May count towards another major.'},
+			{require:1, classes:['MATH 16300', 'MATH 15910'], notes:'May count towards another major.'},
 			{require:3, classes:[
 				{require:1, classes:['MATH 20300','MATH 20700']},
 				{require:1, classes:['MATH 20400','MATH 20800']},
 				{require:1, classes:['MATH 20500','MATH 20900']}
 			]},
-			{require:1, classes:[
-				{require:2, classes:['MATH 25400', 'MATH 25500']},
-				{require:2, classes:['MATH 25700', 'MATH 25800']}
-			]},
+			'MATH 20250',
+			{require:1, classes:['MATH 25400', 'MATH 25700']},
 			'MATH 2'
 		],
 		link:{
@@ -1066,7 +1059,8 @@ var REQUIREMENTS = {
 		classes:[
 			{require:1, classes:[angular.copy(SEQUENCES.CHEM3Q100),angular.copy(SEQUENCES.PHYS3Q120)]},
 			angular.copy(SEQUENCES.MATH2Q130),
-			{require:1, classes:['MATH 16300','MATH 19900']},
+			{require:1, classes:['MATH 16300','MATH 15910']},
+			'MATH 20250',
 			{require:3, classes:[
 				{require:1, classes:['MATH 20300','MATH 20700']},
 				{require:1, classes:['MATH 20400','MATH 20800']},
@@ -1074,10 +1068,7 @@ var REQUIREMENTS = {
 			]},
 			{require:1, classes:['MATH 21100', 'MATH 21200']},
 			{require:6, notes:'Six courses that are not MATH courses but are either within the PSCD or are CPNS courses, at least three of which should be taken in a single department'},
-			{require:2, classes:[
-				{require:1, classes:['MATH 25400','MATH 25700']},
-				{require:1, classes:['MATH 25500','MATH 25800']}
-			]},
+			{require:1, classes:['MATH 25400','MATH 25700']},
 			'MATH 27000','MATH 27300','MATH 27500'
 		],
 		link:{
@@ -1088,20 +1079,16 @@ var REQUIREMENTS = {
 		classes:[
 			{require:1, classes:[angular.copy(SEQUENCES.CHEM3Q100),angular.copy(SEQUENCES.PHYS3Q120)]},
 			angular.copy(SEQUENCES.MATH2Q130),
-			{require:1, classes:['MATH 16300','MATH 19900']},
+			{require:1, classes:['MATH 16300','MATH 15910']},
 			{require:3, classes:[
 				{require:1, classes:['MATH 20300','MATH 20700']},
 				{require:1, classes:['MATH 20400','MATH 20800']},
 				{require:1, classes:['MATH 20500','MATH 20900']}
 			]},
-			{require:2, classes:[
-				{require:1, classes:['MATH 25400','MATH 25700']},
-				{require:1, clasess:['MATH 25500','MATH 25800']}
-			]},
-			'MATH 27000',
-			{require:1, classes:['MATH 27200','MATH 27300']},
-			'STAT 25100',
-			{require:1, classes:['STAT 23400','STAT 24400']},
+			{require:1, classes:['MATH 25400','MATH 25700']},
+			{require:2, classes:['MATH 27000','MATH 27200','MATH 27300','MATH 23500']},
+			{require:1, classes:['STAT 25100','STAT 25150']},
+			{require:1, classes:['STAT 23400','STAT 24400','STAT 24410']},
 			{require:4, classes:[
 				{require:1, classes:['ECON 20000', 'ECON 20010']},
 				{require:1, classes:['ECON 20100', 'ECON 20110']},
