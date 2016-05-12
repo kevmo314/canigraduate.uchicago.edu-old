@@ -1258,6 +1258,7 @@ app.service('ClassService', function($rootScope, $http, $injector, DEFAULT_FILTE
 		}
 		return out;
 	};
+	self.globalDistribution = $http.get('/data/distribution.php');
 	self.descriptions = {};
 	self.distributions = {};
 	self.distributionMeta = {};
@@ -1276,38 +1277,43 @@ app.service('ClassService', function($rootScope, $http, $injector, DEFAULT_FILTE
 				cls.distribution = self.distributions[cls.classes];
 				cls.distributionMeta = self.distributionMeta[cls.classes];
 			} else {
-				$http.get('/data/distribution.php?class=' + cls.classes).success(function(json) {
-					var unmap = {
-						'4':'A','3.7':'A-','3.3':'B+','3':'B','2.7':'B-','2.3':'C+','2':'C','1.7':'C-','1.3':'D+','1':'D'
-					};
-					if(cls.classes in json) {
-						var data = [], max = 0;
-						self.distributionMeta[cls.classes] = {count:0, mean:0, median:0};
-						for(var grade in json[cls.classes]) {
-							data.push([grade, json[cls.classes][grade]]);
-							max = Math.max(max, json[cls.classes][grade]);
-						}
-						var sum = 0;
-						for(var i = 0; i < data.length; i++) {
-							sum += parseFloat(data[i][0]) * data[i][1];
-							self.distributionMeta[cls.classes].count += data[i][1];
-						}
-						// sort and calculate median in second pass
-						data.sort(function(a, b) { return parseFloat(b[0]) - parseFloat(a[0]) });
-						var cumulativeCount = 0;
-						for(var i = 0; i < data.length; i++) {
-							if (cumulativeCount <= self.distributionMeta[cls.classes].count / 2) {
-								self.distributionMeta[cls.classes].median = data[i][0] + "/" + unmap[data[i][0]];
-							}
-							cumulativeCount += data[i][1];
-							data[i][1] /= max * 0.01;
-						}
-						self.distributionMeta[cls.classes].mean = sum / self.distributionMeta[cls.classes].count;
-						cls.distributionMeta = self.distributionMeta[cls.classes];
-						cls.distribution = self.distributions[cls.classes] = data.map(function(e) {
-							return [unmap[e[0]], e[1]]
-						});
+				var withCrosslistings = [cls.classes].concat(self.getCrosslists(cls.classes));
+				self.globalDistribution.then(function(result) {
+					var unmap = {'4':'A','3.7':'A-','3.3':'B+','3':'B','2.7':'B-','2.3':'C+','2':'C','1.7':'C-','1.3':'D+','1':'D'};
+					// Reduce to the cls.classes node.
+					var json = withCrosslistings.map(function(key) { return result.data[key]; })
+						.reduce(function(prev, cur) {
+								for(var grade in cur) {
+									prev[grade] += cur[grade];
+								}
+								return prev;
+							}, {'4':0, '3.7':0, '3.3':0, '3':0, '2.7':0, '2.3':0, '2':0, '1.7':0, '1.3':0, '1':0});
+					var data = [], max = 0;
+					self.distributionMeta[cls.classes] = {count:0, mean:0, median:0};
+					for(var grade in json) {
+						data.push([grade, json[grade]]);
+						max = Math.max(max, json[grade]);
 					}
+					var sum = 0;
+					for(var i = 0; i < data.length; i++) {
+						sum += parseFloat(data[i][0]) * data[i][1];
+						self.distributionMeta[cls.classes].count += data[i][1];
+					}
+					// sort and calculate median in second pass
+					data.sort(function(a, b) { return parseFloat(b[0]) - parseFloat(a[0]) });
+					var cumulativeCount = 0;
+					for(var i = 0; i < data.length; i++) {
+						if (cumulativeCount <= self.distributionMeta[cls.classes].count / 2) {
+							self.distributionMeta[cls.classes].median = data[i][0] + "/" + unmap[data[i][0]];
+						}
+						cumulativeCount += data[i][1];
+						data[i][1] /= max * 0.01;
+					}
+					self.distributionMeta[cls.classes].mean = sum / self.distributionMeta[cls.classes].count;
+					cls.distributionMeta = self.distributionMeta[cls.classes];
+					cls.distribution = self.distributions[cls.classes] = data.map(function(e) {
+						return [unmap[e[0]], e[1]]
+					});
 				});
 			}
 		}
@@ -1670,7 +1676,7 @@ app.factory('RegistrationFactory', function($rootScope, $http, $modal, $q, Times
 		};
 	};
 });
-app.factory('TranscriptFactory', function($http) {
+app.factory('TranscriptFactory', function($http, ClassService) {
 	return function(data) {
 		var records = data || [], self = this, distributionLoaded = false;
 		records.sort(function(a, b) {
@@ -1680,13 +1686,13 @@ app.factory('TranscriptFactory', function($http) {
 		// Populate average GPAs. We must reissue distribution.php requests because
 		// ClassService.loadData assumes the object has certain properties, which we do not
 		// have because we have an id.
-		$http.get('/data/distribution.php').success(function(json) {
+		ClassService.globalDistribution.then(function(json) {
 			for(var i = 0; i < records.length; i++) {
 				records[i].expectedGPA = 0;
 				var count = 0;
-				for(var key in json[records[i].id]) {
-					records[i].expectedGPA += parseFloat(key) * json[records[i].id][key];
-					count += json[records[i].id][key];
+				for(var key in json.data[records[i].id]) {
+					records[i].expectedGPA += parseFloat(key) * json.data[records[i].id][key];
+					count += json.data[records[i].id][key];
 				}
 				records[i].expectedGPA /= count;
 			}

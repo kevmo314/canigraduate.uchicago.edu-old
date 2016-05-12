@@ -8,9 +8,10 @@ def email(subject, message):
 	msg = MIMEText(message)
 	msg["From"] = "Magister.Mugit@uchicago.edu"
 	msg["To"] = "kevmo314@gmail.com"
-	msg["Subject"] = "Page update: %s" % subject
+	msg["Subject"] = "Can I Graduate Update: %s" % subject
 	p = Popen(["/usr/sbin/sendmail", "-t"], stdin=PIPE)
 	p.communicate(msg.as_string())
+	print("Sending email")
 
 def read(f):
 	try:
